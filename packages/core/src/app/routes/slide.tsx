@@ -328,6 +328,7 @@ export function Slide() {
   return (
     <HistoryProvider>
       <InspectorProvider slideId={slideId}>
+        <SelectionReporter />
         <div className="flex h-dvh flex-col overflow-hidden bg-background text-foreground">
           {/* Editorial toolbar — three zones, hairline separators, mono-folio center */}
           <header className="relative flex h-12 shrink-0 items-center justify-between border-b border-hairline bg-sidebar/85 px-2 backdrop-blur-md md:px-3">
@@ -543,6 +544,23 @@ export function Slide() {
       </InspectorProvider>
     </HistoryProvider>
   );
+}
+
+function SelectionReporter() {
+  const { selected } = useInspector();
+  useEffect(() => {
+    if (!import.meta.hot) return;
+    const selection = selected
+      ? {
+          line: selected.line,
+          column: selected.column,
+          tagName: selected.anchor.tagName.toLowerCase(),
+          text: (selected.anchor.textContent ?? '').replace(/\s+/g, ' ').trim().slice(0, 120),
+        }
+      : null;
+    import.meta.hot.send('open-slide:current', { selection });
+  }, [selected]);
+  return null;
 }
 
 function SlideWheelNavigation({
