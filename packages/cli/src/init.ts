@@ -37,6 +37,19 @@ export interface InitOptions {
   locale: LocaleCode;
 }
 
+export function sanitizeDirName(value: string): string {
+  const trimmed = value.trim();
+  if (trimmed === '.' || trimmed === '..') return trimmed;
+  const cleaned = trimmed
+    .replace(/\s+/g, '-')
+    .replace(/[^\\\p{L}\p{N}_./-]/gu, '-')
+    .replace(/-+/g, '-')
+    .replace(/(^-|-$)/g, '')
+    .replace(/-*([/\\])-*/g, '$1');
+  if (cleaned === '' || /^[/\\]+$/.test(cleaned)) return 'my-slides';
+  return cleaned;
+}
+
 export async function isDirNonEmpty(target: string): Promise<boolean> {
   if (!existsSync(target)) return false;
   const entries = await readdir(target);
