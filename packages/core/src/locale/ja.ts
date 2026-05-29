@@ -229,6 +229,7 @@ export const ja: Locale = {
     commentPlaceholder: 'エージェントに依頼する変更を記述…',
     commentShortcutHint: '⌘/ でフォーカス · ⌘↵ で追加',
     addComment: 'コメントを追加',
+    commentAdded: 'コメントを追加しました',
     unsavedChanges: {
       one: '未保存の変更 {count} 件',
       other: '未保存の変更 {count} 件',

@@ -87,6 +87,40 @@ function findJsxAncestors(ast: t.Node, line: number, column: number): JsxContain
   return hits.map((h) => h.node);
 }
 
+function findJsxAncestorsByLine(ast: t.Node, line: number): JsxContainer[] {
+  const hits: { node: JsxContainer; size: number }[] = [];
+  walkJsx(ast, (n) => {
+    if (!n.loc || (!t.isJSXElement(n) && !t.isJSXFragment(n))) return;
+    const s = n.loc.start;
+    const e = n.loc.end;
+    if (line < s.line || line > e.line) return;
+    hits.push({ node: n, size: (n.end ?? 0) - (n.start ?? 0) });
+  });
+  hits.sort((a, b) => a.size - b.size);
+  return hits.map((h) => h.node);
+}
+
+function findJsxByStart(ast: t.Node, line: number, column: number): t.JSXElement | null {
+  let hit: t.JSXElement | null = null;
+  walkJsx(ast, (n) => {
+    if (!t.isJSXElement(n) || !n.loc) return;
+    const s = n.loc.start;
+    if (s.line === line && s.column === column) {
+      hit = n;
+      return 'stop';
+    }
+  });
+  return hit;
+}
+
+function firstInsertionPlan(source: string, containers: JsxContainer[]): InsertionPlan | null {
+  for (const node of containers) {
+    const plan = planInsertion(source, node);
+    if (plan) return plan;
+  }
+  return null;
+}
+
 function planInsertion(source: string, target: JsxContainer): InsertionPlan | null {
   if (t.isJSXFragment(target)) {
     const opening = target.openingFragment;
@@ -119,13 +153,17 @@ export function findInsertion(
   const ast = parseSource(source);
   if (!ast) return null;
 
-  const col = column ?? 0;
-  const ancestors = findJsxAncestors(ast, line, col);
-  for (const node of ancestors) {
-    const plan = planInsertion(source, node);
-    if (plan) return plan;
+  if (column !== undefined) {
+    const exact = findJsxByStart(ast, line, column);
+    if (exact) {
+      const exactPlan = planInsertion(source, exact);
+      if (exactPlan) return exactPlan;
+    }
+    const scoped = firstInsertionPlan(source, findJsxAncestors(ast, line, column));
+    if (scoped) return scoped;
   }
-  return null;
+
+  return firstInsertionPlan(source, findJsxAncestorsByLine(ast, line));
 }
 
 export function offsetToLine(source: string, offset: number): number {

@@ -11,6 +11,7 @@ import {
   X,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
 import { Field, NumberField, Section } from '@/components/panel/panel-fields';
 import { PANEL_TRANSITION_MS, PanelShell, useAnimatedOpen } from '@/components/panel/panel-shell';
 import { Button } from '@/components/ui/button';
@@ -260,7 +261,7 @@ export function InspectorPanel() {
           </div>
         </>
       }
-      footer={<CommentsSection selected={pinSelected} onAdd={add} />}
+      footer={<CommentsSection target={pinSelected} onAdd={add} />}
     >
       {pinSnapshot.text !== null && (
         <>
@@ -870,15 +871,31 @@ function AgentWatchingBadge() {
   );
 }
 
+function commentLocFromTarget(target: SelectedTarget): { line: number; column: number } {
+  const loc = target.anchor.dataset.slideLoc;
+  if (loc) {
+    const idx = loc.indexOf(':');
+    if (idx > 0) {
+      const line = Number(loc.slice(0, idx));
+      const column = Number(loc.slice(idx + 1));
+      if (Number.isFinite(line) && Number.isFinite(column)) {
+        return { line, column };
+      }
+    }
+  }
+  return { line: target.line, column: target.column };
+}
+
 function CommentsSection({
-  selected,
+  target,
   onAdd,
 }: {
-  selected: { line: number; column: number };
+  target: SelectedTarget;
   onAdd: (line: number, column: number, text: string) => Promise<void>;
 }) {
   const [draft, setDraft] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const t = useLocale();
 
@@ -900,9 +917,14 @@ function CommentsSection({
     const trimmed = draft.trim();
     if (!trimmed) return;
     setSubmitting(true);
+    setSubmitError(null);
+    const { line, column } = commentLocFromTarget(target);
     try {
-      await onAdd(selected.line, selected.column, trimmed);
+      await onAdd(line, column, trimmed);
       setDraft('');
+      toast.success(t.inspector.commentAdded);
+    } catch (err) {
+      setSubmitError(String((err as Error).message ?? err));
     } finally {
       setSubmitting(false);
     }
@@ -914,7 +936,10 @@ function CommentsSection({
         <div ref={wrapRef} className="comment-cue rounded-[6px]">
           <Textarea
             value={draft}
-            onChange={(e) => setDraft(e.target.value)}
+            onChange={(e) => {
+              setDraft(e.target.value);
+              if (submitError) setSubmitError(null);
+            }}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
                 e.preventDefault();
@@ -925,11 +950,18 @@ function CommentsSection({
             className="min-h-16 resize-none text-[12px]"
           />
         </div>
+        {submitError && <p className="text-[11px] leading-snug text-red-600">{submitError}</p>}
         <div className="flex items-center justify-between gap-2">
           <span className="font-mono text-[10.5px] text-muted-foreground/70">
             {t.inspector.commentShortcutHint}
           </span>
-          <Button size="sm" variant="brand" disabled={submitting || !draft.trim()} onClick={submit}>
+          <Button
+            type="button"
+            size="sm"
+            variant="brand"
+            disabled={submitting || !draft.trim()}
+            onClick={submit}
+          >
             {t.inspector.addComment}
           </Button>
         </div>

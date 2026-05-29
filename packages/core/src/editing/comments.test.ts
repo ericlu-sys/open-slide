@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { b64urlDecode, b64urlEncode, parseMarkers } from './comments.ts';
+import { b64urlDecode, b64urlEncode, findInsertion, parseMarkers } from './comments.ts';
 
 describe('b64url encoding', () => {
   it('round-trips arbitrary unicode strings', () => {
@@ -68,5 +68,33 @@ describe('parseMarkers', () => {
     const comments = parseMarkers(source);
     expect(comments.map((c) => c.note)).toEqual(['one', 'two']);
     expect(comments.map((c) => c.line)).toEqual([1, 3]);
+  });
+});
+
+describe('findInsertion', () => {
+  it('inserts inside the JSX element at an exact data-slide-loc start', () => {
+    const source = [
+      'export default [() => (',
+      '  <div>',
+      '    <h2>Title</h2>',
+      '  </div>',
+      ')];',
+      '',
+    ].join('\n');
+
+    expect(findInsertion(source, 3, 4)).not.toBeNull();
+  });
+
+  it('falls back to line-only lookup when the column does not match', () => {
+    const source = [
+      'export default [() => (',
+      '  <div>',
+      '    <h2>Title</h2>',
+      '  </div>',
+      ')];',
+      '',
+    ].join('\n');
+
+    expect(findInsertion(source, 3, 0)).not.toBeNull();
   });
 });

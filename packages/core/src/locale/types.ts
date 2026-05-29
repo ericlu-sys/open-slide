@@ -231,6 +231,7 @@ export type Locale = {
     commentPlaceholder: string;
     commentShortcutHint: string;
     addComment: string;
+    commentAdded: string;
     /** templates: "{count} unsaved change" / "{count} unsaved changes" */
     unsavedChanges: Plural;
     /** templates: "{count} comment" / "{count} comments" */

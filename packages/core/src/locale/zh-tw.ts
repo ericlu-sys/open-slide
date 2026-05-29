@@ -227,6 +227,7 @@ export const zhTW: Locale = {
     commentPlaceholder: '描述你希望代理進行的修改…',
     commentShortcutHint: '⌘/ 聚焦 · ⌘↵ 新增',
     addComment: '新增 comment',
+    commentAdded: 'Comment 已新增',
     unsavedChanges: {
       one: '{count} 項未儲存的變更',
       other: '{count} 項未儲存的變更',

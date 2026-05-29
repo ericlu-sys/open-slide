@@ -228,6 +228,7 @@ export const en: Locale = {
     commentPlaceholder: 'Describe a change for the agent…',
     commentShortcutHint: '⌘/ to focus · ⌘↵ to add',
     addComment: 'Add comment',
+    commentAdded: 'Comment added',
     unsavedChanges: {
       one: '{count} unsaved change',
       other: '{count} unsaved changes',

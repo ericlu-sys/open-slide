@@ -38,6 +38,16 @@ import {
   useSlidePageNumber,
 } from '@open-slide/core';
 import qrCode from './assets/校園說明會_持續性_Qr_Code.png';
+import qrSurvey from './assets/qr-survey-surveycake.png';
+import haniPhoto from './assets/hani.jpg';
+import photoGarmin from './assets/factories/garmin.jpg';
+import photoGoldCircuit from './assets/factories/gold-circuit.jpg';
+import photoInnolight from './assets/factories/innolight.jpg';
+import photoLuxnet from './assets/factories/luxnet.jpg';
+import photoTli from './assets/factories/tli.jpg';
+import photoWistron from './assets/factories/wistron.jpg';
+
+const SURVEY_URL = 'https://www.surveycake.com/s/6VG2W';
 
 
 export const design: DesignSystem = {
@@ -102,7 +112,7 @@ const C = {
   dark: '#1C5E57',
   cream: '#F6F4F4',
   paper: '#F6F4F4',
-  surface: '#FAFCFB',
+  surface: '#FFFFFF',
   ink: '#5D5D5D',
   inkSoft: '#636363',
   muted: '#9A9A9A',
@@ -432,13 +442,7 @@ const Card = ({
     variant === 'default' || variant === 'lime' ? `1px solid ${C.panelBorder}` : undefined;
   return (
     <div
-      style={{
-        borderRadius: 20,
-        padding: 36,
-        background: bg,
-        border,
-        ...style,
-      }}
+      style={{ borderRadius: 20, padding: 36, background: bg, border: border, ...style }}
     >
       {children}
     </div>
@@ -643,9 +647,23 @@ const PortraitSlot = ({ hint, style }: { hint: string; style?: React.CSSProperti
   </div>
 );
 
-const QrSlot = ({ hint }: { hint: string }) => (
+const QrSlot = ({ hint, size = 520 }: { hint: string; size?: number }) => (
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 16 }}>
+    <img
+      src={qrCode}
+      alt=""
+      style={{ width: size, height: size, objectFit: 'cover', objectPosition: '42% 50%' }}
+    />
+  </div>
+);
+
+const SurveyQr = ({ size = 520 }: { size?: number }) => (
   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
-    <img src={qrCode} alt='' style={{ width: 440, height: 440, objectFit: 'cover', objectPosition: '50% 50%' }} />
+    <img
+      src={qrSurvey}
+      alt={`問卷 QR Code — ${SURVEY_URL}`}
+      style={{ width: size, height: size, objectFit: 'contain', borderRadius: 12 }}
+    />
   </div>
 );
 
@@ -781,7 +799,9 @@ const StatRow = ({
   highlight?: boolean;
 }) => (
   <>
-    <style>{`@keyframes wpStatRowIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}@keyframes wpStatRowPulse{0%,100%{box-shadow:0 0 0 0 rgba(28,94,87,0)}50%{box-shadow:0 0 0 5px rgba(124,193,113,0.4)}}`}</style>
+    {highlight ? (
+      <style>{`@keyframes wpStatGlow{0%,100%{box-shadow:0 0 14px rgba(86,199,187,0.22)}50%{box-shadow:0 0 26px rgba(86,199,187,0.45)}}`}</style>
+    ) : null}
     <div
       style={{
         display: 'grid',
@@ -791,37 +811,33 @@ const StatRow = ({
         padding: highlight ? '18px 22px' : '18px 0',
         margin: highlight ? '0 -22px' : undefined,
         borderRadius: highlight ? 16 : undefined,
-        background: highlight ? C.greenFill : undefined,
-        border: highlight ? `2px solid ${C.green}` : undefined,
-        borderBottom: highlight ? `2px solid ${C.green}` : `1px solid ${C.rule}`,
-        animation: highlight
-          ? `wpStatRowIn 620ms cubic-bezier(0.16, 1, 0.3, 1) ${(Number.parseInt(String(n), 10) - 1) * 70}ms both, wpStatRowPulse 2.4s ease-in-out 1.4s infinite`
-          : 'wpStatRowIn 620ms cubic-bezier(0.16, 1, 0.3, 1) both',
-        animationDelay: highlight ? undefined : `${(Number.parseInt(String(n), 10) - 1) * 70}ms`,
+        boxShadow: highlight ? '0 0 18px rgba(86, 199, 187, 0.28)' : undefined,
+        borderBottom: highlight ? undefined : `1px solid ${C.rule}`,
+        animation: highlight ? 'wpStatGlow 2.8s ease-in-out infinite' : undefined,
       }}
     >
       <div style={{ fontFamily: FF_DISPLAY, fontWeight: 800, fontSize: 28, color: C.green }}>
         {n}
       </div>
-    <div>
-      <div style={{ fontFamily: FF_ZH, fontSize: 30, fontWeight: 700 }}>{zh}</div>
-      <BodyVn size={20} style={{ margin: 0 }}>
-        {vn}
-        {en ? ` · ${en}` : ''}
-      </BodyVn>
-    </div>
-    <div
-      style={{
-        fontFamily: FF_DISPLAY,
-        fontWeight: 800,
-        fontSize: 36,
-        color: C.ink,
-        whiteSpace: 'nowrap',
-      }}
-    >
-      {points}
-      <span style={{ fontSize: 22, color: C.muted, marginLeft: 4 }}>點</span>
-    </div>
+      <div>
+        <div style={{ fontFamily: FF_ZH, fontSize: 30, fontWeight: 700 }}>{zh}</div>
+        <BodyVn size={20} style={{ margin: 0 }}>
+          {vn}
+          {en ? ` · ${en}` : ''}
+        </BodyVn>
+      </div>
+      <div
+        style={{
+          fontFamily: FF_DISPLAY,
+          fontWeight: 800,
+          fontSize: 36,
+          color: C.ink,
+          whiteSpace: 'nowrap',
+        }}
+      >
+        {points}
+        <span style={{ fontSize: 22, color: C.muted, marginLeft: 4 }}>點</span>
+      </div>
     </div>
   </>
 );
@@ -1535,8 +1551,16 @@ const Page8: Page = () => (
     center
     blobs={<Blob size={520} color={C.green} top={-120} left={-80} opacity={0.32} />}
   >
-    <div style={{ display: 'flex', flexDirection: 'row', gap: 100, alignItems: 'center' }}>
-      <div style={{ flex: 1 }}>
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: '640px auto',
+        gap: 300,
+        alignItems: 'center',
+        width: '100%',
+      }}
+    >
+      <div>
         <Eyebrow theme="dark">SCAN QR CODE</Eyebrow>
         <TitleZh size={96} color="#fff">
           一起來瀏覽
@@ -1587,8 +1611,15 @@ const Page8: Page = () => (
           ))}
         </div>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24 }}>
-        <QrSlot hint="活動職缺 QR Code — wport.me" />
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          gap: 24,
+        }}
+      >
+        <QrSlot hint="活動職缺 QR Code — wport.me" size={640} />
         <div
           style={{
             fontFamily: FF_EN,
@@ -1621,15 +1652,29 @@ const Page9: Page = () => (
 const Page10: Page = () => (
   <PageFrame theme="cream" chromeRight="02 · 如何註冊">
     <Eyebrow>02 / Quick start</Eyebrow>
-    <TitleZh size={64}>開始快速註冊</TitleZh>
-    <TitleVn size={44}>Bắt đầu đăng ký nhanh</TitleVn>
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 28, marginTop: 36 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+      <TitleZh size={64}>開始快速註冊</TitleZh>
+      <TitleVn size={44} style={{ marginTop: 0 }}>
+        Bắt đầu đăng ký nhanh
+      </TitleVn>
+    </div>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 28, marginTop: 28 }}>
       <Card style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ background: '#fff', padding: '28px 0 0', display: 'grid', placeItems: 'center' }}>
-          <PhoneShot src={regLang} alt="切換語言與註冊畫面" height={350} />
+        <div
+          style={{
+            background: '#fff',
+            padding: '28px 0 0',
+            display: 'grid',
+            placeItems: 'center',
+            minHeight: 458,
+          }}
+        >
+          <PhoneShot src={regLang} alt="切換語言與註冊畫面" height={430} />
         </div>
         <div style={{ padding: '24px 28px' }}>
-          <StepNum n="01" />
+          <div style={{ minHeight: 72, display: 'flex', alignItems: 'center' }}>
+            <StepNum n="01" />
+          </div>
           <div style={{ fontFamily: FF_ZH, fontSize: 32, fontWeight: 700, marginTop: 16 }}>
             切換語言 & 註冊
           </div>
@@ -1640,11 +1685,19 @@ const Page10: Page = () => (
         </div>
       </Card>
       <Card style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ background: '#fff', padding: '28px 0 0', display: 'grid', placeItems: 'center' }}>
-          <PhoneShot src={regGoogle} alt="Google 帳號登入畫面" height={350} />
+        <div
+          style={{
+            background: '#fff',
+            padding: '28px 0 0',
+            display: 'grid',
+            placeItems: 'center',
+            minHeight: 458,
+          }}
+        >
+          <PhoneShot src={regGoogle} alt="Google 帳號登入畫面" height={430} />
         </div>
         <div style={{ padding: '24px 28px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <div style={{ minHeight: 72, display: 'flex', alignItems: 'center', gap: 14 }}>
             <StepNum n="02" />
             <Pill variant="lime">推薦 RECOMMENDED</Pill>
           </div>
@@ -1657,19 +1710,34 @@ const Page10: Page = () => (
           <BodyVn size={21}>Đăng nhập bằng Google nhanh hơn</BodyVn>
         </div>
       </Card>
-      <Card variant="green" style={{ padding: 40, display: 'flex', flexDirection: 'column' }}>
-        <StepNum n="03" lime />
-        <div style={{ fontFamily: FF_ZH, fontSize: 34, fontWeight: 700, marginTop: 18, color: '#fff' }}>
-          開始填寫
+      <Card style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+        <div
+          style={{
+            background: '#fff',
+            padding: '28px 0 0',
+            display: 'grid',
+            placeItems: 'center',
+            minHeight: 458,
+          }}
+        >
+          <img
+            src={qrWport}
+            alt="WPORT 註冊 QR Code"
+            style={{ width: 220, height: 220, display: 'block', borderRadius: 10 }}
+          />
         </div>
-        <BodyZh size={24} color="rgba(255,255,255,0.85)" style={{ marginTop: 8 }}>
-          填寫個人資料與履歷
-        </BodyZh>
-        <BodyVn size={20} color={C.lime}>
-          Điền thông tin và CV
-        </BodyVn>
-        <div style={{ flex: 1, minHeight: 24 }} />
-        <StepQr size={200} align="center" />
+        <div style={{ padding: '24px 28px' }}>
+          <div style={{ minHeight: 72, display: 'flex', alignItems: 'center' }}>
+            <StepNum n="03" />
+          </div>
+          <div style={{ fontFamily: FF_ZH, fontSize: 32, fontWeight: 700, marginTop: 16 }}>
+            開始填寫
+          </div>
+          <BodyZh size={24} style={{ marginTop: 8 }}>
+            填寫個人資料與履歷
+          </BodyZh>
+          <BodyVn size={21}>Điền thông tin và CV</BodyVn>
+        </div>
       </Card>
     </div>
   </PageFrame>
@@ -1694,7 +1762,7 @@ const Page11: Page = () => (
           <img
             src={regEmail}
             alt="驗證信已寄送至您的 Email"
-            style={{ width: '100%', maxWidth: 440, height: 'auto', display: 'block' }}
+            style={{ width: '100%', maxWidth: 520, height: 'auto', display: 'block' }}
           />
         </div>
         <div style={{ padding: '24px 28px' }}>
@@ -1707,7 +1775,7 @@ const Page11: Page = () => (
       </Card>
       <Card style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
         <div style={{ background: '#fff', padding: '28px 0 0', display: 'grid', placeItems: 'center' }}>
-          <PhoneShot src={regVerify} alt="輸入信箱內驗證碼" height={350} />
+          <PhoneShot src={regVerify} alt="輸入信箱內驗證碼" height={430} />
         </div>
         <div style={{ padding: '24px 28px' }}>
           <StepNum n="02" />
@@ -1785,13 +1853,13 @@ const Page12: Page = () => (
         }}
       >
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
-          <PhoneShot src={regProfile} alt="編輯會員資料 步驟 1" height={480} />
+          <PhoneShot src={regProfile} alt="編輯會員資料 步驟 1" height={540} />
           <div style={{ fontFamily: FF_ZH, fontSize: 22, fontWeight: 700, color: C.dark }}>
             ① 會員資料
           </div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
-          <PhoneShot src={regProfile2} alt="求職與就學資料 步驟 2" height={480} />
+          <PhoneShot src={regProfile2} alt="求職與就學資料 步驟 2" height={540} />
           <div style={{ fontFamily: FF_ZH, fontSize: 22, fontWeight: 700, color: C.dark }}>
             ② 求職 / 就學
           </div>
@@ -2153,36 +2221,61 @@ const Page15: Page = () => (
 );
 
 const Page16: Page = () => (
-  <PageFrame theme="cream" chromeRight="03 · 評點制 / ICAN">
+  <PageFrame theme="paper" chromeRight="03 · 評點制 / ICAN">
     <Eyebrow>03 / About ICAN</Eyebrow>
     <TitleZh>艾肯顧問 自我介紹</TitleZh>
     <TitleVn size={52}>Giới thiệu về Tư vấn ICAN</TitleVn>
     <div
       style={{
         display: 'grid',
-        gridTemplateColumns: '0.8fr 1.2fr',
+        gridTemplateColumns: '380px 1fr',
         gap: 56,
-        marginTop: 64,
+        marginTop: 48,
         alignItems: 'stretch',
       }}
     >
-      <Card
+      <div
         style={{
-          padding: 48,
-          background: C.surface,
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'space-between',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
         }}
       >
-        <div>
+        <img
+          src={haniPhoto}
+          alt="Hani — ICAN 正職顧問"
+          style={{
+            width: '100%',
+            maxHeight: 720,
+            objectFit: 'contain',
+            objectPosition: 'bottom center',
+            display: 'block',
+            filter: 'drop-shadow(0 18px 36px rgba(28, 94, 87, 0.18))',
+          }}
+        />
+        <div
+          style={{
+            marginTop: 16,
+            fontFamily: FF_ZH,
+            fontSize: 28,
+            fontWeight: 700,
+            color: C.dark,
+            textAlign: 'center',
+          }}
+        >
+          Hani · 正職顧問
+        </div>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
+        <Card variant="lime" style={{ padding: 36 }}>
           <div
             style={{
               fontFamily: FF_EN,
               fontSize: 22,
               letterSpacing: '0.18em',
               textTransform: 'uppercase',
-              color: C.green,
+              color: C.dark,
               fontWeight: 700,
             }}
           >
@@ -2191,68 +2284,62 @@ const Page16: Page = () => (
           <div
             style={{
               fontFamily: FF_ZH,
-              fontSize: 60,
+              fontSize: 52,
               fontWeight: 900,
-              marginTop: 18,
+              marginTop: 12,
               lineHeight: 1.1,
+              color: C.dark,
             }}
           >
-            艾惜人才
-            <br />
-            肯定未來
+            艾惜人才 · 肯定未來
           </div>
-          <BodyVn size={26} style={{ marginTop: 16 }}>
+          <BodyVn size={24} color={C.dark} style={{ marginTop: 10 }}>
             Trân trọng nhân tài · Khẳng định tương lai
           </BodyVn>
-        </div>
-        <div style={{ marginTop: 40 }}>
-          <div style={{ height: 1, background: C.rule, marginBottom: 24 }} />
-          <div style={{ fontFamily: FF_EN, fontSize: 22, color: C.muted, letterSpacing: '0.08em' }}>
-            Introduction to ICAN Consulting
-          </div>
-          <BodyVn size={22} style={{ marginTop: 4 }}>
-            Giới thiệu về Tư vấn ICAN
-          </BodyVn>
-        </div>
-      </Card>
-      <ul
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 28,
-          margin: 0,
-          padding: 0,
-          listStyle: 'none',
-        }}
-      >
-        {[
-          <>
-            任職艾肯控股集團
-            <span style={{ color: C.green, fontWeight: 700, marginLeft: 8 }}>第 4 年</span>
-          </>,
-          <>負責企業正職招募</>,
-          <>
-            協助招募超過
-            <span style={{ color: C.green, fontWeight: 700, marginLeft: 8 }}>上萬名員工</span>
-          </>,
-          <>擅長人才媒合、市場行情分析</>,
-        ].map((item, i) => (
-          <li
-            key={i}
-            style={{
-              fontFamily: FF_ZH,
-              fontSize: 32,
-              fontWeight: 600,
-              display: 'flex',
-              alignItems: 'flex-start',
-              gap: 16,
-            }}
-          >
-            <span style={{ color: C.green, fontWeight: 800 }}>✓</span>
-            {item}
-          </li>
-        ))}
-      </ul>
+        </Card>
+        <ul
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 20,
+            margin: 0,
+            padding: 0,
+            listStyle: 'none',
+          }}
+        >
+          {[
+            <>
+              任職艾肯控股集團
+              <span style={{ color: C.green, fontWeight: 700, marginLeft: 8 }}>第 4 年</span>
+            </>,
+            <>負責企業正職招募</>,
+            <>
+              協助招募超過
+              <span style={{ color: C.green, fontWeight: 700, marginLeft: 8 }}>上萬名員工</span>
+            </>,
+            <>擅長人才媒合、市場行情分析</>,
+          ].map((item, i) => (
+            <li
+              key={i}
+              style={{
+                fontFamily: FF_ZH,
+                fontSize: 30,
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: 16,
+                padding: '18px 24px',
+                borderRadius: 14,
+                background: i % 2 === 0 ? C.panelStrong : C.panel,
+                border: `1px solid ${C.panelBorder}`,
+              }}
+            >
+              <span style={{ color: C.green, fontWeight: 800 }}>✓</span>
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   </PageFrame>
 );
@@ -2437,160 +2524,232 @@ const Page19: Page = () => (
     <TitleVn size={52}>Hệ thống cấp phép lao động theo thang điểm</TitleVn>
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, marginTop: 56 }}>
       {[
-        [
-          '1',
-          'STATUS',
-          '身分',
-          '僑生 或 華裔學生',
-          'Sinh viên Hoa kiều',
-          'Overseas Chinese Students',
-          'default',
-        ],
-        [
-          '2',
-          'EDUCATION',
-          '學歷',
-          '在台取得\n大學（含）以上學歷',
-          'Tốt nghiệp từ đại học trở lên',
-          '',
-          'default',
-        ],
-        [
-          '3',
-          'POINTS · MOL',
-          '經審核點數',
-          '≥70',
-          '累積點數門檻 · 勞動部',
-          'Tích lũy ≥70 điểm · Bộ Lao động',
-          'hi',
-        ],
-      ].map(([num, en, zh, main, vn, enSub, v]) => (
-        <Card
-          key={num}
-          variant={v as 'default' | 'hi'}
-          style={{ padding: 40, background: v === 'default' ? C.cream : undefined }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <div
-              style={{
-                width: 56,
-                height: 56,
-                borderRadius: '50%',
-                background: v === 'hi' ? C.lime : C.green,
-                color: v === 'hi' ? C.dark : '#fff',
-                display: 'grid',
-                placeItems: 'center',
-                fontFamily: FF_DISPLAY,
-                fontWeight: 800,
-                fontSize: 28,
-              }}
-            >
-              {num}
-            </div>
-            <div
-              style={{
-                fontFamily: FF_EN,
-                fontSize: 22,
-                fontWeight: 700,
-                letterSpacing: '0.14em',
-                color: v === 'hi' ? C.lime : C.muted,
-              }}
-            >
-              {en}
-            </div>
-          </div>
-          <div
-            style={{
-              fontFamily: FF_ZH,
-              fontSize: 32,
-              fontWeight: 700,
-              marginTop: 24,
-              color: v === 'hi' ? '#fff' : undefined,
-            }}
-          >
-            {zh}
-          </div>
-          <div
-            style={{
-              height: 1,
-              background: v === 'hi' ? 'rgba(255,255,255,0.18)' : C.rule,
-              margin: '20px 0',
-            }}
-          />
-          {num === '3' ? (
-            <>
+        {
+          num: '1',
+          en: 'STATUS',
+          zh: '身分',
+          main: '僑生 或 華裔學生',
+          vn: 'Sinh viên Hoa kiều',
+          enSub: 'Overseas Chinese Students',
+          variant: 'lime' as const,
+        },
+        {
+          num: '2',
+          en: 'EDUCATION',
+          zh: '學歷',
+          main: '在台取得\n大學（含）以上學歷',
+          vn: 'Tốt nghiệp từ đại học trở lên',
+          enSub: '',
+          variant: 'green' as const,
+        },
+        {
+          num: '3',
+          en: 'POINTS · MOL',
+          zh: '經審核點數',
+          main: '≥70',
+          vn: 'Tích lũy ≥70 điểm · Bộ Lao động',
+          enSub: '累積點數門檻 · 勞動部',
+          variant: 'lime' as const,
+          points: true,
+        },
+      ].map(({ num, en, zh, main, vn, enSub, variant, points }) => {
+        const onDark = variant === 'green';
+        return (
+          <Card key={num} variant={variant} style={{ padding: 40 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
               <div
                 style={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: '50%',
+                  background: onDark ? C.lime : C.green,
+                  color: C.dark,
+                  display: 'grid',
+                  placeItems: 'center',
                   fontFamily: FF_DISPLAY,
                   fontWeight: 800,
-                  fontSize: 120,
-                  color: C.lime,
-                  lineHeight: 0.9,
-                  letterSpacing: '-0.04em',
+                  fontSize: 28,
                 }}
               >
-                ≥70
+                {num}
               </div>
-              <div style={{ fontFamily: FF_ZH, fontSize: 24, color: '#fff', marginTop: 8 }}>
-                累積點數門檻 · 勞動部
-              </div>
-              <BodyVn size={22} color={C.lime}>
-                {vn}
-              </BodyVn>
-            </>
-          ) : (
-            <>
               <div
                 style={{
-                  fontFamily: FF_ZH,
-                  fontSize: 28,
-                  fontWeight: 600,
-                  lineHeight: 1.4,
-                  whiteSpace: 'pre-line',
+                  fontFamily: FF_EN,
+                  fontSize: 22,
+                  fontWeight: 700,
+                  letterSpacing: '0.14em',
+                  color: onDark ? C.lime : C.dark,
                 }}
               >
-                {main}
+                {en}
               </div>
-              <BodyVn size={22}>{vn}</BodyVn>
-              {enSub ? (
-                <div style={{ fontFamily: FF_EN, fontSize: 20, color: C.muted, marginTop: 4 }}>
+            </div>
+            <div
+              style={{
+                fontFamily: FF_ZH,
+                fontSize: 32,
+                fontWeight: 700,
+                marginTop: 24,
+                color: onDark ? '#fff' : C.dark,
+              }}
+            >
+              {zh}
+            </div>
+            <div
+              style={{
+                height: 1,
+                background: onDark ? 'rgba(255,255,255,0.22)' : C.panelBorder,
+                margin: '20px 0',
+              }}
+            />
+            {points ? (
+              <>
+                <div
+                  style={{
+                    fontFamily: FF_DISPLAY,
+                    fontWeight: 800,
+                    fontSize: 100,
+                    color: onDark ? C.lime : C.dark,
+                    lineHeight: 0.9,
+                    letterSpacing: '-0.04em',
+                  }}
+                >
+                  {main}
+                </div>
+                <div
+                  style={{
+                    fontFamily: FF_ZH,
+                    fontSize: 24,
+                    color: onDark ? '#fff' : C.dark,
+                    marginTop: 8,
+                  }}
+                >
                   {enSub}
                 </div>
-              ) : null}
-            </>
-          )}
-        </Card>
-      ))}
+                <BodyVn size={22} color={onDark ? C.lime : C.dark}>
+                  {vn}
+                </BodyVn>
+              </>
+            ) : (
+              <>
+                <div
+                  style={{
+                    fontFamily: FF_ZH,
+                    fontSize: 28,
+                    fontWeight: 600,
+                    lineHeight: 1.4,
+                    whiteSpace: 'pre-line',
+                    color: onDark ? '#fff' : C.ink,
+                  }}
+                >
+                  {main}
+                </div>
+                <BodyVn size={22} color={onDark ? C.lime : undefined}>
+                  {vn}
+                </BodyVn>
+                {enSub ? (
+                  <div
+                    style={{
+                      fontFamily: FF_EN,
+                      fontSize: 20,
+                      color: onDark ? 'rgba(255,255,255,0.7)' : C.muted,
+                      marginTop: 4,
+                    }}
+                  >
+                    {enSub}
+                  </div>
+                ) : null}
+              </>
+            )}
+          </Card>
+        );
+      })}
     </div>
   </PageFrame>
 );
 
 const Page20: Page = () => (
   <PageFrame theme="cream" chromeRight="03 · 評點制 / ICAN">
+    <style>{`@keyframes wpDateFlow{0%{background-position:200% 0}100%{background-position:-200% 0}}@keyframes wpStepIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}`}</style>
     <Eyebrow>03 / Case flow</Eyebrow>
     <TitleZh>案例分享 — 明X興業 繪圖助理</TitleZh>
     <TitleVn size={52}>Case study – Trợ lý vẽ kỹ thuật tại Minh X Hưng Nghiệp</TitleVn>
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 16, marginTop: 72 }}>
-      {[
-        ['01', '招募', 'Tuyển dụng'],
-        ['02', '面試', 'Phỏng vấn'],
-        ['03', '錄取', 'Trúng tuyển'],
-        ['04', '申請評點制資料', 'Xin tài liệu chế độ điểm'],
-        ['05', '收到工作聘僱許可函', 'Nhận giấy phép lao động'],
-        ['06', '申請居留證變更', 'Đổi thẻ cư trú'],
-      ].map(([n, zh, vn]) => (
-        <Card key={n} style={{ padding: 28, background: C.surface }}>
-          <StepNum n={n} />
-          <div style={{ fontFamily: FF_ZH, fontSize: 28, fontWeight: 700, marginTop: 14 }}>
-            {zh}
-          </div>
-          <BodyVn size={20}>{vn}</BodyVn>
-        </Card>
-      ))}
+    <div style={{ position: 'relative', marginTop: 56 }}>
+      <div
+        aria-hidden
+        style={{
+          position: 'absolute',
+          top: 52,
+          left: '6%',
+          right: '6%',
+          height: 4,
+          borderRadius: 999,
+          background: `linear-gradient(90deg, ${C.panel} 0%, ${C.green} 25%, ${C.lime} 50%, ${C.green} 75%, ${C.panel} 100%)`,
+          backgroundSize: '200% 100%',
+          animation: 'wpDateFlow 4s linear infinite',
+        }}
+      />
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(7, 1fr)',
+          gap: 12,
+          position: 'relative',
+        }}
+      >
+        {[
+          ['01', '1/9', '招募', 'Tuyển dụng'],
+          ['02', '1/13', '面試', 'Phỏng vấn'],
+          ['03', '1/22', '錄取', 'Trúng tuyển'],
+          ['04', '2/23', '申請評點制資料', 'Nộp hồ sơ chế độ điểm'],
+          ['05', '3/5', '收到工作聘僱許可函', 'Nhận giấy phép lao động'],
+          ['06', '3/16', '到職日', 'Ngày nhận việc'],
+          ['07', '3/16', '申請居留證變更', 'Đổi thẻ cư trú'],
+        ].map(([n, date, zh, vn], i) => (
+          <Card
+            key={n}
+            variant={i % 2 === 0 ? 'lime' : 'green'}
+            style={{
+              padding: '22px 18px',
+              animation: `wpStepIn 560ms cubic-bezier(0.16, 1, 0.3, 1) ${i * 90}ms both`,
+            }}
+          >
+            <div
+              style={{
+                fontFamily: FF_DISPLAY,
+                fontWeight: 800,
+                fontSize: 34,
+                color: i % 2 === 0 ? C.dark : C.lime,
+                lineHeight: 1,
+                letterSpacing: '-0.03em',
+              }}
+            >
+              {date}
+            </div>
+            <StepNum n={n} lime={i % 2 !== 0} />
+            <div
+              style={{
+                fontFamily: FF_ZH,
+                fontSize: 22,
+                fontWeight: 700,
+                marginTop: 10,
+                lineHeight: 1.35,
+                color: i % 2 === 0 ? C.dark : '#fff',
+              }}
+            >
+              {zh}
+            </div>
+            <BodyVn size={18} color={i % 2 === 0 ? C.dark : C.lime}>
+              {vn}
+            </BodyVn>
+          </Card>
+        ))}
+      </div>
     </div>
     <div
       style={{
-        marginTop: 48,
+        marginTop: 40,
         padding: '24px 32px',
         ...panelBarStyle(),
         display: 'flex',
@@ -2651,8 +2810,8 @@ const Page21: Page = () => (
       style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 64px', marginTop: 40 }}
     >
       <StatRow n="01" zh="學歷" vn="Trình độ học vấn" en="Education" points="5–30" />
-      <StatRow n="02" zh="華語語文能力" vn="Tiếng Hoa" en="Mandarin" points="0–30" />
-      <StatRow n="03" zh="聘僱薪資" vn="Mức lương" en="Salary" points="10–40" highlight />
+      <StatRow n="02" zh="華語語文能力" vn="Tiếng Hoa" en="Mandarin" points="0–30" highlight />
+      <StatRow n="03" zh="聘僱薪資" vn="Mức lương" en="Salary" points="10–40" />
       <StatRow n="04" zh="他國語言能力" vn="Ngoại ngữ" en="Foreign Language" points="0–20" />
       <StatRow n="05" zh="工作經驗" vn="Kinh nghiệm" en="Experience" points="0–20" />
       <StatRow n="06" zh="配合政府政策" vn="Tuân thủ chính sách" en="Policies" points="0–20" />
@@ -3175,27 +3334,33 @@ const Page28: Page = () => (
   <JobFullTime
     chrome="05 · 職缺 01 · 正職"
     eyebrow="05 / Full-time No.01"
-    titleZh="外勤技術工程師"
-    titleVn="Kỹ sư kỹ thuật hiện trường · Field Technical Engineer"
-    logoZh="明曜興業"
-    logoEn="Ming Yao Air Condition"
+    titleZh="內外場服務人員"
+    titleVn="Nhân viên phục vụ nhà hàng · F&B Service Crew"
+    logoZh="海底撈火鍋"
+    logoEn="Haidilao Hotpot"
     payLabel="MONTHLY PAY"
-    payValue="$35K–38K"
-    paySub="+ 獎金 $5K–13K"
-    footer="明曜興業 · MING YAO · Công ty TNHH Minh Diệu Hưng Nghiệp"
-    hours="08:00 – 17:00"
-    hoursVn="Giờ làm việc"
-    location={
+    payValue="$36K–57.5K"
+    paySub="起 · 獎金另計"
+    footer="海底撈火鍋 · HAIDILAO · Lẩu Haidilao"
+    hours={
       <>
-        桃園市蘆竹區
+        日班 07:00 – 02:00
         <br />
-        中興一街 18 號
+        夜班 19:00 – 05:00
       </>
     }
-    locationVn="Lô Trúc, Đào Viên"
+    hoursVn="Ca ngày luân phiên / Ca đêm cố định"
+    location={
+      <>
+        台北信義 · 桃園台茂
+        <br />
+        新竹遠百 · 台南 · 高雄等
+      </>
+    }
+    locationVn="Đài Bắc / Đào Viên / Tân Trúc / Đài Nam / Cao Hùng"
     perks={[
-      ['精進專業技術', 'Nâng cao kỹ thuật chuyên môn'],
-      ['拓展人脈關係', 'Mở rộng mối quan hệ'],
+      ['班別可自選', 'Ca linh hoạt'],
+      ['升遷制度完善', 'Cơ hội thăng tiến'],
     ]}
   />
 );
@@ -3239,10 +3404,10 @@ const Page29: Page = () => (
 const PageKatsuya: Page = () => (
   <JobFullTime
     theme="cream"
-    chrome="05 · 職缺 03 · 打工"
-    eyebrow="05 / Part-time No.03"
-    titleZh="餐飲服務員"
-    titleVn="Nhân viên phục vụ nhà hàng · Restaurant Service Crew"
+    chrome="05 · 職缺 03 · 正職"
+    eyebrow="05 / Full-time No.03"
+    titleZh="餐廚助手"
+    titleVn="Nhân viên phục vụ nhà hàng · Kitchen Assistant"
     logoZh="台灣吉豚屋 · Katsuya"
     logoEn="Katsuya Taiwan"
     payLabel="HOURLY PAY"
@@ -3269,7 +3434,7 @@ const PageKatsuya: Page = () => (
     locationVn="Trung Sơn, Đài Bắc"
     perks={[
       ['彈性排班', 'Ca linh hoạt'],
-      ['兼職 · 長期穩定', 'Bán thời gian ổn định'],
+      ['長期穩定', 'Ổn định lâu dài'],
     ]}
   />
 );
@@ -3286,6 +3451,8 @@ const ManufacturingJob = ({
   locationLabel,
   location,
   locationVn,
+  photoSrc,
+  photoAlt,
   theme = 'cream',
 }: {
   chrome: string;
@@ -3299,6 +3466,8 @@ const ManufacturingJob = ({
   locationLabel: string;
   location: React.ReactNode;
   locationVn: string;
+  photoSrc?: string;
+  photoAlt?: string;
   theme?: Theme;
 }) => (
   <PageFrame theme={theme} chromeRight={chrome}>
@@ -3312,12 +3481,58 @@ const ManufacturingJob = ({
       }}
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-        <LogoSlot
-          nameZh={companyZh}
-          nameEn={companyEn}
-          style={{ aspectRatio: '4 / 3', minHeight: 180 }}
-        />
-        <Card variant="lime" style={{ padding: 28 }}>
+        {photoSrc ? (
+          <>
+            <div
+              style={{
+                borderRadius: 16,
+                overflow: 'hidden',
+                border: `1px solid ${C.panelBorder}`,
+                flex: 1,
+                minHeight: 280,
+                background: C.surface,
+              }}
+            >
+              <img
+                src={photoSrc}
+                alt={photoAlt ?? companyZh}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'center',
+                  display: 'block',
+                }}
+              />
+            </div>
+            <div
+              style={{
+                padding: '14px 18px',
+                borderRadius: 14,
+                background: C.surface,
+                border: `1px solid ${C.panelBorder}`,
+                textAlign: 'center',
+              }}
+            >
+              <div style={{ fontFamily: FF_ZH, fontSize: 26, fontWeight: 700, color: C.ink }}>
+                {companyZh}
+              </div>
+              <div style={{ fontFamily: FF_EN, fontSize: 20, color: C.muted, marginTop: 4 }}>
+                {companyEn}
+              </div>
+            </div>
+          </>
+        ) : (
+          <LogoSlot nameZh={companyZh} nameEn={companyEn} style={{ aspectRatio: '4 / 3', minHeight: 180 }} />
+        )}
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+        <div>
+          <Eyebrow>{no}</Eyebrow>
+          <TitleZh size={76}>{companyZh}</TitleZh>
+          <TitleVn size={44}>{companyEn}</TitleVn>
+        </div>
+        <Card variant="lime" style={{ padding: 28, marginTop: 32 }}>
           <div
             style={{
               fontFamily: FF_EN,
@@ -3346,77 +3561,63 @@ const ManufacturingJob = ({
             {productsVn}
           </BodyVn>
         </Card>
-        <div style={{ flex: 1 }} />
-        <div
-          style={{
-            fontFamily: FF_EN,
-            fontSize: 20,
-            letterSpacing: '0.16em',
-            color: C.muted,
-            fontWeight: 600,
-          }}
-        >
-          {companyZh} · {companyEn.toUpperCase()}
-        </div>
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <Eyebrow>{no}</Eyebrow>
-        <TitleZh size={76}>{companyZh}</TitleZh>
-        <TitleVn size={44}>{companyEn}</TitleVn>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginTop: 48 }}>
-          <Card style={{ padding: 28, background: theme === 'paper' ? C.cream : undefined }}>
-            <div
-              style={{
-                fontFamily: FF_EN,
-                fontSize: 20,
-                color: C.muted,
-                letterSpacing: '0.14em',
-                fontWeight: 700,
-              }}
-            >
-              SHIFTS
-            </div>
-            <div
-              style={{
-                fontFamily: FF_DISPLAY,
-                fontSize: 26,
-                fontWeight: 700,
-                marginTop: 8,
-                lineHeight: 1.4,
-              }}
-            >
-              {shifts}
-            </div>
-            <BodyVn size={20}>{shiftsVn}</BodyVn>
-          </Card>
-          <Card variant="hi" style={{ padding: 28 }}>
-            <div
-              style={{
-                fontFamily: FF_EN,
-                fontSize: 20,
-                color: C.lime,
-                letterSpacing: '0.14em',
-                fontWeight: 700,
-              }}
-            >
-              {locationLabel}
-            </div>
-            <div
-              style={{
-                fontFamily: FF_ZH,
-                fontSize: 24,
-                fontWeight: 700,
-                marginTop: 8,
-                lineHeight: 1.4,
-                color: '#fff',
-              }}
-            >
-              {location}
-            </div>
-            <BodyVn size={20} color={C.lime}>
-              {locationVn}
-            </BodyVn>
-          </Card>
+        <div style={{ flex: 1, minHeight: 24 }} />
+        <div style={{ paddingBottom: 24 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+            <Card style={{ padding: 28, background: theme === 'paper' ? C.cream : undefined }}>
+              <div
+                style={{
+                  fontFamily: FF_EN,
+                  fontSize: 20,
+                  color: C.muted,
+                  letterSpacing: '0.14em',
+                  fontWeight: 700,
+                }}
+              >
+                SHIFTS
+              </div>
+              <div
+                style={{
+                  fontFamily: FF_DISPLAY,
+                  fontSize: 26,
+                  fontWeight: 700,
+                  marginTop: 8,
+                  lineHeight: 1.4,
+                }}
+              >
+                {shifts}
+              </div>
+              <BodyVn size={20}>{shiftsVn}</BodyVn>
+            </Card>
+            <Card variant="hi" style={{ padding: 28 }}>
+              <div
+                style={{
+                  fontFamily: FF_EN,
+                  fontSize: 20,
+                  color: C.lime,
+                  letterSpacing: '0.14em',
+                  fontWeight: 700,
+                }}
+              >
+                {locationLabel}
+              </div>
+              <div
+                style={{
+                  fontFamily: FF_ZH,
+                  fontSize: 24,
+                  fontWeight: 700,
+                  marginTop: 8,
+                  lineHeight: 1.4,
+                  color: '#fff',
+                }}
+              >
+                {location}
+              </div>
+              <BodyVn size={20} color={C.lime}>
+                {locationVn}
+              </BodyVn>
+            </Card>
+          </div>
         </div>
       </div>
     </div>
@@ -3429,6 +3630,8 @@ const Page30: Page = () => (
     no="05 / Manufacturing No.04"
     companyZh="緯創資通"
     companyEn="Wistron Corporation"
+    photoSrc={photoWistron}
+    photoAlt="緯創資通 Wistron 廠區"
     products={
       <>
         各類電腦
@@ -3464,6 +3667,8 @@ const Page31: Page = () => (
     no="05 / Manufacturing No.05"
     companyZh="金像電子"
     companyEn="Gold Circuit Electronics"
+    photoSrc={photoGoldCircuit}
+    photoAlt="金像電子 Gold Circuit 廠區"
     products={
       <>
         AI / 高階伺服器板
@@ -3500,6 +3705,8 @@ const PageInnoLight: Page = () => (
     no="05 / Manufacturing No.06"
     companyZh="旭創光通"
     companyEn="InnoLight Technology"
+    photoSrc={photoInnolight}
+    photoAlt="旭創光通 InnoLight 廠區"
     products={
       <>
         高速光通訊
@@ -3535,6 +3742,8 @@ const Page32: Page = () => (
     no="05 / Manufacturing No.07"
     companyZh="華星光通"
     companyEn="LuxNet Corporation"
+    photoSrc={photoLuxnet}
+    photoAlt="華星光通 LuxNet 廠區"
     products={
       <>
         電子零組件製造業
@@ -3571,6 +3780,8 @@ const PageGarmin: Page = () => (
     no="05 / Manufacturing No.08"
     companyZh="台灣國際航電"
     companyEn="Garmin Corporation"
+    photoSrc={photoGarmin}
+    photoAlt="Garmin 台灣國際航電 廠區"
     products={
       <>
         智慧手錶與運動穿戴
@@ -3606,6 +3817,8 @@ const Page34: Page = () => (
     no="05 / Manufacturing No.09"
     companyZh="台灣積層"
     companyEn="Taiwan Lamination Industries"
+    photoSrc={photoTli}
+    photoAlt="台灣積層 Taiwan Lamination 廠區"
     products={
       <>
         專業軟性包裝材料
@@ -4089,23 +4302,36 @@ const HrReservedRow = ({ label, vn }: { label: string; vn: string }) => (
   </div>
 );
 
-const CompanyHrPage = ({
+const TeamPhotoSlot = ({ hint, style }: { hint: string; style?: React.CSSProperties }) => (
+  <div style={{ borderRadius: 16, overflow: 'hidden', border: `1px solid ${C.rule}`, ...style }}>
+    <ImagePlaceholder
+      hint={hint}
+      width={640}
+      height={480}
+      style={{ border: 'none', borderRadius: 0, width: '100%', height: '100%' }}
+    />
+  </div>
+);
+
+const CompanySpotlightPage = ({
   num,
   companyZh,
   photoHint,
+  logoSrc,
   logoHint,
 }: {
   num: string;
   companyZh: string;
   photoHint: string;
+  logoSrc?: string;
   logoHint: string;
 }) => (
-  <PageFrame theme="cream" chromeRight={`企業宣傳 ${num} · HR`}>
+  <PageFrame theme="cream" chromeRight={`企業宣傳 ${num}`}>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
       <div>
-        <Eyebrow>HR Spotlight · 企業宣傳</Eyebrow>
+        <Eyebrow>Company Spotlight · 企業宣傳</Eyebrow>
         <TitleZh size={64}>{companyZh}</TitleZh>
-        <TitleVn size={40}>Doanh nghiệp đối tác · HR giới thiệu</TitleVn>
+        <TitleVn size={40}>Doanh nghiệp đối tác · Giới thiệu công ty</TitleVn>
       </div>
       <Pill variant="lime">{num} / 03</Pill>
     </div>
@@ -4119,14 +4345,18 @@ const CompanyHrPage = ({
       }}
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-        <PortraitSlot hint={photoHint} style={{ flex: 1, minHeight: 520 }} />
+        <TeamPhotoSlot hint={photoHint} style={{ flex: 1, minHeight: 480 }} />
         <div style={{ fontFamily: FF_ZH, fontSize: 24, fontWeight: 700, color: C.muted, textAlign: 'center' }}>
-          HR 照片預留 · Ảnh HR
+          公司團隊照 · Ảnh đội ngũ công ty
         </div>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         <Card style={{ padding: 28, display: 'flex', alignItems: 'center', gap: 24 }}>
-          <ImagePlaceholder hint={logoHint} width={180} height={88} />
+          {logoSrc ? (
+            <img src={logoSrc} alt={logoHint} style={{ height: 72, maxWidth: 180, objectFit: 'contain' }} />
+          ) : (
+            <ImagePlaceholder hint={logoHint} width={180} height={88} />
+          )}
           <div>
             <div style={{ fontFamily: FF_ZH, fontSize: 26, fontWeight: 700 }}>公司 Logo</div>
             <BodyVn size={20} style={{ marginTop: 4 }}>
@@ -4148,10 +4378,10 @@ const CompanyHrPage = ({
             About · 公司簡介
           </div>
           <div style={{ fontFamily: FF_ZH, fontSize: 28, fontWeight: 700, color: C.muted, marginTop: 14 }}>
-            （HR 簡介內容預留）
+            （公司簡介內容預留）
           </div>
           <BodyVn size={20} style={{ marginTop: 6 }}>
-            Nội dung giới thiệu do HR bổ sung
+            Nội dung giới thiệu do doanh nghiệp bổ sung
           </BodyVn>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginTop: 24 }}>
             <HrReservedRow label="主要服務 / 產品" vn="Sản phẩm · Dịch vụ" />
@@ -4166,23 +4396,42 @@ const CompanyHrPage = ({
 );
 
 const Page43: Page = () => (
-  <CompanyHrPage
+  <CompanySpotlightPage
     num="01"
-    companyZh="精力數位股份有限公司"
-    photoHint="精力數位 HR 人物照"
-    logoHint="精力數位 公司 Logo"
+    companyZh="精立數位"
+    photoHint="精立數位 公司團隊照"
+    logoSrc={logoJingli}
+    logoHint="精立數位 Logo"
   />
 );
 
 const Page44: Page = () => (
-  <CompanyHrPage num="02" companyZh="智慧老人" photoHint="智慧老人 HR 人物照" logoHint="智慧老人 公司 Logo" />
+  <CompanySpotlightPage
+    num="02"
+    companyZh="智慧老人"
+    photoHint="智慧老人 公司團隊照"
+    logoHint="智慧老人 公司 Logo"
+  />
 );
 
 const Page45: Page = () => (
-  <CompanyHrPage num="03" companyZh="機童科技" photoHint="機童科技 HR 人物照" logoHint="機童科技 公司 Logo" />
+  <CompanySpotlightPage
+    num="03"
+    companyZh="機童科技"
+    photoHint="機童科技 公司團隊照"
+    logoHint="機童科技 公司 Logo"
+  />
 );
 
-const CompanyBooth = ({ no, nameZh }: { no: string; nameZh: React.ReactNode }) => (
+const CompanyBooth = ({
+  no,
+  nameZh,
+  features,
+}: {
+  no: string;
+  nameZh: React.ReactNode;
+  features: [string, string][];
+}) => (
   <Card
     style={{
       padding: 30,
@@ -4215,20 +4464,20 @@ const CompanyBooth = ({ no, nameZh }: { no: string; nameZh: React.ReactNode }) =
     >
       {nameZh}
     </div>
-    <div
-      style={{
-        marginTop: 'auto',
-        paddingTop: 12,
-        display: 'flex',
-        alignItems: 'center',
-        gap: 10,
-        fontFamily: FF_ZH,
-        fontSize: 23,
-        fontWeight: 700,
-        color: C.dark,
-      }}
-    >
-      <span style={{ color: C.green }}>★</span> 用人主管駐點
+    <div style={{ marginTop: 'auto', paddingTop: 12, display: 'flex', flexDirection: 'column', gap: 10 }}>
+      {features.map(([zh, vn]) => (
+        <div key={zh} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+          <span style={{ color: C.green, fontSize: 18, lineHeight: 1.4, flexShrink: 0 }}>★</span>
+          <div>
+            <div style={{ fontFamily: FF_ZH, fontSize: 22, fontWeight: 700, color: C.dark, lineHeight: 1.3 }}>
+              {zh}
+            </div>
+            <div style={{ fontFamily: FF_VN, fontSize: 18, color: C.muted, fontStyle: 'italic', marginTop: 2 }}>
+              {vn}
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   </Card>
 );
@@ -4375,7 +4624,7 @@ const Page40: Page = () => (
     </div>
     <div style={{ marginTop: 28, display: 'flex', alignItems: 'baseline', gap: 16, flexWrap: 'wrap' }}>
       <div style={{ fontFamily: FF_ZH, fontSize: 28, fontWeight: 800, color: C.dark }}>
-        ★ 上台企業也設攤 · 歡迎直接與用人主管聊聊
+        ★ 上台企業也設攤 · 歡迎認識各公司團隊
       </div>
       <div
         style={{
@@ -4386,13 +4635,37 @@ const Page40: Page = () => (
           opacity: 0.85,
         }}
       >
-        Trò chuyện trực tiếp với quản lý tuyển dụng
+        Gặp gỡ đội ngũ các doanh nghiệp đối tác
       </div>
     </div>
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginTop: 16 }}>
-      <CompanyBooth no="03" nameZh="精力數位" />
-      <CompanyBooth no="04" nameZh="智慧老人" />
-      <CompanyBooth no="05" nameZh="機童科技" />
+      <CompanyBooth
+        no="03"
+        nameZh="精立數位"
+        features={[
+          ['主要服務 / 產品', 'Sản phẩm · Dịch vụ'],
+          ['招募職缺', 'Vị trí tuyển dụng'],
+          ['福利 / 制度', 'Phúc lợi · Chế độ'],
+        ]}
+      />
+      <CompanyBooth
+        no="04"
+        nameZh="智慧老人"
+        features={[
+          ['主要服務 / 產品', 'Sản phẩm · Dịch vụ'],
+          ['招募職缺', 'Vị trí tuyển dụng'],
+          ['工作地點', 'Địa điểm làm việc'],
+        ]}
+      />
+      <CompanyBooth
+        no="05"
+        nameZh="機童科技"
+        features={[
+          ['主要服務 / 產品', 'Sản phẩm · Dịch vụ'],
+          ['招募職缺', 'Vị trí tuyển dụng'],
+          ['福利 / 制度', 'Phúc lợi · Chế độ'],
+        ]}
+      />
     </div>
   </PageFrame>
 );
@@ -4401,7 +4674,6 @@ const Page41: Page = () => (
   <PageFrame
     theme="dark"
     chromeRight="06 / 06"
-    center
     blobs={
       <>
         <Blob size={720} color={C.green} bottom={-200} left={-160} opacity={0.28} />
@@ -4411,35 +4683,79 @@ const Page41: Page = () => (
   >
     <div
       style={{
-        fontFamily: FF_EN,
-        fontSize: 28,
-        letterSpacing: '0.32em',
-        textTransform: 'uppercase',
-        fontWeight: 700,
-        color: C.lime,
+        display: 'grid',
+        gridTemplateColumns: '1.15fr 0.85fr',
+        gap: 72,
+        alignItems: 'center',
+        height: '100%',
       }}
     >
-      CHAPTER SIX · LIVE
+      <div>
+        <div
+          style={{
+            fontFamily: FF_EN,
+            fontSize: 28,
+            letterSpacing: '0.32em',
+            textTransform: 'uppercase',
+            fontWeight: 700,
+            color: C.lime,
+          }}
+        >
+          CHAPTER SIX · LIVE
+        </div>
+        <div
+          style={{
+            fontFamily: FF_DISPLAY,
+            fontWeight: 800,
+            fontSize: 280,
+            lineHeight: 0.85,
+            letterSpacing: '-0.06em',
+            color: '#fff',
+            marginTop: 32,
+          }}
+        >
+          Q&A
+        </div>
+        <div style={{ fontFamily: FF_ZH, fontSize: 56, fontWeight: 700, color: '#fff', marginTop: 32 }}>
+          現場詢問 — 我們在這裡。
+        </div>
+        <TitleVn theme="dark" size={36} style={{ marginTop: 16 }}>
+          Trực tiếp – Chúng tôi sẵn sàng trả lời.
+        </TitleVn>
+        <div
+          style={{
+            marginTop: 40,
+            padding: '24px 32px',
+            background: 'rgba(255,255,255,0.08)',
+            borderRadius: 16,
+            border: '1px solid rgba(255,255,255,0.12)',
+          }}
+        >
+          <div style={{ fontFamily: FF_ZH, fontSize: 26, fontWeight: 700, color: '#fff', lineHeight: 1.4 }}>
+            也可掃描 QR Code 填寫問卷回饋
+          </div>
+          <BodyVn size={20} color={C.lime} style={{ marginTop: 8 }}>
+            Quét mã QR để điền khảo sát phản hồi
+          </BodyVn>
+        </div>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
+        <SurveyQr size={420} />
+        <div
+          style={{
+            fontFamily: FF_EN,
+            fontSize: 20,
+            letterSpacing: '0.16em',
+            color: C.lime,
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            textAlign: 'center',
+          }}
+        >
+          SCAN TO FEEDBACK
+        </div>
+      </div>
     </div>
-    <div
-      style={{
-        fontFamily: FF_DISPLAY,
-        fontWeight: 800,
-        fontSize: 360,
-        lineHeight: 0.85,
-        letterSpacing: '-0.06em',
-        color: '#fff',
-        marginTop: 32,
-      }}
-    >
-      Q&A
-    </div>
-    <div style={{ fontFamily: FF_ZH, fontSize: 56, fontWeight: 700, color: '#fff', marginTop: 32 }}>
-      現場詢問 — 我們在這裡。
-    </div>
-    <TitleVn theme="dark" size={36} style={{ marginTop: 16 }}>
-      Trực tiếp – Chúng tôi sẵn sàng trả lời.
-    </TitleVn>
   </PageFrame>
 );
 
@@ -4448,7 +4764,7 @@ const Page42: Page = () => (
     theme="cream"
     chromeRight="END · 問卷回饋"
     center
-    foot={<ChromeFoot theme="cream" tagline="WPORT · 職航站 × ICAN · 艾肯顧問" right="wport.me" />}
+    foot={<ChromeFoot theme="cream" tagline="WPORT · 職航站" right="wport.me" />}
   >
     <div
       style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: 80, alignItems: 'center' }}
@@ -4504,7 +4820,7 @@ const Page42: Page = () => (
         </div>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
-        <QrSlot hint="問卷 QR Code — feedback survey" />
+        <SurveyQr />
         <div
           style={{
             fontFamily: FF_EN,
