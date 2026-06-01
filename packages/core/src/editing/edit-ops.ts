@@ -13,7 +13,8 @@ export type EditOp =
       prevText?: string;
     }
   | { kind: 'set-attr-asset'; attr: string; assetPath: string }
-  | { kind: 'replace-placeholder-with-image'; assetPath: string };
+  | { kind: 'replace-placeholder-with-image'; assetPath: string }
+  | { kind: 'replace-image'; assetPath: string };
 
 export type ApplyEditResult =
   | { ok: true; source: string }
@@ -1162,6 +1163,24 @@ function planReplacePlaceholder(
   return { importSplice, elementSplice: spliceRange(element, replacement) };
 }
 
+export function planReplaceImage(
+  ast: t.File,
+  element: t.JSXElement,
+  assetPath: string,
+): PlaceholderEditPlan | AssetEditPlan | { error: string } {
+  const opening = element.openingElement;
+  if (t.isJSXIdentifier(opening.name) && opening.name.name === 'ImagePlaceholder') {
+    return planReplacePlaceholder(ast, element, assetPath);
+  }
+  if (t.isJSXIdentifier(opening.name) && opening.name.name === 'img') {
+    return planAssetAttr(ast, element, 'src', assetPath);
+  }
+  if (findJsxAttr(opening, 'src')) {
+    return planAssetAttr(ast, element, 'src', assetPath);
+  }
+  return { error: 'not an image slot' };
+}
+
 export function applyEdit(
   source: string,
   line: number,
@@ -1227,7 +1246,8 @@ export function applyEdit(
   const placeholderOps = ops.flatMap((op) =>
     op.kind === 'replace-placeholder-with-image' ? [op] : [],
   );
-  if (assetOps.length > 0 || placeholderOps.length > 0) {
+  const replaceImageOps = ops.flatMap((op) => (op.kind === 'replace-image' ? [op] : []));
+  if (assetOps.length > 0 || placeholderOps.length > 0 || replaceImageOps.length > 0) {
     const importSplices: Splice[] = [];
     for (const op of assetOps) {
       const plan = planAssetAttr(ast, element, op.attr, op.assetPath);
@@ -1240,6 +1260,17 @@ export function applyEdit(
       if ('error' in plan) return { ok: false, status: 422, error: plan.error };
       splices.push(plan.elementSplice);
       if (plan.importSplice) importSplices.push(plan.importSplice);
+    }
+    for (const op of replaceImageOps) {
+      const plan = planReplaceImage(ast, element, op.assetPath);
+      if ('error' in plan) return { ok: false, status: 422, error: plan.error };
+      if ('elementSplice' in plan) {
+        splices.push(plan.elementSplice);
+        if (plan.importSplice) importSplices.push(plan.importSplice);
+      } else {
+        splices.push(plan.attrSplice);
+        if (plan.importSplice) importSplices.push(plan.importSplice);
+      }
     }
     // Multiple new imports for the same edit must not overlap, but they
     // all anchor to the same offset (end of last existing import). When

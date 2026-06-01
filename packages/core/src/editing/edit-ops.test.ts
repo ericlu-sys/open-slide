@@ -1043,6 +1043,52 @@ describe('applyEdit / set-attr-asset', () => {
   });
 });
 
+describe('applyEdit / replace-image', () => {
+  it('replaces an existing <img> src', () => {
+    const src = [
+      "import photo from './assets/old.jpg';",
+      'export default [() => (',
+      "<img src={photo} alt='Team' style={{ width: '100%', objectFit: 'cover' }} />",
+      ')];',
+      '',
+    ].join('\n');
+    const r = applyEdit(src, 3, 0, [{ kind: 'replace-image', assetPath: './assets/fresh.jpg' }]);
+    if (!r.ok) throw new Error(`expected ok, got ${r.error}`);
+    expect(r.source).toContain("import fresh from './assets/fresh.jpg';");
+    expect(r.source).toContain('<img src={fresh}');
+    expect(r.source).toContain("import photo from './assets/old.jpg';");
+  });
+
+  it('replaces a CoverImage-style component via its src prop', () => {
+    const src = [
+      'const CoverImage = ({ src }: { src: string }) => <img src={src} alt="" />;',
+      "import team from './assets/team.jpg';",
+      'export default [() => (',
+      '<CoverImage src={team} />',
+      ')];',
+      '',
+    ].join('\n');
+    const r = applyEdit(src, 4, 0, [{ kind: 'replace-image', assetPath: './assets/team-v2.jpg' }]);
+    if (!r.ok) throw new Error(`expected ok, got ${r.error}`);
+    expect(r.source).toContain("import teamV2 from './assets/team-v2.jpg';");
+    expect(r.source).toContain('<CoverImage src={teamV2} />');
+  });
+
+  it('rewrites ImagePlaceholder like replace-placeholder-with-image', () => {
+    const src = [
+      "import { ImagePlaceholder } from '@open-slide/core';",
+      'export default [() => (',
+      '<ImagePlaceholder hint="Hero" width={800} height={600} />',
+      ')];',
+      '',
+    ].join('\n');
+    const r = applyEdit(src, 3, 0, [{ kind: 'replace-image', assetPath: './assets/hero.png' }]);
+    if (!r.ok) throw new Error(`expected ok, got ${r.error}`);
+    expect(r.source).toContain('<img src={hero}');
+    expect(r.source).not.toContain('<ImagePlaceholder');
+  });
+});
+
 describe('applyEdit / replace-placeholder-with-image', () => {
   it('rewrites <ImagePlaceholder> to <img> and adds an import', () => {
     const src = [

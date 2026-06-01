@@ -9,6 +9,7 @@ You are authoring **slides** in this repo. Every slide is arbitrary React code t
 - Put slide-specific images/videos/fonts under `slides/<id>/assets/`. For assets reused across decks or themes (logos, avatars), use the global `assets/` folder and import via `@assets/...`.
 - Do **not** touch `package.json`, `open-slide.config.ts`, or other slides.
 - Do not add dependencies. Use only `react` and standard web APIs.
+- **Never let slide content exceed the 1920×1080 canvas.** The viewer does not scroll — anything past the bottom is clipped. Budget height as `1080 − top padding − bottom padding` (see `slide-authoring` → Vertical budget); cap tall blocks with explicit `maxHeight` / fixed grid height. No `overflow: auto` to hide overflow.
 
 ## Which skill to use
 

@@ -365,6 +365,7 @@ export const ja: Locale = {
 
   imagePlaceholder: {
     dropOverlay: 'ここにドロップして使用',
+    dropOverlayReplace: 'ドロップして画像を差し替え',
     uploading: 'アップロード中…',
     uploadFailed: '画像のアップロードに失敗しました',
   },

@@ -1,3 +1,11 @@
+import davidCaseClaudeSkills from '@assets/david-case-claude-skills.jpg';
+import davidCaseTaoyuanGroup from '@assets/david-case-taoyuan-group.jpg';
+import davidInstructor from '@assets/david-instructor.jpg';
+import ericNccu from '@assets/eric_nccu.jpg';
+import ericJingli from '@assets/eric_精立數位.jpg';
+import ericNankai from '@assets/eric_開南.jpg';
+import wportLogo from '@assets/wport.png';
+import wportSquare from '@assets/wport_方形logo.png';
 import {
   type DesignSystem,
   ImagePlaceholder,
@@ -6,18 +14,6 @@ import {
   type SlideTransition,
   useSlidePageNumber,
 } from '@open-slide/core';
-import wportLogo from '@assets/wport.png';
-import wportSquare from '@assets/wport_方形logo.png';
-import ericNccu from '@assets/eric_nccu.jpg';
-import davidInstructor from '@assets/david-instructor.jpg';
-import davidCaseTaoyuanGroup from '@assets/david-case-taoyuan-group.jpg';
-import davidCaseClaudeSkills from '@assets/david-case-claude-skills.jpg';
-import ericJingli from '@assets/eric_精立數位.jpg';
-import ericNankai from '@assets/eric_開南.jpg';
-
-
-
-
 
 export const design: DesignSystem = {
   palette: {
@@ -202,13 +198,7 @@ const PageNumber = () => {
   );
 };
 
-const PageHeading = ({
-  children,
-  delay = 0,
-}: {
-  children: React.ReactNode;
-  delay?: number;
-}) => (
+const PageHeading = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => (
   <h2
     className="ai-fadeUp"
     style={{
@@ -220,18 +210,12 @@ const PageHeading = ({
       letterSpacing: '-0.03em',
       margin: 0,
     }}
-    >
+  >
     {children}
   </h2>
 );
 
-const BulletList = ({
-  items,
-  startDelay = 240,
-}: {
-  items: string[];
-  startDelay?: number;
-}) => (
+const BulletList = ({ items, startDelay = 240 }: { items: string[]; startDelay?: number }) => (
   <ul
     style={{
       listStyle: 'none',
@@ -372,7 +356,11 @@ const InstructorPage = ({
         }}
       >
         <div className="ai-fadeUp" style={{ animationDelay: '160ms' }}>
-          <img src={photoSrc} alt={photoAlt} style={{ width: 520, height: 640, objectFit: 'cover', objectPosition: '50% 50%' }} />
+          <img
+            src={photoSrc}
+            alt={photoAlt}
+            style={{ width: 520, height: 640, objectFit: 'cover', objectPosition: '50% 50%' }}
+          />
         </div>
         <div>
           <Eyebrow>核心講師 · {number} / 02</Eyebrow>
@@ -719,8 +707,7 @@ const ValueSection: Page = () => (
     title={
       <>
         為什麼
-        <br />
-        選 WPORT
+        <br />選 WPORT
       </>
     }
     subtitle="業界實戰講師帶隊，課程設計可對應公開課、校園與企業三種場景。"
@@ -815,8 +802,7 @@ const ApproachContent: Page = () => (
             Plan → Execute → Verify
           </div>
           <p style={{ fontSize: 30, lineHeight: 1.5, color: palette.muted, margin: 0 }}>
-            先釐清 edge case 與步驟，再分段生成與驗證；適用 Vibe Coding、後端實作與 AI
-            工具選型。
+            先釐清 edge case 與步驟，再分段生成與驗證；適用 Vibe Coding、後端實作與 AI 工具選型。
           </p>
         </div>
         <div
@@ -953,36 +939,16 @@ const EricTeaching: Page = () => (
           org="精立數位 · 企業內訓"
           topic="n8n 自動化實作：自動搜集名單"
         />
-        <TalkEntry
-          delay={300}
-          period="2024"
-          org="政治大學"
-          topic="如何從大學開始職涯規劃"
-        />
-        <TalkEntry
-          delay={350}
-          period="2024"
-          org="師範大學"
-          topic="僑外生如何留台、職涯規劃"
-        />
+        <TalkEntry delay={300} period="2024" org="政治大學" topic="如何從大學開始職涯規劃" />
+        <TalkEntry delay={350} period="2024" org="師範大學" topic="僑外生如何留台、職涯規劃" />
         <TalkEntry
           delay={400}
           period="2021"
           org="微軟 × 聯強 · 線上研討會"
           topic="數種B2B不同的業態 如何開始數位轉型"
         />
-        <TalkEntry
-          delay={450}
-          period="2019"
-          org="智慧零售電子展 · 實務講堂"
-          topic="歐洲陌生開發"
-        />
-        <TalkEntry
-          delay={500}
-          period="2018"
-          org="亞泰電子商務展"
-          topic="B2B 如何數位化"
-        />
+        <TalkEntry delay={450} period="2019" org="智慧零售電子展 · 實務講堂" topic="歐洲陌生開發" />
+        <TalkEntry delay={500} period="2018" org="亞泰電子商務展" topic="B2B 如何數位化" />
       </div>
     </div>
     <PageNumber />
@@ -1013,8 +979,7 @@ const EricExperience: Page = () => (
           achievement="軟體開發、新創資源銜接、小人提計劃，雇主品牌"
           accent="blue"
         />
-   
-    
+
         <ExperienceEntry
           delay={440}
           period="2015 – 2024"
@@ -1085,7 +1050,11 @@ const CasePublic: Page = () => (
         />
       </div>
       <div className="ai-fadeUp" style={{ animationDelay: '240ms' }}>
-        <img src={davidCaseTaoyuanGroup} alt="桃園社大 AI 語言學習工作坊 — 現場合照" style={{ width: 640, height: 480, objectFit: 'cover', objectPosition: '50% 40%' }} />
+        <img
+          src={davidCaseTaoyuanGroup}
+          alt="桃園社大 AI 語言學習工作坊 — 現場合照"
+          style={{ width: 640, height: 480, objectFit: 'cover', objectPosition: '50% 40%' }}
+        />
       </div>
     </div>
     <PageNumber />
@@ -1117,9 +1086,7 @@ const CaseUniversity: Page = () => (
       <div>
         <Eyebrow>案例 ②</Eyebrow>
         <PageHeading delay={80}>大學正式課 · 開南資管系</PageHeading>
-        <CaseMeta>
-          2026 · 30 人 · 電腦教室實機 · David , Eric 合授
-        </CaseMeta>
+        <CaseMeta>2026 · 30 人 · 電腦教室實機 · David , Eric 合授</CaseMeta>
         <BulletList
           startDelay={320}
           items={[
@@ -1129,7 +1096,11 @@ const CaseUniversity: Page = () => (
         />
       </div>
       <div className="ai-fadeUp" style={{ animationDelay: '240ms' }}>
-        <img src={ericNankai} alt="開南大學資管系工作坊 — 現場授課" style={{ width: 640, height: 480, objectFit: 'cover', objectPosition: '50% 35%' }} />
+        <img
+          src={ericNankai}
+          alt="開南大學資管系工作坊 — 現場授課"
+          style={{ width: 640, height: 480, objectFit: 'cover', objectPosition: '50% 35%' }}
+        />
       </div>
     </div>
     <PageNumber />
@@ -1170,7 +1141,11 @@ const CaseCorporate: Page = () => (
           >
             精立數位 · n8n 實作（Eric）
           </div>
-          <img src={ericJingli} alt='精立數位 n8n 企業內訓 — 現場或簡報截圖' style={{ width: 760, height: 300, objectFit: 'cover', objectPosition: '50% 50%' }} />
+          <img
+            src={ericJingli}
+            alt="精立數位 n8n 企業內訓 — 現場或簡報截圖"
+            style={{ width: 760, height: 300, objectFit: 'cover', objectPosition: '50% 50%' }}
+          />
         </div>
         <div className="ai-fadeUp" style={{ animationDelay: '320ms' }}>
           <div
@@ -1183,7 +1158,11 @@ const CaseCorporate: Page = () => (
           >
             非程式背景也能學位如何用Claude實作產品 v2（David）
           </div>
-          <img src={davidCaseClaudeSkills} alt="企業內訓 Claude Skills — David 現場授課" style={{ width: 760, height: 300, objectFit: 'cover', objectPosition: '50% 45%' }} />
+          <img
+            src={davidCaseClaudeSkills}
+            alt="企業內訓 Claude Skills — David 現場授課"
+            style={{ width: 760, height: 300, objectFit: 'cover', objectPosition: '50% 45%' }}
+          />
         </div>
       </div>
     </div>
@@ -1217,9 +1196,7 @@ const CaseCommunity: Page = () => (
       <div>
         <Eyebrow>案例 ④</Eyebrow>
         <PageHeading delay={80}>聰電站第三場 · AI 基礎</PageHeading>
-        <CaseMeta>
-          2026-06-18 · 桃園在地 · 非技術背景 · 約 3 小時 · David + Eric 合授
-        </CaseMeta>
+        <CaseMeta>2026-06-18 · 桃園在地 · 非技術背景 · 約 3 小時 · David + Eric 合授</CaseMeta>
         <BulletList
           startDelay={320}
           items={[
@@ -1230,11 +1207,7 @@ const CaseCommunity: Page = () => (
         />
       </div>
       <div className="ai-fadeUp" style={{ animationDelay: '240ms' }}>
-        <ImagePlaceholder
-          hint="未來準備中"
-          width={640}
-          height={480}
-        />
+        <ImagePlaceholder hint="未來準備中" width={640} height={480} />
       </div>
     </div>
     <PageNumber />

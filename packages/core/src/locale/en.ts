@@ -361,6 +361,7 @@ export const en: Locale = {
 
   imagePlaceholder: {
     dropOverlay: 'Drop image to use here',
+    dropOverlayReplace: 'Drop image to replace',
     uploading: 'Uploading…',
     uploadFailed: "Couldn't upload image",
   },

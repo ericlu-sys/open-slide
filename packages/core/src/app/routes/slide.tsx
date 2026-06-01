@@ -27,6 +27,7 @@ import {
   useInspector,
 } from '@/components/inspector/inspector-provider';
 import { SaveBar } from '@/components/inspector/save-bar';
+import { SlideImageDropLayer } from '@/components/slide-image-drop-layer';
 import { DesignProvider } from '@/components/style-panel/design-provider';
 import { DesignPanel, DesignToggleButton } from '@/components/style-panel/style-panel';
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -605,6 +606,7 @@ export function Slide() {
                     />
                     <InspectOverlay />
                     <SaveBar />
+                    {import.meta.env.DEV && <SlideImageDropLayer slideId={slideId} />}
                     {import.meta.env.DEV && <CommentWidget />}
                   </main>
                   {/* Mobile-only horizontal rail. Sits below the canvas and

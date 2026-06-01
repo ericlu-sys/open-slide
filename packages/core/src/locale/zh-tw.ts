@@ -360,6 +360,7 @@ export const zhTW: Locale = {
 
   imagePlaceholder: {
     dropOverlay: '拖入圖片以使用',
+    dropOverlayReplace: '拖入圖片以取代',
     uploading: '上傳中…',
     uploadFailed: '圖片上傳失敗',
   },

@@ -65,7 +65,9 @@ const Footer = () => {
       }}
     >
       <span>WPORT DESIGN KIT</span>
-      <span>{String(current).padStart(2, '0')} / {String(total).padStart(2, '0')}</span>
+      <span>
+        {String(current).padStart(2, '0')} / {String(total).padStart(2, '0')}
+      </span>
     </div>
   );
 };
@@ -136,7 +138,9 @@ const Content: Page = () => (
           padding: '28px 30px',
         }}
       >
-        <div style={{ fontSize: 26, color: 'var(--osd-accent)', fontWeight: 700 }}>Brand Fidelity</div>
+        <div style={{ fontSize: 26, color: 'var(--osd-accent)', fontWeight: 700 }}>
+          Brand Fidelity
+        </div>
         <div style={{ marginTop: 14, fontSize: 32, lineHeight: 1.45, color: colors.muted }}>
           `#56C7BB` accent, Arial typography, and consistent spacing from the design kit.
         </div>
@@ -149,7 +153,9 @@ const Content: Page = () => (
           padding: '28px 30px',
         }}
       >
-        <div style={{ fontSize: 26, color: colors.supportBlue, fontWeight: 700 }}>Content Clarity</div>
+        <div style={{ fontSize: 26, color: colors.supportBlue, fontWeight: 700 }}>
+          Content Clarity
+        </div>
         <div style={{ marginTop: 14, fontSize: 32, lineHeight: 1.45, color: '#636363' }}>
           Light background and muted text reduce visual noise for teaching-oriented decks.
         </div>

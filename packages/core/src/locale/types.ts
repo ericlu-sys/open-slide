@@ -384,6 +384,7 @@ export type Locale = {
 
   imagePlaceholder: {
     dropOverlay: string;
+    dropOverlayReplace: string;
     uploading: string;
     uploadFailed: string;
   };

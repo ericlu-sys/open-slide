@@ -1,8 +1,26 @@
-import wportLogo from '@assets/wport.png';
+import davidCaseClaudeSkills from '@assets/david-case-claude-skills.jpg';
 import ericKainan from '@assets/eric_開南.jpg';
+import wportLogo from '@assets/wport.png';
+import {
+  type DesignSystem,
+  ImagePlaceholder,
+  type Page,
+  type SlideMeta,
+  type SlideTransition,
+  useSlidePageNumber,
+} from '@open-slide/core';
+import { useEffect, useState } from 'react';
 import coChc from './assets/co-chc.jpg';
 import coDrinkit from './assets/co-drinkit.jpg';
 import coImpact from './assets/co-impact.jpg';
+import photoGarmin from './assets/factories/garmin.jpg';
+import photoGoldCircuit from './assets/factories/gold-circuit.jpg';
+import photoInnolight from './assets/factories/innolight.jpg';
+import photoLuxnet from './assets/factories/luxnet.jpg';
+import photoTli from './assets/factories/tli.jpg';
+import photoWistron from './assets/factories/wistron.jpg';
+import haniPhoto from './assets/hani-consultant-cutout.png';
+import iMG4598 from './assets/IMG_4598.jpg';
 import infoSession from './assets/info-session.jpg';
 import logoAikenConsulting from './assets/logos/aiken-consulting.png';
 import logoAikenIntl from './assets/logos/aiken-intl.png';
@@ -10,7 +28,9 @@ import logoChc from './assets/logos/chc.jpg';
 import logoDrinkit from './assets/logos/drinkit.jpg';
 import logoFootd from './assets/logos/footd.jpg';
 import logoGanggang from './assets/logos/ganggang.png';
+import logoHaidilao from './assets/logos/haidilao.png';
 import logoHaijia from './assets/logos/haijia.png';
+import logoShepherd from './assets/logos/shepherd.png';
 import logoHaohao from './assets/logos/haohao.png';
 import logoImpact from './assets/logos/impact.png';
 import logoJingli from './assets/logos/jingli.png';
@@ -22,6 +42,7 @@ import logoWanda from './assets/logos/wanda.png';
 import logoWportCo from './assets/logos/wport.png';
 import logoYes from './assets/logos/yes.png';
 import mascot from './assets/mascot.png';
+import qrSurvey from './assets/qr-survey-surveycake.png';
 import qrWport from './assets/qr-wport.png';
 import regEmail from './assets/reg-email.png';
 import regGoogle from './assets/reg-google.png';
@@ -29,26 +50,22 @@ import regLang from './assets/reg-lang.png';
 import regProfile from './assets/reg-profile.png';
 import regProfile2 from './assets/reg-profile2.png';
 import regVerify from './assets/reg-verify.png';
-import {
-  type DesignSystem,
-  ImagePlaceholder,
-  type Page,
-  type SlideMeta,
-  type SlideTransition,
-  useSlidePageNumber,
-} from '@open-slide/core';
 import qrCode from './assets/校園說明會_持續性_Qr_Code.png';
-import qrSurvey from './assets/qr-survey-surveycake.png';
-import haniPhoto from './assets/hani.jpg';
-import photoGarmin from './assets/factories/garmin.jpg';
-import photoGoldCircuit from './assets/factories/gold-circuit.jpg';
-import photoInnolight from './assets/factories/innolight.jpg';
-import photoLuxnet from './assets/factories/luxnet.jpg';
-import photoTli from './assets/factories/tli.jpg';
-import photoWistron from './assets/factories/wistron.jpg';
+import asset2026060144538 from './assets/截圖 2026-06-01 下午4.45.38.png';
+import logo from './assets/吉豚屋logo.png';
+import ritaHaniContact from './assets/rita-hani-contact.jpg';
+import seniorPanPortrait from './assets/潘祥薇.png';
+import senior23Portrait from './assets/senior-23-portrait.png';
+import asset978de56f68ef4a31A3c6B3b340e1c53c from './assets/978de56f-68ef-4a31-a3c6-b3b340e1c53c.png';
+import logo2 from './assets/logo.jpg';
+
+
+
+
+
+
 
 const SURVEY_URL = 'https://www.surveycake.com/s/6VG2W';
-
 
 export const design: DesignSystem = {
   palette: {
@@ -100,6 +117,8 @@ const PAD_X = 100;
 const PAD_TOP = 96;
 const PAD_BOTTOM = 88;
 const CHROME_Y = 44;
+const CANVAS_H = 1080;
+const CONTENT_MAX_H = CANVAS_H - PAD_TOP - PAD_BOTTOM;
 
 const C = {
   green: '#56C7BB',
@@ -441,9 +460,7 @@ const Card = ({
   const border =
     variant === 'default' || variant === 'lime' ? `1px solid ${C.panelBorder}` : undefined;
   return (
-    <div
-      style={{ borderRadius: 20, padding: 36, background: bg, border: border, ...style }}
-    >
+    <div style={{ borderRadius: 20, padding: 36, background: bg, border: border, ...style }}>
       {children}
     </div>
   );
@@ -577,12 +594,14 @@ const SectionDivider = ({
 const LogoSlot = ({
   nameZh,
   nameEn,
+  src,
   hint,
   style,
   highlight,
 }: {
   nameZh: string;
   nameEn: string;
+  src?: string;
   hint?: string;
   style?: React.CSSProperties;
   highlight?: boolean;
@@ -599,18 +618,39 @@ const LogoSlot = ({
       ...style,
     }}
   >
-    <ImagePlaceholder
-      hint={hint ?? `${nameZh} (${nameEn}) logo`}
-      width={380}
-      height={120}
-      style={{
-        flex: '1 1 auto',
-        width: '100%',
-        minHeight: 120,
-        borderRadius: 0,
-        background: highlight ? 'rgba(255,255,255,0.08)' : undefined,
-      }}
-    />
+    {src ? (
+      <div
+        style={{
+          flex: '1 1 auto',
+          minHeight: 120,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '20px 24px',
+          background: highlight ? 'rgba(255,255,255,0.08)' : '#fff',
+        }}
+      >
+        <img
+          src={src}
+          alt={nameZh}
+          style={{
+            maxWidth: '100%',
+            maxHeight: '100%',
+            width: 'auto',
+            height: 'auto',
+            objectFit: 'contain',
+            display: 'block',
+          }}
+        />
+      </div>
+    ) : (
+      <ImagePlaceholder
+        hint={hint ?? `${nameZh} (${nameEn}) logo`}
+        width={380}
+        height={120}
+        style={{ flex: '1 1 auto', minHeight: 120, borderRadius: 0, border: 'none' }}
+      />
+    )}
     <div style={{ padding: '12px 16px', textAlign: 'center' }}>
       <div
         style={{
@@ -636,14 +676,62 @@ const LogoSlot = ({
   </div>
 );
 
-const PortraitSlot = ({ hint, style }: { hint: string; style?: React.CSSProperties }) => (
-  <div style={{ borderRadius: 16, overflow: 'hidden', border: `1px solid ${C.rule}`, ...style }}>
-    <ImagePlaceholder
-      hint={hint}
-      width={420}
-      height={520}
-      style={{ border: 'none', borderRadius: 0, width: '100%', height: '100%' }}
-    />
+const CoverImage = ({
+  src,
+  alt,
+  objectPosition = 'center',
+}: {
+  src: string;
+  alt: string;
+  objectPosition?: string;
+}) => (
+  <img
+    src={src}
+    alt={alt}
+    style={{
+      position: 'absolute',
+      inset: 0,
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+      objectPosition,
+      display: 'block',
+    }}
+  />
+);
+
+const PortraitSlot = ({
+  hint,
+  src,
+  alt,
+  objectPosition = '50% 20%',
+  style,
+}: {
+  hint: string;
+  src?: string;
+  alt?: string;
+  objectPosition?: string;
+  style?: React.CSSProperties;
+}) => (
+  <div
+    style={{
+      position: 'relative',
+      borderRadius: 16,
+      overflow: 'hidden',
+      border: `1px solid ${C.rule}`,
+      ...style,
+    }}
+  >
+    {src ? (
+      <CoverImage src={src} alt={alt ?? hint} objectPosition={objectPosition} />
+    ) : (
+      <ImagePlaceholder
+        hint={hint}
+        width={420}
+        height={520}
+        style={{ border: 'none', borderRadius: 0, width: '100%', height: '100%' }}
+      />
+    )}
   </div>
 );
 
@@ -702,15 +790,7 @@ const LogoImg = ({ src, name }: { src: string; name: string }) => (
   </div>
 );
 
-const PhoneShot = ({
-  src,
-  alt,
-  height = 420,
-}: {
-  src: string;
-  alt: string;
-  height?: number;
-}) => (
+const PhoneShot = ({ src, alt, height = 420 }: { src: string; alt: string; height?: number }) => (
   <img
     src={src}
     alt={alt}
@@ -748,7 +828,9 @@ const StepQr = ({
       />
     </div>
     <div style={{ textAlign: align === 'center' ? 'center' : 'left' }}>
-      <div style={{ fontFamily: FF_ZH, fontSize: 26, fontWeight: 800, color: '#fff', lineHeight: 1.2 }}>
+      <div
+        style={{ fontFamily: FF_ZH, fontSize: 26, fontWeight: 800, color: '#fff', lineHeight: 1.2 }}
+      >
         掃碼立即註冊
       </div>
       <div
@@ -893,7 +975,13 @@ const Page1: Page = () => (
         <img
           src={mascot}
           alt="WPORT 吉祥物 — 留台求職旅程"
-          style={{ width: '100%', maxWidth: 660, height: 'auto', filter: 'drop-shadow(0 30px 60px rgba(0,0,0,0.35))', objectFit: 'cover' }}
+          style={{
+            width: '100%',
+            maxWidth: 660,
+            height: 'auto',
+            filter: 'drop-shadow(0 30px 60px rgba(0,0,0,0.35))',
+            objectFit: 'cover',
+          }}
         />
       </div>
     </div>
@@ -1254,9 +1342,7 @@ const Page5: Page = () => (
 
 const Page6: Page = () => (
   <PageFrame theme="lime" chromeRight="01 · LIVE JOBS">
-    <div
-      style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center' }}
-    >
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center' }}>
       <div>
         <div
           style={{
@@ -1362,7 +1448,9 @@ const Page6: Page = () => (
       >
         <span style={{ width: 40, height: 3, background: C.dark, borderRadius: 2 }} />
         外籍友善企業持續徵才中
-        <span style={{ fontFamily: FF_VN, fontSize: 22, fontWeight: 500, color: C.dark, opacity: 0.7 }}>
+        <span
+          style={{ fontFamily: FF_VN, fontSize: 22, fontWeight: 500, color: C.dark, opacity: 0.7 }}
+        >
           · Doanh nghiệp thân thiện đang tuyển
         </span>
       </div>
@@ -1501,7 +1589,12 @@ const Page7: Page = () => (
               {co.jobs.map((job) => (
                 <div
                   key={job.title}
-                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 12,
+                  }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
                     <span
@@ -1774,7 +1867,9 @@ const Page11: Page = () => (
         </div>
       </Card>
       <Card style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ background: '#fff', padding: '28px 0 0', display: 'grid', placeItems: 'center' }}>
+        <div
+          style={{ background: '#fff', padding: '28px 0 0', display: 'grid', placeItems: 'center' }}
+        >
           <PhoneShot src={regVerify} alt="輸入信箱內驗證碼" height={430} />
         </div>
         <div style={{ padding: '24px 28px' }}>
@@ -1787,7 +1882,9 @@ const Page11: Page = () => (
       </Card>
       <Card variant="hi" style={{ padding: 40, display: 'flex', flexDirection: 'column' }}>
         <StepNum n="03" lime />
-        <div style={{ fontFamily: FF_ZH, fontSize: 30, fontWeight: 700, marginTop: 16, color: '#fff' }}>
+        <div
+          style={{ fontFamily: FF_ZH, fontSize: 30, fontWeight: 700, marginTop: 16, color: '#fff' }}
+        >
           完成註冊
           <br />
           進入填寫個人資料
@@ -1868,7 +1965,15 @@ const Page12: Page = () => (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
         <Card style={{ padding: 32 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <div style={{ fontFamily: FF_DISPLAY, fontWeight: 800, fontSize: 44, color: C.green, lineHeight: 1 }}>
+            <div
+              style={{
+                fontFamily: FF_DISPLAY,
+                fontWeight: 800,
+                fontSize: 44,
+                color: C.green,
+                lineHeight: 1,
+              }}
+            >
               ⚠
             </div>
             <div
@@ -1884,7 +1989,15 @@ const Page12: Page = () => (
               #注意 / Lưu ý
             </div>
           </div>
-          <div style={{ fontFamily: FF_ZH, fontSize: 32, fontWeight: 700, marginTop: 14, lineHeight: 1.3 }}>
+          <div
+            style={{
+              fontFamily: FF_ZH,
+              fontSize: 32,
+              fontWeight: 700,
+              marginTop: 14,
+              lineHeight: 1.3,
+            }}
+          >
             姓名請填寫 <span style={{ color: C.green }}>與居留證一致</span>
           </div>
           <BodyVn size={22} style={{ marginTop: 8 }}>
@@ -1893,7 +2006,15 @@ const Page12: Page = () => (
         </Card>
         <Card variant="hi" style={{ padding: 32, flex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <div style={{ fontFamily: FF_DISPLAY, fontWeight: 800, fontSize: 44, color: C.lime, lineHeight: 1 }}>
+            <div
+              style={{
+                fontFamily: FF_DISPLAY,
+                fontWeight: 800,
+                fontSize: 44,
+                color: C.lime,
+                lineHeight: 1,
+              }}
+            >
               ✓
             </div>
             <div
@@ -1909,7 +2030,15 @@ const Page12: Page = () => (
               #必填 / Bắt buộc
             </div>
           </div>
-          <div style={{ fontFamily: FF_ZH, fontSize: 30, fontWeight: 700, marginTop: 14, color: '#fff' }}>
+          <div
+            style={{
+              fontFamily: FF_ZH,
+              fontSize: 30,
+              fontWeight: 700,
+              marginTop: 14,
+              color: '#fff',
+            }}
+          >
             履歷必填欄位 <span style={{ color: C.lime }}>缺一不可</span>
           </div>
           <div
@@ -2821,14 +2950,25 @@ const Page21: Page = () => (
   </PageFrame>
 );
 
+const SENIOR_PHOTO_W = 480;
+const SENIOR_PHOTO_INSET = { top: 40, left: 32, bottom: 40, right: 20 };
+
+const seniorPhotoFill: React.CSSProperties = {
+  position: 'absolute',
+  inset: 0,
+  width: '100%',
+  height: '100%',
+  objectFit: 'cover',
+  objectPosition: '50% 15%',
+  display: 'block',
+};
+
 const SeniorProfile = ({
   chrome,
   no,
   nameZh,
   nameEn,
-  photoHint,
-  logoZh,
-  logoEn,
+  photo,
   school,
   schoolEn,
   major,
@@ -2841,9 +2981,7 @@ const SeniorProfile = ({
   no: string;
   nameZh: string;
   nameEn: string;
-  photoHint: string;
-  logoZh: string;
-  logoEn: string;
+  photo: React.ReactNode;
   school: string;
   schoolEn: string;
   major: string;
@@ -2856,61 +2994,44 @@ const SeniorProfile = ({
     <div
       style={{
         display: 'grid',
-        gridTemplateColumns: '0.85fr 1.15fr',
+        gridTemplateColumns: `${SENIOR_PHOTO_W}px 1fr`,
         gap: 64,
         alignItems: 'stretch',
-        height: '100%',
+        height: CONTENT_MAX_H,
+        maxHeight: CONTENT_MAX_H,
       }}
     >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-        <PortraitSlot hint={photoHint} style={{ flex: 1, minHeight: 420 }} />
-        <LogoSlot nameZh={logoZh} nameEn={logoEn} style={{ aspectRatio: '16 / 6' }} />
+      <div
+        style={{
+          padding: `${SENIOR_PHOTO_INSET.top}px ${SENIOR_PHOTO_INSET.right}px ${SENIOR_PHOTO_INSET.bottom}px ${SENIOR_PHOTO_INSET.left}px`,
+          minHeight: 0,
+          boxSizing: 'border-box',
+        }}
+      >
+        <div
+          style={{
+            position: 'relative',
+            height: '100%',
+            borderRadius: 16,
+            overflow: 'hidden',
+            border: `1px solid ${C.rule}`,
+          }}
+        >
+          {photo}
+        </div>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0 }}>
         <Eyebrow>{no}</Eyebrow>
         <TitleZh size={60}>{nameZh}</TitleZh>
         <TitleVn size={32}>{nameEn}</TitleVn>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 28, marginTop: 48 }}>
-          {[
-            ['School', school, schoolEn, 'default'],
-            ['Major', major, majorEn, 'default'],
-            ['Level', level, levelEn, 'default'],
-            ['Nationality', '越南', 'Việt Nam', 'green'],
-          ].map(([label, zh, en, v]) => (
-            <Card
-              key={label as string}
-              variant={v as 'default' | 'green'}
-              style={{ padding: 28, background: v === 'default' ? C.surface : undefined }}
-            >
-              <div
-                style={{
-                  fontFamily: FF_EN,
-                  fontSize: 20,
-                  letterSpacing: '0.14em',
-                  textTransform: 'uppercase',
-                  color: v === 'green' ? C.lime : C.muted,
-                  fontWeight: 700,
-                }}
-              >
-                {label}
-              </div>
-              <div
-                style={{
-                  fontFamily: FF_ZH,
-                  fontSize: 30,
-                  fontWeight: 700,
-                  marginTop: 10,
-                  color: v === 'green' ? '#fff' : undefined,
-                }}
-              >
-                {zh}
-              </div>
-              <BodyVn size={20} color={v === 'green' ? C.lime : undefined}>
-                {en}
-              </BodyVn>
-            </Card>
-          ))}
-        </div>
+        <SeniorInfoCards
+          school={school}
+          schoolEn={schoolEn}
+          major={major}
+          majorEn={majorEn}
+          level={level}
+          levelEn={levelEn}
+        />
         <div
           style={{
             marginTop: 'auto',
@@ -2922,11 +3043,76 @@ const SeniorProfile = ({
             fontWeight: 600,
           }}
         >
-          艾惜人才 · 肯定未來 · ICAN
+        
         </div>
       </div>
     </div>
   </PageFrame>
+);
+
+const seniorInfoFields = [
+  ['School', 'school', 'schoolEn'],
+  ['Major', 'major', 'majorEn'],
+  ['Level', 'level', 'levelEn'],
+  ['Nationality', '越南', 'Việt Nam'],
+] as const;
+
+const SeniorInfoCards = ({
+  school,
+  schoolEn,
+  major,
+  majorEn,
+  level,
+  levelEn,
+}: {
+  school: string;
+  schoolEn: string;
+  major: string;
+  majorEn: string;
+  level: string;
+  levelEn: string;
+}) => (
+  <div
+    style={{
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: 28,
+      marginTop: 48,
+    }}
+  >
+    {seniorInfoFields.map(([label, zhKey, enKey]) => {
+      const zh = zhKey === 'school' ? school : zhKey === 'major' ? major : zhKey === 'level' ? level : zhKey;
+      const en =
+        enKey === 'schoolEn' ? schoolEn : enKey === 'majorEn' ? majorEn : enKey === 'levelEn' ? levelEn : enKey;
+      return (
+        <Card key={label} style={{ padding: 28, background: C.surface }}>
+          <div
+            style={{
+              fontFamily: FF_EN,
+              fontSize: 20,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              color: C.muted,
+              fontWeight: 700,
+            }}
+          >
+            {label}
+          </div>
+          <div
+            style={{
+              fontFamily: FF_ZH,
+              fontSize: 30,
+              fontWeight: 700,
+              marginTop: 10,
+            }}
+          >
+            {zh}
+          </div>
+          <BodyVn size={20}>{en}</BodyVn>
+        </Card>
+      );
+    })}
+  </div>
 );
 
 const Page22: Page = () => (
@@ -2945,17 +3131,17 @@ const Page23: Page = () => (
   <SeniorProfile
     chrome="04 · 學長姐分享 01"
     no="04 / Senior sharing No.01"
-    nameZh="青重 / TRAN THANH TRONG"
+    nameZh="潘祥薇 / Phan Tương Vệ"
     nameEn="Du học sinh chia sẻ"
-    photoHint="Portrait — TRAN THANH TRONG, Kaori Thermal"
-    logoZh="高力熱能"
-    logoEn="Kaori Thermal Technology"
-    school="元智大學"
-    schoolEn="Yuan Ze University"
-    major="資訊工程系"
-    majorEn="CNTT"
-    level="碩士"
-    levelEn="Thạc sĩ"
+    photo={
+      <img src={seniorPanPortrait} alt="潘祥薇 / Phan Tương Vệ" style={seniorPhotoFill} />
+    }
+    school="中原大學"
+    schoolEn="Chung Yuan Christian University"
+    major="語言學系"
+    majorEn="Khoa Ngôn ngữ học"
+    level="二年級"
+    levelEn="lớp hai"
   />
 );
 
@@ -3037,105 +3223,18 @@ const Page25: Page = () => (
   <SeniorProfile
     chrome="04 · 學長姐分享 02"
     no="04 / Senior sharing No.02"
-    nameZh="阮日輝 / NGUYỄN NHẬT HUY"
+    nameZh="阮如瓊 / Ruan Ruqiong"
     nameEn="Du học sinh chia sẻ"
-    photoHint="Portrait — NGUYỄN NHẬT HUY, Source Photonics"
-    logoZh="索爾思光電"
-    logoEn="Source Photonics"
-    school="元智大學"
-    schoolEn="Yuan Ze University"
-    major="電機工程"
-    majorEn="Kỹ thuật điện"
-    level="大學一年級"
-    levelEn="Năm nhất đại học"
+    photo={
+      <img src={senior23Portrait} alt="阮如瓊 / Ruan Ruqiong" style={seniorPhotoFill} />
+    }
+    school="開南大學"
+    schoolEn="Đại học Khai Nam"
+    major="觀光休閒系"
+    majorEn="Bộ Du lịch và Giải trí"
+    level="二年級-碩士"
+    levelEn="Năm thứ hai - Thạc sĩ"
   />
-);
-
-const Page26: Page = () => (
-  <PageFrame theme="paper" chromeRight="04 · 學長姐分享 03">
-    <Eyebrow>04 / Senior sharing No.03</Eyebrow>
-    <TitleZh>何明潔 / HÀ MINH KIỆT</TitleZh>
-    <TitleVn size={52}>Source Photonics · 碩士畢業</TitleVn>
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '0.75fr 1.25fr',
-        gap: 56,
-        marginTop: 56,
-        alignItems: 'stretch',
-      }}
-    >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-        <PortraitSlot
-          hint="Portrait — HÀ MINH KIỆT, Source Photonics"
-          style={{ flex: 1, minHeight: 380 }}
-        />
-        <LogoSlot nameZh="索爾思光電" nameEn="Source Photonics" />
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-        <Card variant="lime" style={{ padding: 48 }}>
-          <div
-            style={{
-              fontFamily: FF_EN,
-              fontSize: 24,
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
-              fontWeight: 700,
-              color: C.dark,
-            }}
-          >
-            STATUS UPDATE
-          </div>
-          <div
-            style={{
-              fontFamily: FF_ZH,
-              fontSize: 56,
-              fontWeight: 900,
-              color: C.dark,
-              marginTop: 16,
-              lineHeight: 1.15,
-            }}
-          >
-            延期在台申請
-            <br />
-            已完成 ✓
-          </div>
-          <BodyVn size={26} color={C.dark} style={{ marginTop: 16 }}>
-            Đã hoàn tất các thủ tục gia hạn thời gian lưu trú tại Đài Loan.
-          </BodyVn>
-        </Card>
-        <Card variant="hi" style={{ padding: 36 }}>
-          <div
-            style={{
-              fontFamily: FF_DISPLAY,
-              fontSize: 56,
-              color: C.lime,
-              lineHeight: 1,
-              fontWeight: 800,
-            }}
-          >
-            "
-          </div>
-          <div
-            style={{
-              fontFamily: FF_ZH,
-              fontSize: 30,
-              fontWeight: 500,
-              color: '#fff',
-              lineHeight: 1.5,
-              marginTop: 8,
-            }}
-          >
-            學歷已取得、申請也完成 — 接下來就是專注在台灣工作的下一階段。
-          </div>
-          <BodyVn size={22} color={C.lime} style={{ marginTop: 12 }}>
-            Hoàn tất việc học và thủ tục – Tiếp theo là tập trung cho giai đoạn làm việc tại Đài
-            Loan.
-          </BodyVn>
-        </Card>
-      </div>
-    </div>
-  </PageFrame>
 );
 
 const Page27: Page = () => (
@@ -3150,13 +3249,27 @@ const Page27: Page = () => (
   />
 );
 
+const JobChromeRight = ({ label, logoSrc, logoAlt }: { label: string; logoSrc: string; logoAlt: string }) => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+    <span>{label}</span>
+    <img
+      src={logoSrc}
+      alt={logoAlt}
+      style={{ height: 44, width: 'auto', maxWidth: 160, objectFit: 'contain', display: 'block' }}
+    />
+  </div>
+);
+
 const JobFullTime = ({
   chrome,
+  chromeLogoSrc,
+  chromeLogoAlt,
   eyebrow,
   titleZh,
   titleVn,
   logoZh,
   logoEn,
+  logoSrc,
   payLabel,
   payValue,
   paySub,
@@ -3169,11 +3282,14 @@ const JobFullTime = ({
   theme = 'cream',
 }: {
   chrome: string;
+  chromeLogoSrc?: string;
+  chromeLogoAlt?: string;
   eyebrow: string;
   titleZh: string;
   titleVn: string;
   logoZh: string;
   logoEn: string;
+  logoSrc?: string;
   payLabel: string;
   payValue: string;
   paySub: string;
@@ -3185,7 +3301,16 @@ const JobFullTime = ({
   perks: [string, string][];
   theme?: Theme;
 }) => (
-  <PageFrame theme={theme} chromeRight={chrome}>
+  <PageFrame
+    theme={theme}
+    chromeRight={
+      chromeLogoSrc ? (
+        <JobChromeRight label={chrome} logoSrc={chromeLogoSrc} logoAlt={chromeLogoAlt ?? logoZh} />
+      ) : (
+        chrome
+      )
+    }
+  >
     <div
       style={{
         display: 'grid',
@@ -3199,6 +3324,7 @@ const JobFullTime = ({
         <LogoSlot
           nameZh={logoZh}
           nameEn={logoEn}
+          src={logoSrc}
           style={{ aspectRatio: '4 / 3', minHeight: 180 }}
         />
         <Card variant="lime" style={{ padding: 28 }}>
@@ -3335,9 +3461,10 @@ const Page28: Page = () => (
     chrome="05 · 職缺 01 · 正職"
     eyebrow="05 / Full-time No.01"
     titleZh="內外場服務人員"
-    titleVn="Nhân viên phục vụ nhà hàng · F&B Service Crew"
+    titleVn="Nhân viên dự bị quản lý nhà hàng"
     logoZh="海底撈火鍋"
-    logoEn="Haidilao Hotpot"
+    logoEn="Haidilao Hotpot · Lẩu Haidilao"
+    logoSrc={logoHaidilao}
     payLabel="MONTHLY PAY"
     payValue="$36K–57.5K"
     paySub="起 · 獎金另計"
@@ -3371,9 +3498,10 @@ const Page29: Page = () => (
     chrome="05 · 職缺 02 · 正職"
     eyebrow="05 / Full-time No.02"
     titleZh="內外場儲備幹部"
-    titleVn="Nhân viên dự bị quản lý nhà hàng · Restaurant Management Trainee"
+    titleVn="Nhân viên dự bị quản lý nhà hàng"
     logoZh="牧羊人集團 · 汪喵星球"
-    logoEn="Shepherdtech Group"
+    logoEn="Tập đoàn Shepherd"
+    logoSrc={logoShepherd}
     payLabel="MONTHLY PAY"
     payValue="$40K–44K"
     paySub="+ 獎金另計"
@@ -3406,10 +3534,11 @@ const PageKatsuya: Page = () => (
     theme="cream"
     chrome="05 · 職缺 03 · 正職"
     eyebrow="05 / Full-time No.03"
-    titleZh="餐廚助手"
-    titleVn="Nhân viên phục vụ nhà hàng · Kitchen Assistant"
+    titleZh="餐飲服務員"
+    titleVn="Nhân viên phục vụ nhà hàng"
     logoZh="台灣吉豚屋 · Katsuya"
-    logoEn="Katsuya Taiwan"
+    logoEn="Katsuya Đài Loan"
+    logoSrc={logo}
     payLabel="HOURLY PAY"
     payValue="$205/hr"
     paySub="起 · 獎金另計"
@@ -3434,6 +3563,7 @@ const PageKatsuya: Page = () => (
     locationVn="Trung Sơn, Đài Bắc"
     perks={[
       ['彈性排班', 'Ca linh hoạt'],
+      ['兼職打工', 'Làm thêm'],
       ['長期穩定', 'Ổn định lâu dài'],
     ]}
   />
@@ -3477,33 +3607,33 @@ const ManufacturingJob = ({
         gridTemplateColumns: '0.7fr 1.3fr',
         gap: 56,
         alignItems: 'stretch',
-        height: '100%',
+        height: CONTENT_MAX_H,
+        maxHeight: CONTENT_MAX_H,
       }}
     >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 20,
+          height: '100%',
+          minHeight: 0,
+        }}
+      >
         {photoSrc ? (
           <>
             <div
               style={{
+                position: 'relative',
                 borderRadius: 16,
                 overflow: 'hidden',
                 border: `1px solid ${C.panelBorder}`,
                 flex: 1,
-                minHeight: 280,
+                minHeight: 0,
                 background: C.surface,
               }}
             >
-              <img
-                src={photoSrc}
-                alt={photoAlt ?? companyZh}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: 'center',
-                  display: 'block',
-                }}
-              />
+              <CoverImage src={photoSrc} alt={photoAlt ?? companyZh} />
             </div>
             <div
               style={{
@@ -3523,7 +3653,11 @@ const ManufacturingJob = ({
             </div>
           </>
         ) : (
-          <LogoSlot nameZh={companyZh} nameEn={companyEn} style={{ aspectRatio: '4 / 3', minHeight: 180 }} />
+          <LogoSlot
+            nameZh={companyZh}
+            nameEn={companyEn}
+            style={{ aspectRatio: '4 / 3', minHeight: 180 }}
+          />
         )}
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -4095,301 +4229,626 @@ const Page38: Page = () => (
   </PageFrame>
 );
 
-const ICAN_CREAM = '#FAF5EB';
-const ICAN_GOLD = '#B08A45';
-const ICAN_GOLD_SOFT = '#D8C498';
-const ICAN_BROWN = '#5A4528';
-const ICAN_RED = '#A4122B';
-const FF_SERIF = '"Songti TC", "STSong", "PingFang TC", Georgia, serif';
-const FF_SCRIPT = '"Snell Roundhand", "Apple Chancery", "Brush Script MT", cursive';
-
-const DottedCorner = ({ style }: { style: React.CSSProperties }) => (
-  <div
-    aria-hidden
-    style={{
-      position: 'absolute',
-      width: 168,
-      height: 132,
-      backgroundImage: `radial-gradient(${ICAN_GOLD_SOFT} 2.4px, transparent 2.6px)`,
-      backgroundSize: '20px 20px',
-      opacity: 0.55,
-      pointerEvents: 'none',
-      ...style,
-    }}
-  />
-);
-
-const ConsultantColumn = ({
-  kind,
-  qrHint,
-  name,
-  tag,
-}: {
-  kind: string;
-  qrHint: string;
-  name: string;
-  tag: string;
-}) => (
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-    <div
-      style={{
-        fontFamily: FF_SERIF,
-        fontSize: 92,
-        fontWeight: 700,
-        color: ICAN_BROWN,
-        letterSpacing: '0.12em',
-        lineHeight: 1,
-      }}
-    >
-      {kind}
-    </div>
-    <div
-      style={{
-        marginTop: 34,
-        background: '#fff',
-        border: `2px solid ${ICAN_GOLD_SOFT}`,
-        borderRadius: 18,
-        padding: 16,
-        boxShadow: '0 18px 40px rgba(120,90,40,0.16)',
-      }}
-    >
-      <ImagePlaceholder hint={qrHint} width={250} height={250} style={{ borderRadius: 8 }} />
-    </div>
-    <div
-      style={{
-        fontFamily: FF_SCRIPT,
-        fontSize: 76,
-        fontStyle: 'italic',
-        color: ICAN_GOLD,
-        marginTop: 24,
-        lineHeight: 1,
-      }}
-    >
-      {name}
-    </div>
-    <div
-      style={{
-        marginTop: 18,
-        padding: '10px 30px',
-        borderRadius: 999,
-        background: ICAN_BROWN,
-        color: '#FBF3E2',
-        fontFamily: FF_ZH,
-        fontSize: 24,
-        fontWeight: 600,
-        letterSpacing: '0.06em',
-      }}
-    >
-      {tag}
-    </div>
-  </div>
-);
-
 const Page39: Page = () => (
-  <div style={{ ...fill, background: ICAN_CREAM }}>
-    <div
-      aria-hidden
-      style={{
-        position: 'absolute',
-        top: 28,
-        left: 28,
-        right: 28,
-        bottom: 92,
-        border: `2px solid ${ICAN_GOLD_SOFT}`,
-        borderRadius: 20,
-        pointerEvents: 'none',
-      }}
+  <div style={fill}>
+    <img
+      src={ritaHaniContact}
+      alt="ICAN 顧問聯絡 — Rita 打工、Hani 正職 LINE QR Code"
+      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
     />
-    <DottedCorner style={{ top: 58, left: 58 }} />
-    <DottedCorner style={{ bottom: 128, right: 58 }} />
-
-    <div style={{ position: 'absolute', left: 36, bottom: 92, width: 420, height: 868 }}>
-      <ImagePlaceholder
-        hint="Rita 打工顧問 去背人像照"
-        width={420}
-        height={868}
-        style={{ width: '100%', height: '100%', borderRadius: 14 }}
-      />
-    </div>
-    <div style={{ position: 'absolute', right: 36, bottom: 92, width: 420, height: 868 }}>
-      <ImagePlaceholder
-        hint="Hani 正職顧問 去背人像照"
-        width={420}
-        height={868}
-        style={{ width: '100%', height: '100%', borderRadius: 14 }}
-      />
-    </div>
-
-    <div
-      style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 92,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '40px 480px 0',
-      }}
-    >
-      <div style={{ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 96, width: '100%' }}>
-        <div
-          aria-hidden
-          style={{
-            position: 'absolute',
-            left: '50%',
-            top: 8,
-            bottom: 8,
-            borderLeft: `1px dashed ${ICAN_GOLD_SOFT}`,
-            transform: 'translateX(-50%)',
-          }}
-        />
-        <ConsultantColumn kind="打工" qrHint="Rita 打工 LINE QR Code" name="Rita" tag="貼心服務 · 誠信可靠" />
-        <ConsultantColumn kind="正職" qrHint="Hani 正職 LINE QR Code" name="Hani" tag="專業細心 · 值得信賴" />
-      </div>
-      <div
-        style={{
-          marginTop: 44,
-          fontFamily: FF_ZH,
-          fontSize: 30,
-          fontWeight: 600,
-          color: ICAN_GOLD,
-          letterSpacing: '0.1em',
-        }}
-      >
-        ✦ 掃描 QR Code 加入 LINE，立即諮詢 ✦
-      </div>
-    </div>
-
-    <div
-      style={{
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: 0,
-        height: 72,
-        background: ICAN_RED,
-        display: 'grid',
-        placeItems: 'center',
-      }}
-    >
-      <div style={{ fontFamily: FF_SERIF, fontSize: 32, fontWeight: 700, color: '#fff', letterSpacing: '0.32em' }}>
-        艾惜人才　肯定未來
-      </div>
-    </div>
   </div>
 );
 
-const HrReservedRow = ({ label, vn }: { label: string; vn: string }) => (
+const HrReservedRow = ({
+  label,
+  vn,
+  valueZh,
+  dense,
+}: {
+  label: string;
+  vn: string;
+  valueZh?: string;
+  dense?: boolean;
+}) => (
   <div
     style={{
       display: 'flex',
-      alignItems: 'center',
-      gap: 16,
-      padding: '16px 20px',
+      alignItems: 'flex-start',
+      gap: 12,
+      padding: dense ? '12px 14px' : '16px 20px',
       border: `1px dashed ${C.panelBorder}`,
       borderRadius: 12,
       background: C.surface,
     }}
   >
-    <div style={{ width: 12, height: 12, borderRadius: '50%', background: C.green, flexShrink: 0 }} />
-    <div>
-      <div style={{ fontFamily: FF_ZH, fontSize: 24, fontWeight: 700, color: C.ink }}>{label}</div>
-      <div style={{ fontFamily: FF_VN, fontSize: 19, color: C.muted, fontStyle: 'italic' }}>{vn}</div>
+    <div
+      style={{
+        width: 10,
+        height: 10,
+        borderRadius: '50%',
+        background: C.green,
+        flexShrink: 0,
+        marginTop: dense ? 6 : 8,
+      }}
+    />
+    <div style={{ minWidth: 0 }}>
+      <div
+        style={{
+          fontFamily: FF_ZH,
+          fontSize: dense ? 20 : 24,
+          fontWeight: 700,
+          color: C.ink,
+        }}
+      >
+        {label}
+      </div>
+      {valueZh ? (
+        <div
+          style={{
+            fontFamily: FF_ZH,
+            fontSize: dense ? 18 : 22,
+            fontWeight: 600,
+            color: C.inkSoft,
+            marginTop: 4,
+            lineHeight: 1.35,
+            whiteSpace: 'pre-line',
+          }}
+        >
+          {valueZh}
+        </div>
+      ) : null}
+      <div
+        style={{
+          fontFamily: FF_VN,
+          fontSize: dense ? 17 : 19,
+          color: C.muted,
+          fontStyle: 'italic',
+          marginTop: valueZh ? 2 : 0,
+        }}
+      >
+        {vn}
+      </div>
     </div>
   </div>
 );
 
-const TeamPhotoSlot = ({ hint, style }: { hint: string; style?: React.CSSProperties }) => (
-  <div style={{ borderRadius: 16, overflow: 'hidden', border: `1px solid ${C.rule}`, ...style }}>
-    <ImagePlaceholder
-      hint={hint}
-      width={640}
-      height={480}
-      style={{ border: 'none', borderRadius: 0, width: '100%', height: '100%' }}
-    />
+const TeamPhotoSlot = ({
+  hint,
+  photoSrc,
+  style,
+}: {
+  hint: string;
+  photoSrc?: string;
+  style?: React.CSSProperties;
+}) => (
+  <div
+    style={{
+      position: 'relative',
+      borderRadius: 16,
+      overflow: 'hidden',
+      border: `1px solid ${C.rule}`,
+      ...style,
+    }}
+  >
+    {photoSrc ? (
+      <CoverImage src={photoSrc} alt={hint} objectPosition="50% 50%" />
+    ) : (
+      <div style={{ position: 'absolute', inset: 0 }}>
+        <ImagePlaceholder
+          hint={hint}
+          width={640}
+          height={480}
+          style={{ border: 'none', borderRadius: 0, width: '100%', height: '100%' }}
+        />
+      </div>
+    )}
+  </div>
+);
+
+const SPOTLIGHT_BODY_HEIGHT = CONTENT_MAX_H - 208;
+const WHY_JOIN_MAIN_H = CONTENT_MAX_H - 192;
+
+const WhyJoinReasonCard = ({
+  n,
+  zh,
+  vn,
+  detail,
+}: {
+  n: string;
+  zh: string;
+  vn: string;
+  detail: string;
+}) => (
+  <Card
+    style={{
+      padding: 28,
+      background: C.surface,
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+    }}
+  >
+    <div
+      style={{
+        fontFamily: FF_DISPLAY,
+        fontWeight: 800,
+        fontSize: 64,
+        color: C.green,
+        lineHeight: 1,
+        letterSpacing: '-0.04em',
+      }}
+    >
+      {n}
+    </div>
+    <div
+      style={{
+        fontFamily: FF_ZH,
+        fontSize: 30,
+        fontWeight: 700,
+        marginTop: 16,
+        lineHeight: 1.25,
+      }}
+    >
+      {zh}
+    </div>
+    <BodyVn size={20} style={{ marginTop: 8 }}>
+      {vn}
+    </BodyVn>
+    <div
+      style={{
+        fontFamily: FF_ZH,
+        fontSize: 22,
+        fontWeight: 600,
+        color: C.inkSoft,
+        marginTop: 10,
+        lineHeight: 1.35,
+      }}
+    >
+      {detail}
+    </div>
+  </Card>
+);
+
+const RehoWhyJoinHeader = ({ part }: { part: '1' | '2' }) => (
+  <div
+    style={{
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'flex-end',
+      flexShrink: 0,
+    }}
+  >
+    <div>
+      <Eyebrow>Why join us · 為什麼加入我們</Eyebrow>
+      <TitleZh size={56}>為什麼選擇熱火數碼？</TitleZh>
+      <TitleVn size={36}>Vì sao nên gia nhập Reho Digital?</TitleVn>
+    </div>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 12 }}>
+      <img src={logoWportCo} alt="熱火數碼資訊 Logo" style={{ height: 64, objectFit: 'contain' }} />
+      <Pill variant="lime">{part} / 2</Pill>
+    </div>
+  </div>
+);
+
+const WhyJoinPhotoColumn = ({
+  hint,
+  photoSrc,
+  photoAlt,
+  captionZh,
+  captionVn,
+}: {
+  hint: string;
+  photoSrc?: string;
+  photoAlt?: string;
+  captionZh: string;
+  captionVn: string;
+}) => (
+  <div
+    style={{
+      borderRadius: 16,
+      overflow: 'hidden',
+      border: `1px solid ${C.rule}`,
+      display: 'flex',
+      flexDirection: 'column',
+      minHeight: 0,
+      height: '100%',
+    }}
+  >
+    <div style={{ position: 'relative', flex: 1, minHeight: 0 }}>
+      {photoSrc ? (
+        <CoverImage src={photoSrc} alt={photoAlt ?? hint} objectPosition="50% 45%" />
+      ) : (
+        <div style={{ position: 'absolute', inset: 0 }}>
+          <ImagePlaceholder
+            hint={hint}
+            style={{ border: 'none', borderRadius: 0, width: '100%', height: '100%' }}
+          />
+        </div>
+      )}
+    </div>
+    <div style={{ padding: '18px 22px', background: C.surface, flexShrink: 0 }}>
+      <div style={{ fontFamily: FF_ZH, fontSize: 26, fontWeight: 700, lineHeight: 1.3 }}>
+        {captionZh}
+      </div>
+      <BodyVn size={20} style={{ marginTop: 6 }}>
+        {captionVn}
+      </BodyVn>
+    </div>
   </div>
 );
 
 const CompanySpotlightPage = ({
   num,
+  total = '03',
   companyZh,
   photoHint,
+  photoSrc,
   logoSrc,
   logoHint,
+  aboutZh = '（公司簡介內容預留）',
+  aboutVn = 'Nội dung giới thiệu do doanh nghiệp bổ sung',
+  productValue,
+  jobsValue,
+  locationValue,
+  benefitsValue,
 }: {
   num: string;
+  total?: string;
   companyZh: string;
   photoHint: string;
+  photoSrc?: string;
   logoSrc?: string;
   logoHint: string;
-}) => (
-  <PageFrame theme="cream" chromeRight={`企業宣傳 ${num}`}>
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-      <div>
-        <Eyebrow>Company Spotlight · 企業宣傳</Eyebrow>
-        <TitleZh size={64}>{companyZh}</TitleZh>
-        <TitleVn size={40}>Doanh nghiệp đối tác · Giới thiệu công ty</TitleVn>
-      </div>
-      <Pill variant="lime">{num} / 03</Pill>
-    </div>
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '0.82fr 1.18fr',
-        gap: 44,
-        marginTop: 44,
-        alignItems: 'stretch',
-      }}
-    >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-        <TeamPhotoSlot hint={photoHint} style={{ flex: 1, minHeight: 480 }} />
-        <div style={{ fontFamily: FF_ZH, fontSize: 24, fontWeight: 700, color: C.muted, textAlign: 'center' }}>
-          公司團隊照 · Ảnh đội ngũ công ty
+  aboutZh?: string;
+  aboutVn?: string;
+  productValue?: string;
+  jobsValue?: string;
+  locationValue?: string;
+  benefitsValue?: string;
+}) => {
+  const detailDense =
+    [productValue, jobsValue, locationValue, benefitsValue].some(
+      (v) => (v?.split('\n').length ?? 0) > 2 || (v?.length ?? 0) > 48,
+    ) || aboutZh.length > 36;
+
+  return (
+    <PageFrame theme="cream" chromeRight={`企業宣傳 ${num}`}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+        <div>
+          <Eyebrow>Company Spotlight · 企業宣傳</Eyebrow>
+          <TitleZh size={56}>{companyZh}</TitleZh>
+          <TitleVn size={36}>Doanh nghiệp đối tác · Giới thiệu công ty</TitleVn>
         </div>
+        <Pill variant="lime">
+          {num} / {total}
+        </Pill>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-        <Card style={{ padding: 28, display: 'flex', alignItems: 'center', gap: 24 }}>
-          {logoSrc ? (
-            <img src={logoSrc} alt={logoHint} style={{ height: 72, maxWidth: 180, objectFit: 'contain' }} />
-          ) : (
-            <ImagePlaceholder hint={logoHint} width={180} height={88} />
-          )}
-          <div>
-            <div style={{ fontFamily: FF_ZH, fontSize: 26, fontWeight: 700 }}>公司 Logo</div>
-            <BodyVn size={20} style={{ marginTop: 4 }}>
-              Logo công ty
-            </BodyVn>
-          </div>
-        </Card>
-        <Card style={{ padding: 32, flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '0.82fr 1.18fr',
+          gap: 32,
+          marginTop: 28,
+          height: SPOTLIGHT_BODY_HEIGHT,
+          minHeight: 0,
+          alignItems: 'stretch',
+        }}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, minHeight: 0 }}>
+          <TeamPhotoSlot hint={photoHint} photoSrc={photoSrc} style={{ flex: 1, minHeight: 0 }} />
           <div
             style={{
-              fontFamily: FF_EN,
-              fontSize: 20,
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
+              fontFamily: FF_ZH,
+              fontSize: 22,
               fontWeight: 700,
-              color: C.green,
+              color: C.muted,
+              textAlign: 'center',
+              flexShrink: 0,
             }}
           >
-            About · 公司簡介
+            公司團隊照 · Ảnh đội ngũ công ty
           </div>
-          <div style={{ fontFamily: FF_ZH, fontSize: 28, fontWeight: 700, color: C.muted, marginTop: 14 }}>
-            （公司簡介內容預留）
-          </div>
-          <BodyVn size={20} style={{ marginTop: 6 }}>
-            Nội dung giới thiệu do doanh nghiệp bổ sung
-          </BodyVn>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginTop: 24 }}>
-            <HrReservedRow label="主要服務 / 產品" vn="Sản phẩm · Dịch vụ" />
-            <HrReservedRow label="招募職缺" vn="Vị trí tuyển dụng" />
-            <HrReservedRow label="工作地點" vn="Địa điểm làm việc" />
-            <HrReservedRow label="福利 / 制度" vn="Phúc lợi · Chế độ" />
-          </div>
-        </Card>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14, minHeight: 0 }}>
+          <Card
+            style={{
+              padding: '20px 24px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 20,
+              flexShrink: 0,
+            }}
+          >
+            {logoSrc ? (
+              <img
+                src={logoSrc}
+                alt={logoHint}
+                style={{ height: 60, maxWidth: 160, objectFit: 'contain' }}
+              />
+            ) : (
+              <img src={logo2} alt='' style={{ width: 160, height: 72, objectFit: 'cover', objectPosition: '50% 50%' }} />
+            )}
+            <div>
+              <div style={{ fontFamily: FF_ZH, fontSize: 24, fontWeight: 700 }}>公司 Logo</div>
+              <BodyVn size={18} style={{ marginTop: 2 }}>
+                Logo công ty
+              </BodyVn>
+            </div>
+          </Card>
+          <Card
+            style={{
+              padding: detailDense ? 22 : 28,
+              flex: 1,
+              minHeight: 0,
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <div style={{ flexShrink: 0 }}>
+              <div
+                style={{
+                  fontFamily: FF_EN,
+                  fontSize: 18,
+                  letterSpacing: '0.18em',
+                  textTransform: 'uppercase',
+                  fontWeight: 700,
+                  color: C.green,
+                }}
+              >
+                About · 公司簡介
+              </div>
+              <div
+                style={{
+                  fontFamily: FF_ZH,
+                  fontSize: detailDense ? 24 : 26,
+                  fontWeight: 700,
+                  color: aboutZh.startsWith('（') ? C.muted : C.ink,
+                  marginTop: 10,
+                  lineHeight: 1.35,
+                  whiteSpace: 'pre-line',
+                }}
+              >
+                {aboutZh}
+              </div>
+              <BodyVn size={detailDense ? 18 : 20} style={{ marginTop: 4 }}>
+                {aboutVn}
+              </BodyVn>
+            </div>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: detailDense ? 10 : 14,
+                marginTop: detailDense ? 16 : 20,
+                flex: 1,
+                minHeight: 0,
+                alignContent: 'start',
+              }}
+            >
+              <HrReservedRow
+                label="主要服務 / 產品"
+                vn="Sản phẩm · Dịch vụ"
+                valueZh={productValue}
+                dense={detailDense}
+              />
+              <HrReservedRow
+                label="招募職缺"
+                vn="Vị trí tuyển dụng"
+                valueZh={jobsValue}
+                dense={detailDense}
+              />
+              <HrReservedRow
+                label="工作地點"
+                vn="Địa điểm làm việc"
+                valueZh={locationValue}
+                dense={detailDense}
+              />
+              <HrReservedRow
+                label="福利 / 制度"
+                vn="Phúc lợi · Chế độ"
+                valueZh={benefitsValue}
+                dense={detailDense}
+              />
+            </div>
+          </Card>
+        </div>
+      </div>
+    </PageFrame>
+  );
+};
+
+const WPORT_REHO_JOBS_URL =
+  'https://wport.me/foreign-student-zone?keyword=%E7%86%B1%E7%81%AB&page=1&pageSize=10';
+
+type WportRehoJob = {
+  title: string;
+  area: string;
+  salary: string;
+  updatedAt: string;
+};
+
+const WPORT_REHO_JOBS_FALLBACK: WportRehoJob[] = [
+  {
+    title: '校園關係開發專員-桃園校區',
+    area: '桃園市蘆竹區 新興里文新街7號2F',
+    salary: '月薪 TWD 30,000',
+    updatedAt: '2026-05-21T09:37:42.000Z',
+  },
+  {
+    title: '企業開發顧問-僑外生人才專案',
+    area: '桃園市蘆竹區 新興里文新街7號2F',
+    salary: '月薪 TWD 30,000',
+    updatedAt: '2026-01-27T09:30:11.000Z',
+  },
+];
+
+function parseWportRehoJobsFromHtml(html: string): WportRehoJob[] | null {
+  if (!html.includes('熱火數碼資訊股份有限公司')) return null;
+
+  const fullJobRe = /,"([a-f0-9]{32})","([^"]+)","([^"]+)","(月薪[^"]+)","TWD",\[\],"([^"]+)"/g;
+  const jobs: WportRehoJob[] = [];
+  let area = WPORT_REHO_JOBS_FALLBACK[0]?.area ?? '';
+  let salary = WPORT_REHO_JOBS_FALLBACK[0]?.salary ?? '';
+
+  for (const match of html.matchAll(fullJobRe)) {
+    const [, , title, matchArea, matchSalary, updatedAt] = match;
+    area = matchArea;
+    salary = matchSalary;
+    jobs.push({ title, area, salary, updatedAt });
+  }
+
+  const shortJobRe = /,"([a-f0-9]{32})","([^"]+)",\[\],"([^"]+)"/g;
+  for (const match of html.matchAll(shortJobRe)) {
+    const [, , title, updatedAt] = match;
+    if (jobs.some((job) => job.title === title)) continue;
+    jobs.push({ title, area, salary, updatedAt });
+  }
+
+  return jobs.length > 0 ? jobs : null;
+}
+
+function useWportRehoJobs() {
+  const [jobs, setJobs] = useState<WportRehoJob[]>(WPORT_REHO_JOBS_FALLBACK);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const res = await fetch(WPORT_REHO_JOBS_URL);
+        if (!res.ok) return;
+        const parsed = parseWportRehoJobsFromHtml(await res.text());
+        if (!cancelled && parsed?.length) setJobs(parsed);
+      } catch {
+        // keep fallback
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return jobs;
+}
+
+const PageRehoSpotlight: Page = () => {
+  const jobs = useWportRehoJobs();
+  const primary = jobs[0] ?? WPORT_REHO_JOBS_FALLBACK[0];
+
+  return (
+    <CompanySpotlightPage
+      num="01"
+      total="04"
+      companyZh="熱火數碼資訊"
+      photoHint="熱火數碼資訊 公司團隊照"
+      photoSrc={iMG4598}
+      logoSrc={logoWportCo}
+      logoHint="熱火數碼資訊 Logo"
+      aboutZh="WPORT 職航站 · 僑外生就業媒合平台"
+      aboutVn="Nền tảng WPORT · Kết nối việc làm cho sinh viên quốc tế"
+      productValue="僑外生找工作 · 實習 · 打工媒合"
+      jobsValue={jobs
+        .slice(0, 3)
+        .map((job) => job.title)
+        .join('\n')}
+      locationValue={primary.area}
+      benefitsValue={primary.salary}
+    />
+  );
+};
+
+const PageRehoWhyJoin1: Page = () => (
+  <PageFrame theme="cream" chromeRight="企業宣傳 · 熱火數碼 1/2">
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: CONTENT_MAX_H,
+        maxHeight: CONTENT_MAX_H,
+        minHeight: 0,
+      }}
+    >
+      <RehoWhyJoinHeader part="1" />
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1.05fr 0.95fr',
+          gap: 28,
+          marginTop: 24,
+          height: WHY_JOIN_MAIN_H,
+          minHeight: 0,
+        }}
+      >
+        <WhyJoinPhotoColumn
+          hint="熱火數碼 — AI 協作 / 學習照片"
+          photoSrc={davidCaseClaudeSkills}
+          photoAlt="企業內訓 — 非程式背景也能學會如何用 Claude 實作產品（David 現場授課）"
+          captionZh="AI 工具與學習 · 公司全力投入"
+          captionVn="Công cụ AI và đào tạo — công ty đầu tư toàn diện"
+        />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 18, minHeight: 0 }}>
+          <WhyJoinReasonCard
+            n="01"
+            zh="跟上 AI 時代"
+            vn="Claude hàng ngày · Đào tạo Trello, Obsidian, n8n"
+            detail="Claude 常態化，Trello、Obsidian、n8n 教學"
+          />
+          <WhyJoinReasonCard
+            n="02"
+            zh="為員工著想"
+            vn="Khóa học đa dạng — công ty tài trợ 100% học phí bạn muốn học"
+            detail="小人提、數位轉型等多元課程，你想上的課，公司全額出資"
+          />
+        </div>
+      </div>
+    </div>
+  </PageFrame>
+);
+
+const PageRehoWhyJoin2: Page = () => (
+  <PageFrame theme="cream" chromeRight="企業宣傳 · 熱火數碼 2/2">
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: CONTENT_MAX_H,
+        maxHeight: CONTENT_MAX_H,
+        minHeight: 0,
+      }}
+    >
+      <RehoWhyJoinHeader part="2" />
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1.05fr 0.95fr',
+          gap: 28,
+          marginTop: 24,
+          height: WHY_JOIN_MAIN_H,
+          minHeight: 0,
+        }}
+      >
+        <WhyJoinPhotoColumn
+          hint="熱火數碼 — 團隊 / 活動照片"
+          photoSrc={asset2026060144538}
+          photoAlt="熱火數碼團隊活動"
+          captionZh="自由成長 · 國際化年輕團隊"
+          captionVn="Phát triển tự do · Đội ngũ trẻ, đa quốc tịch"
+        />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 18, minHeight: 0 }}>
+          <WhyJoinReasonCard
+            n="03"
+            zh="氛圍自由"
+            vn="Thăm trường, giảng viên DN, AI Coding, dự án NTU Garage+"
+            detail="校園訪問、企業講師、AI Coding、台大創創專案 · 不設限，支持你培養個人專長"
+          />
+          <WhyJoinReasonCard
+            n="04"
+            zh="多元 DNA"
+            vn="Đội ngũ dưới 30 tuổi · Anh/Nhật hàng ngày · Chỉ xem năng lực"
+            detail="團隊平均年齡 30 歲以下！英日文溝通是日常，只看實力不看國籍，全力支持工作證"
+          />
+        </div>
       </div>
     </div>
   </PageFrame>
@@ -4397,26 +4856,46 @@ const CompanySpotlightPage = ({
 
 const Page43: Page = () => (
   <CompanySpotlightPage
-    num="01"
+    num="02"
+    total="04"
     companyZh="精立數位"
     photoHint="精立數位 公司團隊照"
     logoSrc={logoJingli}
     logoHint="精立數位 Logo"
+    aboutZh="數位行銷代理商，以 Meta、Google、Line、Dcard 等媒體為客戶規劃投放與口碑（KOL／素人）行銷，歡迎想接觸多元產業的同仁。"
+    aboutVn="Agency marketing số — quảng cáo & truyền thông KOL"
+    productValue="口碑顧問 · 數位廣告（Meta / Google）"
+    jobsValue={'產品專員\n數位廣告人員\n實習顧問'}
+    locationValue="桃園市中壢區 新明路7號11樓"
+    benefitsValue={
+      '三節獎金 · 週休二日 · 健檢全額補助\n每週內訓 · 免費行銷線上課程\n年終獎金 · 旅遊／部門聚餐補助'
+    }
   />
 );
 
 const Page44: Page = () => (
   <CompanySpotlightPage
-    num="02"
+    num="03"
+    total="04"
     companyZh="智慧老人"
     photoHint="智慧老人 公司團隊照"
+    logoSrc={asset978de56f68ef4a31A3c6B3b340e1c53c}
     logoHint="智慧老人 公司 Logo"
+    aboutZh="其他住宿服務，團隊 5–9 人。旅宿退房房務清潔與現場營運，表現優異者 6 個月以上可培訓晉升現場營運專員。"
+    aboutVn="Lưu trú · dọn phòng · lộ trình quản lý hiện trường"
+    productValue="短租旅宿 · 房務清潔與現場營運"
+    jobsValue="環境整理員"
+    locationValue={'台北市信義區（工作）\n台北市中正區 羅斯福路四段68號7樓之10'}
+    benefitsValue={
+      '論件計酬 · 彈性排班 · 準時結算\n新手 LINE 教學 · 後台 30 分鐘內支援\n三節獎金 · 健保勞保 · 晉升區域組長'
+    }
   />
 );
 
 const Page45: Page = () => (
   <CompanySpotlightPage
-    num="03"
+    num="04"
+    total="04"
     companyZh="機童科技"
     photoHint="機童科技 公司團隊照"
     logoHint="機童科技 公司 Logo"
@@ -4464,15 +4943,39 @@ const CompanyBooth = ({
     >
       {nameZh}
     </div>
-    <div style={{ marginTop: 'auto', paddingTop: 12, display: 'flex', flexDirection: 'column', gap: 10 }}>
+    <div
+      style={{
+        marginTop: 'auto',
+        paddingTop: 12,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 10,
+      }}
+    >
       {features.map(([zh, vn]) => (
         <div key={zh} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
           <span style={{ color: C.green, fontSize: 18, lineHeight: 1.4, flexShrink: 0 }}>★</span>
           <div>
-            <div style={{ fontFamily: FF_ZH, fontSize: 22, fontWeight: 700, color: C.dark, lineHeight: 1.3 }}>
+            <div
+              style={{
+                fontFamily: FF_ZH,
+                fontSize: 22,
+                fontWeight: 700,
+                color: C.dark,
+                lineHeight: 1.3,
+              }}
+            >
               {zh}
             </div>
-            <div style={{ fontFamily: FF_VN, fontSize: 18, color: C.muted, fontStyle: 'italic', marginTop: 2 }}>
+            <div
+              style={{
+                fontFamily: FF_VN,
+                fontSize: 18,
+                color: C.muted,
+                fontStyle: 'italic',
+                marginTop: 2,
+              }}
+            >
               {vn}
             </div>
           </div>
@@ -4622,7 +5125,9 @@ const Page40: Page = () => (
         </div>
       </Card>
     </div>
-    <div style={{ marginTop: 28, display: 'flex', alignItems: 'baseline', gap: 16, flexWrap: 'wrap' }}>
+    <div
+      style={{ marginTop: 28, display: 'flex', alignItems: 'baseline', gap: 16, flexWrap: 'wrap' }}
+    >
       <div style={{ fontFamily: FF_ZH, fontSize: 28, fontWeight: 800, color: C.dark }}>
         ★ 上台企業也設攤 · 歡迎認識各公司團隊
       </div>
@@ -4643,28 +5148,22 @@ const Page40: Page = () => (
         no="03"
         nameZh="精立數位"
         features={[
-          ['主要服務 / 產品', 'Sản phẩm · Dịch vụ'],
-          ['招募職缺', 'Vị trí tuyển dụng'],
-          ['福利 / 制度', 'Phúc lợi · Chế độ'],
+          ['Meta / Google 數位廣告', 'Quảng cáo Meta · Google'],
+          ['口碑行銷 · KOL', 'Marketing truyền thông KOL'],
         ]}
       />
       <CompanyBooth
         no="04"
         nameZh="智慧老人"
         features={[
-          ['主要服務 / 產品', 'Sản phẩm · Dịch vụ'],
-          ['招募職缺', 'Vị trí tuyển dụng'],
-          ['工作地點', 'Địa điểm làm việc'],
+          ['房務清潔 · 彈性排班', 'Dọn phòng · ca linh hoạt'],
+          ['6 個月可晉升營運', 'Thăng tiến vận hành sau 6 tháng'],
         ]}
       />
       <CompanyBooth
         no="05"
         nameZh="機童科技"
-        features={[
-          ['主要服務 / 產品', 'Sản phẩm · Dịch vụ'],
-          ['招募職缺', 'Vị trí tuyển dụng'],
-          ['福利 / 制度', 'Phúc lợi · Chế độ'],
-        ]}
+        features={[['車廠、客服、年輕團隊', 'Ô tô · CSKH · đội ngũ trẻ']]}
       />
     </div>
   </PageFrame>
@@ -4716,7 +5215,9 @@ const Page41: Page = () => (
         >
           Q&A
         </div>
-        <div style={{ fontFamily: FF_ZH, fontSize: 56, fontWeight: 700, color: '#fff', marginTop: 32 }}>
+        <div
+          style={{ fontFamily: FF_ZH, fontSize: 56, fontWeight: 700, color: '#fff', marginTop: 32 }}
+        >
           現場詢問 — 我們在這裡。
         </div>
         <TitleVn theme="dark" size={36} style={{ marginTop: 16 }}>
@@ -4731,7 +5232,15 @@ const Page41: Page = () => (
             border: '1px solid rgba(255,255,255,0.12)',
           }}
         >
-          <div style={{ fontFamily: FF_ZH, fontSize: 26, fontWeight: 700, color: '#fff', lineHeight: 1.4 }}>
+          <div
+            style={{
+              fontFamily: FF_ZH,
+              fontSize: 26,
+              fontWeight: 700,
+              color: '#fff',
+              lineHeight: 1.4,
+            }}
+          >
             也可掃描 QR Code 填寫問卷回饋
           </div>
           <BodyVn size={20} color={C.lime} style={{ marginTop: 8 }}>
@@ -4859,7 +5368,8 @@ export default [
   Page20,
   Page21,
   Page22,
-  Page26,
+  Page23,
+  Page25,
   Page27,
   Page28,
   Page29,
@@ -4873,6 +5383,9 @@ export default [
   Page35,
   Page37,
   Page39,
+  PageRehoSpotlight,
+  PageRehoWhyJoin1,
+  PageRehoWhyJoin2,
   Page43,
   Page44,
   Page45,

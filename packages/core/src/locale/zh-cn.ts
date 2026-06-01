@@ -360,6 +360,7 @@ export const zhCN: Locale = {
 
   imagePlaceholder: {
     dropOverlay: '拖入图片以使用',
+    dropOverlayReplace: '拖入图片以替换',
     uploading: '上传中…',
     uploadFailed: '图片上传失败',
   },
