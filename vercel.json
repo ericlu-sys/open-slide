@@ -1,0 +1,6 @@
+{
+  "installCommand": "cd my-slide && npm ci",
+  "buildCommand": "cd my-slide && npm run build",
+  "outputDirectory": "my-slide/dist",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}
