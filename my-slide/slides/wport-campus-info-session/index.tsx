@@ -9,7 +9,7 @@ import {
   type SlideTransition,
   useSlidePageNumber,
 } from '@open-slide/core';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import coChc from './assets/co-chc.jpg';
 import coDrinkit from './assets/co-drinkit.jpg';
 import coImpact from './assets/co-impact.jpg';
@@ -275,6 +275,56 @@ const ChromeFoot = ({
     >
       <div style={{ fontFamily: FF_ZH, letterSpacing: '0.18em', fontWeight: 500 }}>{tagline}</div>
       <div>{showPage ? `p. ${String(current).padStart(2, '0')}` : right}</div>
+    </div>
+  );
+};
+
+const WPORT_PROMO_DRIVE_ID = '168PIbgfB284dYbF1SvcLHDw5AAdhr3Uw';
+const PRESENT_VIDEO_MIN_INTERSECT_PX = 40_000;
+
+const PresentAutoplayDriveVideo = ({ title }: { title: string }) => {
+  const hostRef = useRef<HTMLDivElement>(null);
+  const [src, setSrc] = useState('');
+
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host) return;
+
+    const sync = (entry: IntersectionObserverEntry) => {
+      const area = entry.intersectionRect.width * entry.intersectionRect.height;
+      if (entry.isIntersecting && area >= PRESENT_VIDEO_MIN_INTERSECT_PX) {
+        setSrc(
+          `https://drive.google.com/file/d/${WPORT_PROMO_DRIVE_ID}/preview?autoplay=1`,
+        );
+      } else {
+        setSrc('');
+      }
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) sync(entry);
+      },
+      { threshold: [0, 0.25, 0.5, 0.75, 1] },
+    );
+    observer.observe(host);
+    return () => {
+      observer.disconnect();
+      setSrc('');
+    };
+  }, []);
+
+  return (
+    <div ref={hostRef} style={{ position: 'absolute', inset: 0, background: '#000' }}>
+      {src ? (
+        <iframe
+          src={src}
+          title={title}
+          allow="autoplay; fullscreen"
+          allowFullScreen
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 0 }}
+        />
+      ) : null}
     </div>
   );
 };
@@ -1405,13 +1455,7 @@ const Page5: Page = () => (
             boxShadow: '0 24px 48px rgba(28,94,87,0.16)',
           }}
         >
-          <iframe
-            src="https://drive.google.com/file/d/168PIbgfB284dYbF1SvcLHDw5AAdhr3Uw/preview"
-            title="WPORT 活動影片 — 求職準備"
-            allow="autoplay; fullscreen"
-            allowFullScreen
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 0 }}
-          />
+          <PresentAutoplayDriveVideo title="WPORT 活動影片 — 求職準備" />
         </div>
         <div
           style={{
@@ -2378,7 +2422,7 @@ const Page14: Page = () => (
 const Page15: Page = () => (
   <PageFrame
     theme="dark"
-    chromeRight="03 / 06"
+    chromeRight="01 / 06"
     center
     blobs={<Blob size={680} color={C.green} top={-180} right={-160} opacity={0.32} />}
     foot={<ChromeFoot theme="dark" tagline="WPORT · 職航站" showPage />}
@@ -2406,7 +2450,7 @@ const Page15: Page = () => (
             marginBottom: 20,
           }}
         >
-          CHAPTER THREE
+          CHAPTER ONE
         </div>
         <TitleZh size={92} color="#fff">
           評點制新制 ─
@@ -2452,7 +2496,7 @@ const Page15: Page = () => (
 const Page16: Page = () => (
   <PageFrame theme="paper" chromeRight="01 · 評點制 / ICAN">
     <SlideAnimStyles />
-    <Eyebrow>03 / About ICAN</Eyebrow>
+    <Eyebrow>01 / About ICAN</Eyebrow>
     <TitleZh>艾肯顧問 自我介紹</TitleZh>
     <TitleVn size={52}>Giới thiệu về Tư vấn ICAN</TitleVn>
     <div
@@ -2579,7 +2623,7 @@ const Page16: Page = () => (
 const Page17: Page = () => (
   <PageFrame
     theme="green"
-    chromeRight="03 · 評點制 / ICAN"
+    chromeRight="01 · 評點制 / ICAN"
     center
     blobs={<Blob size={720} color={C.lime} top={-200} right={-200} opacity={0.18} />}
   >
@@ -2631,9 +2675,9 @@ const Page17: Page = () => (
 );
 
 const Page18: Page = () => (
-  <PageFrame theme="cream" chromeRight="03 · 評點制 / ICAN">
+  <PageFrame theme="cream" chromeRight="01 · 評點制 / ICAN">
     <SlideAnimStyles />
-    <Eyebrow>03 / Extended stay</Eyebrow>
+    <Eyebrow>01 / Extended stay</Eyebrow>
     <TitleZh>
       畢業僑外生
       <br />
@@ -2765,9 +2809,9 @@ const Page18: Page = () => (
 );
 
 const Page19: Page = () => (
-  <PageFrame theme="paper" chromeRight="03 · 評點制 / ICAN">
+  <PageFrame theme="paper" chromeRight="01 · 評點制 / ICAN">
     <SlideAnimStyles />
-    <Eyebrow>03 / Points-based system</Eyebrow>
+    <Eyebrow>01 / Points-based system</Eyebrow>
     <TitleZh>畢業僑生留台工作評點制</TitleZh>
     <TitleVn size={52}>Hệ thống cấp phép lao động theo thang điểm</TitleVn>
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, marginTop: 56 }}>
@@ -2926,9 +2970,9 @@ const Page19: Page = () => (
 );
 
 const Page20: Page = () => (
-  <PageFrame theme="cream" chromeRight="03 · 評點制 / ICAN">
+  <PageFrame theme="cream" chromeRight="01 · 評點制 / ICAN">
     <SlideAnimStyles />
-    <Eyebrow>03 / Case flow</Eyebrow>
+    <Eyebrow>01 / Case flow</Eyebrow>
     <TitleZh>案例分享 — 明X興業 繪圖助理</TitleZh>
     <TitleVn size={52}>Case study – Trợ lý vẽ kỹ thuật tại Minh X Hưng Nghiệp</TitleVn>
     <div style={{ position: 'relative', marginTop: 56 }}>
@@ -3028,9 +3072,9 @@ const Page20: Page = () => (
 );
 
 const Page21: Page = () => (
-  <PageFrame theme="paper" chromeRight="03 · 評點制 / ICAN">
+  <PageFrame theme="paper" chromeRight="01 · 評點制 / ICAN">
     <SlideAnimStyles />
-    <Eyebrow>03 / Scoring breakdown</Eyebrow>
+    <Eyebrow>01 / Scoring breakdown</Eyebrow>
     <div
       style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 32 }}
     >
@@ -5564,6 +5608,7 @@ export default [
   Page25,
   Page1,
   Page4,
+  Page5,
   PageKainan,
   Page6,
   Page8,
@@ -5572,7 +5617,6 @@ export default [
   Page43,
   Page40,
   Page3,
-  Page5,
   Page2,
   Page10,
   Page11,
