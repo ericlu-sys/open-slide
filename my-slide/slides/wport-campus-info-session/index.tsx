@@ -58,6 +58,12 @@ import seniorPanPortrait from './assets/潘祥薇.png';
 import senior23Portrait from './assets/senior-23-portrait.png';
 import asset978de56f68ef4a31A3c6B3b340e1c53c from './assets/978de56f-68ef-4a31-a3c6-b3b340e1c53c.png';
 import logo2 from './assets/logo.jpg';
+import asset from './assets/精立數位.jpg';
+import asset2 from './assets/智慧老人-2.jpg';
+
+
+
+
 
 
 
@@ -745,6 +751,87 @@ const QrSlot = ({ hint, size = 520 }: { hint: string; size?: number }) => (
   </div>
 );
 
+const FLOATING_QR_SIZE = 156;
+const FLOATING_QR_SLOT_W = 380;
+const FLOATING_QR_SLOT_H = 196;
+const FLOATING_QR_ANIM_CSS = `@keyframes wpQrFloat{0%,100%{transform:translateY(0) scale(1);box-shadow:0 12px 28px rgba(0,0,0,0.14)}50%{transform:translateY(-10px) scale(1.02);box-shadow:0 20px 34px rgba(0,0,0,0.2)}}`;
+
+const FloatingJobQr = () => (
+  <>
+    <style>{FLOATING_QR_ANIM_CSS}</style>
+    <div
+    style={{
+      position: 'absolute',
+      right: 0,
+      bottom: 0,
+      display: 'flex',
+      alignItems: 'center',
+      gap: 14,
+      background: 'rgba(255,255,255,0.92)',
+      border: `1px solid ${C.panelBorder}`,
+      borderRadius: 16,
+      padding: '14px 16px',
+      boxShadow: '0 12px 28px rgba(0,0,0,0.14)',
+      zIndex: 3,
+      animation: 'wpQrFloat 2.4s ease-in-out infinite',
+      transformOrigin: '85% 85%',
+    }}
+  >
+    <img
+      src={qrCode}
+      alt="活動職缺 QR Code"
+      style={{
+        width: FLOATING_QR_SIZE,
+        height: FLOATING_QR_SIZE,
+        borderRadius: 10,
+        objectFit: 'cover',
+        objectPosition: '42% 50%',
+        flexShrink: 0,
+      }}
+    />
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0 }}>
+      <div
+        style={{
+          fontFamily: FF_EN,
+          fontSize: 16,
+          letterSpacing: '0.18em',
+          textTransform: 'uppercase',
+          fontWeight: 700,
+          color: C.green,
+        }}
+      >
+        SCAN
+      </div>
+      <div style={{ fontFamily: FF_ZH, fontSize: 22, fontWeight: 800, color: C.dark, lineHeight: 1.2 }}>
+        掃描查看活動職缺
+      </div>
+      <div style={{ fontFamily: FF_VN, fontSize: 16, color: C.muted, fontStyle: 'italic', lineHeight: 1.3 }}>
+        Quét mã để xem vị trí tuyển dụng
+      </div>
+    </div>
+    </div>
+  </>
+);
+
+const FloatingJobQrSlot = ({ children }: { children: React.ReactNode }) => (
+  <div
+    style={{
+      position: 'relative',
+      width: '100%',
+      flex: 1,
+      minHeight: 0,
+      display: 'flex',
+      flexDirection: 'column',
+      paddingRight: FLOATING_QR_SLOT_W,
+      paddingBottom: FLOATING_QR_SLOT_H,
+      boxSizing: 'border-box',
+    }}
+  >
+    {children}
+    <FloatingJobQr />
+  </div>
+);
+
 const SurveyQr = ({ size = 520 }: { size?: number }) => (
   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
     <img
@@ -865,6 +952,22 @@ const StepNum = ({ n, lime }: { n: string; lime?: boolean }) => (
   </div>
 );
 
+const REVEAL_EASE = 'cubic-bezier(0.16, 1, 0.3, 1)';
+const REVEAL_DURATION = 560;
+const REVEAL_STAGGER = 90;
+
+const SLIDE_ANIM_CSS = `@keyframes wpStepIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}@keyframes wpStatGlow{0%,100%{box-shadow:0 0 14px rgba(86,199,187,0.22)}50%{box-shadow:0 0 26px rgba(86,199,187,0.45)}}@keyframes wpDateFlow{0%{background-position:200% 0}100%{background-position:-200% 0}}@keyframes wpQrFloat{0%,100%{transform:translateY(0) scale(1);box-shadow:0 12px 28px rgba(0,0,0,0.14)}50%{transform:translateY(-10px) scale(1.02);box-shadow:0 20px 34px rgba(0,0,0,0.2)}}`;
+
+const SlideAnimStyles = () => <style>{SLIDE_ANIM_CSS}</style>;
+
+const revealStagger = (index: number) =>
+  `wpStepIn ${REVEAL_DURATION}ms ${REVEAL_EASE} ${index * REVEAL_STAGGER}ms both`;
+
+const revealThenGlow = (index: number) => {
+  const glowStart = index * REVEAL_STAGGER + REVEAL_DURATION;
+  return `${revealStagger(index)}, wpStatGlow 2.8s ease-in-out ${glowStart}ms infinite`;
+};
+
 const StatRow = ({
   n,
   zh,
@@ -872,6 +975,7 @@ const StatRow = ({
   en,
   points,
   highlight,
+  stagger,
 }: {
   n: string;
   zh: string;
@@ -879,11 +983,18 @@ const StatRow = ({
   en?: string;
   points: string;
   highlight?: boolean;
-}) => (
-  <>
-    {highlight ? (
-      <style>{`@keyframes wpStatGlow{0%,100%{box-shadow:0 0 14px rgba(86,199,187,0.22)}50%{box-shadow:0 0 26px rgba(86,199,187,0.45)}}`}</style>
-    ) : null}
+  stagger?: number;
+}) => {
+  const animation =
+    stagger !== undefined
+      ? highlight
+        ? revealThenGlow(stagger)
+        : revealStagger(stagger)
+      : highlight
+        ? 'wpStatGlow 2.8s ease-in-out infinite'
+        : undefined;
+
+  return (
     <div
       style={{
         display: 'grid',
@@ -895,7 +1006,7 @@ const StatRow = ({
         borderRadius: highlight ? 16 : undefined,
         boxShadow: highlight ? '0 0 18px rgba(86, 199, 187, 0.28)' : undefined,
         borderBottom: highlight ? undefined : `1px solid ${C.rule}`,
-        animation: highlight ? 'wpStatGlow 2.8s ease-in-out infinite' : undefined,
+        animation,
       }}
     >
       <div style={{ fontFamily: FF_DISPLAY, fontWeight: 800, fontSize: 28, color: C.green }}>
@@ -921,8 +1032,8 @@ const StatRow = ({
         <span style={{ fontSize: 22, color: C.muted, marginLeft: 4 }}>點</span>
       </div>
     </div>
-  </>
-);
+  );
+};
 
 const Page1: Page = () => (
   <PageFrame
@@ -1342,6 +1453,7 @@ const Page5: Page = () => (
 
 const Page6: Page = () => (
   <PageFrame theme="lime" chromeRight="01 · LIVE JOBS">
+    <FloatingJobQrSlot>
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center' }}>
       <div>
         <div
@@ -1398,42 +1510,29 @@ const Page6: Page = () => (
           226 vị trí thân thiện đang chờ bạn ứng tuyển.
         </BodyVn>
       </div>
-      <Card variant="hi" style={{ padding: 44 }}>
-        <div
-          style={{
-            fontFamily: FF_EN,
-            fontSize: 22,
-            letterSpacing: '0.2em',
-            textTransform: 'uppercase',
-            fontWeight: 700,
-            color: C.lime,
-          }}
-        >
-          One-click apply
-        </div>
+      <Card variant="hi" style={{ padding: '22px 26px' }}>
         <div
           style={{
             fontFamily: FF_ZH,
-            fontSize: 36,
+            fontSize: 28,
             fontWeight: 700,
             color: '#fff',
-            lineHeight: 1.4,
-            marginTop: 18,
+            lineHeight: 1.35,
           }}
         >
           點擊{' '}
-          <span style={{ background: C.lime, color: C.dark, padding: '4px 14px', borderRadius: 8 }}>
+          <span style={{ background: C.lime, color: C.dark, padding: '2px 10px', borderRadius: 8 }}>
             一鍵投遞人才庫
           </span>
-          <br />
-          就能看到所有職缺。
+          {' '}
+          即可查看所有職缺
         </div>
-        <BodyVn size={24} color={C.lime} style={{ marginTop: 16 }}>
-          Bấm vào kho nhân tài là có thể xem tất cả vị trí.
+        <BodyVn size={20} color={C.lime} style={{ marginTop: 10 }}>
+          Bấm vào kho nhân tài để xem tất cả vị trí.
         </BodyVn>
       </Card>
     </div>
-    <div style={{ marginTop: 44 }}>
+    <div style={{ marginTop: 36 }}>
       <div
         style={{
           fontFamily: FF_ZH,
@@ -1474,6 +1573,7 @@ const Page6: Page = () => (
         <LogoImg src={logoWanda} name="萬達科技顧問" />
       </div>
     </div>
+    </FloatingJobQrSlot>
   </PageFrame>
 );
 
@@ -1528,7 +1628,8 @@ const FEATURED_COMPANIES: FeaturedCompany[] = [
 
 const Page7: Page = () => (
   <PageFrame theme="cream" chromeRight="01 · FEATURED COMPANIES">
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+    <FloatingJobQrSlot>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 48 }}>
       <div>
         <Eyebrow>01 / Featured employers</Eyebrow>
         <TitleZh size={64}>特別推薦企業</TitleZh>
@@ -1536,13 +1637,13 @@ const Page7: Page = () => (
       </div>
       <Pill>3 Companies</Pill>
     </div>
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 28, marginTop: 44 }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, marginTop: 36 }}>
       {FEATURED_COMPANIES.map((co) => (
         <Card key={co.nameEn} style={{ padding: 0, background: C.surface, overflow: 'hidden' }}>
           <img
             src={co.photo}
             alt={`${co.nameZh} 團隊`}
-            style={{ width: '100%', height: 200, objectFit: 'cover', display: 'block' }}
+            style={{ width: '100%', height: 176, objectFit: 'cover', display: 'block' }}
           />
           <div style={{ padding: '24px 28px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
@@ -1634,6 +1735,7 @@ const Page7: Page = () => (
         </Card>
       ))}
     </div>
+    </FloatingJobQrSlot>
   </PageFrame>
 );
 
@@ -2291,9 +2393,7 @@ const Page15: Page = () => (
           letterSpacing: '-0.04em',
           color: C.lime,
         }}
-      >
-        03
-      </div>
+      >01</div>
       <div>
         <div
           style={{
@@ -2350,7 +2450,8 @@ const Page15: Page = () => (
 );
 
 const Page16: Page = () => (
-  <PageFrame theme="paper" chromeRight="03 · 評點制 / ICAN">
+  <PageFrame theme="paper" chromeRight="01 · 評點制 / ICAN">
+    <SlideAnimStyles />
     <Eyebrow>03 / About ICAN</Eyebrow>
     <TitleZh>艾肯顧問 自我介紹</TitleZh>
     <TitleVn size={52}>Giới thiệu về Tư vấn ICAN</TitleVn>
@@ -2369,6 +2470,7 @@ const Page16: Page = () => (
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'flex-end',
+          animation: revealStagger(0),
         }}
       >
         <img
@@ -2397,7 +2499,7 @@ const Page16: Page = () => (
         </div>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
-        <Card variant="lime" style={{ padding: 36 }}>
+        <Card variant="lime" style={{ padding: 36, animation: revealStagger(1) }}>
           <div
             style={{
               fontFamily: FF_EN,
@@ -2461,6 +2563,7 @@ const Page16: Page = () => (
                 borderRadius: 14,
                 background: i % 2 === 0 ? C.panelStrong : C.panel,
                 border: `1px solid ${C.panelBorder}`,
+                animation: revealStagger(2 + i),
               }}
             >
               <span style={{ color: C.green, fontWeight: 800 }}>✓</span>
@@ -2495,10 +2598,22 @@ const Page17: Page = () => (
     <div
       style={{
         fontFamily: FF_ZH,
+        fontSize: 72,
+        fontWeight: 800,
+        lineHeight: 1.2,
+        marginTop: 20,
+        color: '#fff',
+      }}
+    >
+      謝謝大家
+    </div>
+    <div
+      style={{
+        fontFamily: FF_ZH,
         fontSize: 140,
         fontWeight: 900,
         lineHeight: 1.05,
-        marginTop: 32,
+        marginTop: 18,
         color: '#fff',
       }}
     >
@@ -2517,6 +2632,7 @@ const Page17: Page = () => (
 
 const Page18: Page = () => (
   <PageFrame theme="cream" chromeRight="03 · 評點制 / ICAN">
+    <SlideAnimStyles />
     <Eyebrow>03 / Extended stay</Eyebrow>
     <TitleZh>
       畢業僑外生
@@ -2533,7 +2649,7 @@ const Page18: Page = () => (
         alignItems: 'stretch',
       }}
     >
-      <Card style={{ padding: 48, background: C.surface }}>
+      <Card style={{ padding: 48, background: C.surface, animation: revealStagger(0) }}>
         <div
           style={{
             fontFamily: FF_ZH,
@@ -2551,6 +2667,8 @@ const Page18: Page = () => (
               padding: '2px 12px',
               borderRadius: 8,
               border: `1px solid ${C.panelBorder}`,
+              display: 'inline-block',
+              animation: revealStagger(2),
             }}
           >
             無須申請工作許可
@@ -2575,7 +2693,7 @@ const Page18: Page = () => (
         </BodyVn>
       </Card>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-        <Card variant="hi" style={{ padding: 36 }}>
+        <Card variant="hi" style={{ padding: 36, animation: revealStagger(1) }}>
           <div
             style={{
               fontFamily: FF_EN,
@@ -2613,7 +2731,7 @@ const Page18: Page = () => (
             Cannot be accumulated
           </div>
         </Card>
-        <Card variant="lime" style={{ padding: 36 }}>
+        <Card variant="lime" style={{ padding: 36, animation: revealStagger(2) }}>
           <div
             style={{
               fontFamily: FF_EN,
@@ -2648,6 +2766,7 @@ const Page18: Page = () => (
 
 const Page19: Page = () => (
   <PageFrame theme="paper" chromeRight="03 · 評點制 / ICAN">
+    <SlideAnimStyles />
     <Eyebrow>03 / Points-based system</Eyebrow>
     <TitleZh>畢業僑生留台工作評點制</TitleZh>
     <TitleVn size={52}>Hệ thống cấp phép lao động theo thang điểm</TitleVn>
@@ -2681,10 +2800,18 @@ const Page19: Page = () => (
           variant: 'lime' as const,
           points: true,
         },
-      ].map(({ num, en, zh, main, vn, enSub, variant, points }) => {
+      ].map(({ num, en, zh, main, vn, enSub, variant, points }, i) => {
         const onDark = variant === 'green';
         return (
-          <Card key={num} variant={variant} style={{ padding: 40 }}>
+          <Card
+            key={num}
+            variant={variant}
+            style={{
+              padding: 40,
+              animation: points ? revealThenGlow(i) : revealStagger(i),
+              ...(points ? { boxShadow: '0 0 18px rgba(86, 199, 187, 0.28)' } : {}),
+            }}
+          >
             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
               <div
                 style={{
@@ -2800,7 +2927,7 @@ const Page19: Page = () => (
 
 const Page20: Page = () => (
   <PageFrame theme="cream" chromeRight="03 · 評點制 / ICAN">
-    <style>{`@keyframes wpDateFlow{0%{background-position:200% 0}100%{background-position:-200% 0}}@keyframes wpStepIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}`}</style>
+    <SlideAnimStyles />
     <Eyebrow>03 / Case flow</Eyebrow>
     <TitleZh>案例分享 — 明X興業 繪圖助理</TitleZh>
     <TitleVn size={52}>Case study – Trợ lý vẽ kỹ thuật tại Minh X Hưng Nghiệp</TitleVn>
@@ -2841,7 +2968,7 @@ const Page20: Page = () => (
             variant={i % 2 === 0 ? 'lime' : 'green'}
             style={{
               padding: '22px 18px',
-              animation: `wpStepIn 560ms cubic-bezier(0.16, 1, 0.3, 1) ${i * 90}ms both`,
+              animation: revealStagger(i),
             }}
           >
             <div
@@ -2884,6 +3011,7 @@ const Page20: Page = () => (
         display: 'flex',
         alignItems: 'center',
         gap: 24,
+        animation: revealStagger(7),
       }}
     >
       <div style={{ fontFamily: FF_DISPLAY, fontWeight: 800, fontSize: 40, color: C.dark }}>★</div>
@@ -2901,11 +3029,12 @@ const Page20: Page = () => (
 
 const Page21: Page = () => (
   <PageFrame theme="paper" chromeRight="03 · 評點制 / ICAN">
+    <SlideAnimStyles />
     <Eyebrow>03 / Scoring breakdown</Eyebrow>
     <div
       style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 32 }}
     >
-      <div>
+      <div style={{ animation: revealStagger(0) }}>
         <TitleZh size={64}>評點項目及點數</TitleZh>
         <TitleVn size={52}>Các mục đánh giá và điểm số</TitleVn>
       </div>
@@ -2916,6 +3045,7 @@ const Page21: Page = () => (
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          animation: revealStagger(1),
         }}
       >
         <div style={{ fontFamily: FF_ZH, fontSize: 24, color: C.dark, fontWeight: 600 }}>
@@ -2938,14 +3068,50 @@ const Page21: Page = () => (
     <div
       style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 64px', marginTop: 40 }}
     >
-      <StatRow n="01" zh="學歷" vn="Trình độ học vấn" en="Education" points="5–30" />
-      <StatRow n="02" zh="華語語文能力" vn="Tiếng Hoa" en="Mandarin" points="0–30" highlight />
-      <StatRow n="03" zh="聘僱薪資" vn="Mức lương" en="Salary" points="10–40" />
-      <StatRow n="04" zh="他國語言能力" vn="Ngoại ngữ" en="Foreign Language" points="0–20" />
-      <StatRow n="05" zh="工作經驗" vn="Kinh nghiệm" en="Experience" points="0–20" />
-      <StatRow n="06" zh="配合政府政策" vn="Tuân thủ chính sách" en="Policies" points="0–20" />
-      <StatRow n="07" zh="擔任職務資格" vn="Trình độ vị trí" en="Position" points="0–20" />
-      <StatRow n="08" zh="在校成績" vn="Thành tích học tập" en="Academic" points="0–10" />
+      <StatRow n="01" zh="學歷" vn="Trình độ học vấn" en="Education" points="5–30" stagger={2} />
+      <StatRow
+        n="02"
+        zh="華語語文能力"
+        vn="Tiếng Hoa"
+        en="Mandarin"
+        points="0–30"
+        highlight
+        stagger={3}
+      />
+      <StatRow n="03" zh="聘僱薪資" vn="Mức lương" en="Salary" points="10–40" stagger={4} />
+      <StatRow
+        n="04"
+        zh="他國語言能力"
+        vn="Ngoại ngữ"
+        en="Foreign Language"
+        points="0–20"
+        stagger={5}
+      />
+      <StatRow n="05" zh="工作經驗" vn="Kinh nghiệm" en="Experience" points="0–20" stagger={6} />
+      <StatRow
+        n="06"
+        zh="配合政府政策"
+        vn="Tuân thủ chính sách"
+        en="Policies"
+        points="0–20"
+        stagger={7}
+      />
+      <StatRow
+        n="07"
+        zh="擔任職務資格"
+        vn="Trình độ vị trí"
+        en="Position"
+        points="0–20"
+        stagger={8}
+      />
+      <StatRow
+        n="08"
+        zh="在校成績"
+        vn="Thành tích học tập"
+        en="Academic"
+        points="0–10"
+        stagger={9}
+      />
     </div>
   </PageFrame>
 );
@@ -3117,7 +3283,7 @@ const SeniorInfoCards = ({
 
 const Page22: Page = () => (
   <SectionDivider
-    num="04"
+    num="02"
     chapter="CHAPTER FOUR"
     titleZh="學長姐 現身說法"
     titleVn="Chia sẻ từ các anh chị đi trước"
@@ -4315,10 +4481,12 @@ const HrReservedRow = ({
 const TeamPhotoSlot = ({
   hint,
   photoSrc,
+  fallback,
   style,
 }: {
   hint: string;
   photoSrc?: string;
+  fallback?: React.ReactNode;
   style?: React.CSSProperties;
 }) => (
   <div
@@ -4334,12 +4502,12 @@ const TeamPhotoSlot = ({
       <CoverImage src={photoSrc} alt={hint} objectPosition="50% 50%" />
     ) : (
       <div style={{ position: 'absolute', inset: 0 }}>
-        <ImagePlaceholder
-          hint={hint}
-          width={640}
-          height={480}
-          style={{ border: 'none', borderRadius: 0, width: '100%', height: '100%' }}
-        />
+        {fallback ?? (
+          <ImagePlaceholder
+            hint={hint}
+            style={{ border: 'none', borderRadius: 0, width: '100%', height: '100%' }}
+          />
+        )}
       </div>
     )}
   </div>
@@ -4483,6 +4651,7 @@ const CompanySpotlightPage = ({
   companyZh,
   photoHint,
   photoSrc,
+  photoFallback,
   logoSrc,
   logoHint,
   aboutZh = '（公司簡介內容預留）',
@@ -4497,6 +4666,7 @@ const CompanySpotlightPage = ({
   companyZh: string;
   photoHint: string;
   photoSrc?: string;
+  photoFallback?: React.ReactNode;
   logoSrc?: string;
   logoHint: string;
   aboutZh?: string;
@@ -4535,7 +4705,12 @@ const CompanySpotlightPage = ({
         }}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10, minHeight: 0 }}>
-          <TeamPhotoSlot hint={photoHint} photoSrc={photoSrc} style={{ flex: 1, minHeight: 0 }} />
+          <TeamPhotoSlot
+            hint={photoHint}
+            photoSrc={photoSrc}
+            fallback={photoFallback}
+            style={{ flex: 1, minHeight: 0 }}
+          />
           <div
             style={{
               fontFamily: FF_ZH,
@@ -4857,9 +5032,12 @@ const PageRehoWhyJoin2: Page = () => (
 const Page43: Page = () => (
   <CompanySpotlightPage
     num="02"
-    total="04"
+    total="02"
     companyZh="精立數位"
     photoHint="精立數位 公司團隊照"
+    photoFallback={
+      <img src={asset} alt='精立數位 公司團隊照' style={{ objectFit: 'cover', objectPosition: '50% 50%' }} />
+    }
     logoSrc={logoJingli}
     logoHint="精立數位 Logo"
     aboutZh="數位行銷代理商，以 Meta、Google、Line、Dcard 等媒體為客戶規劃投放與口碑（KOL／素人）行銷，歡迎想接觸多元產業的同仁。"
@@ -4875,10 +5053,13 @@ const Page43: Page = () => (
 
 const Page44: Page = () => (
   <CompanySpotlightPage
-    num="03"
-    total="04"
+    num="01"
+    total="02"
     companyZh="智慧老人"
     photoHint="智慧老人 公司團隊照"
+    photoFallback={
+      <img src={asset2} alt='智慧老人 公司團隊照' style={{ objectFit: 'cover', objectPosition: '50% 50%' }} />
+    }
     logoSrc={asset978de56f68ef4a31A3c6B3b340e1c53c}
     logoHint="智慧老人 公司 Logo"
     aboutZh="其他住宿服務，團隊 5–9 人。旅宿退房房務清潔與現場營運，表現優異者 6 個月以上可培訓晉升現場營運專員。"
@@ -4898,6 +5079,12 @@ const Page45: Page = () => (
     total="04"
     companyZh="機童科技"
     photoHint="機童科技 公司團隊照"
+    photoFallback={
+      <ImagePlaceholder
+        hint="機童科技 公司團隊照"
+        style={{ border: 'none', borderRadius: 0, width: '100%', height: '100%' }}
+      />
+    }
     logoHint="機童科技 公司 Logo"
   />
 );
@@ -4906,18 +5093,20 @@ const CompanyBooth = ({
   no,
   nameZh,
   features,
+  logoSrc,
 }: {
   no: string;
   nameZh: React.ReactNode;
   features: [string, string][];
+  logoSrc?: string;
 }) => (
   <Card
     style={{
-      padding: 30,
+      padding: 24,
       background: C.surface,
       display: 'flex',
       flexDirection: 'column',
-      gap: 12,
+      gap: 10,
     }}
   >
     <div
@@ -4932,16 +5121,25 @@ const CompanyBooth = ({
     >
       BOOTH {no}
     </div>
-    <div
-      style={{
-        fontFamily: FF_ZH,
-        fontSize: 38,
-        fontWeight: 900,
-        color: C.ink,
-        lineHeight: 1.12,
-      }}
-    >
-      {nameZh}
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      {logoSrc ? (
+        <img
+          src={logoSrc}
+          alt=""
+          style={{ height: 44, width: 'auto', maxWidth: 88, objectFit: 'contain', flexShrink: 0 }}
+        />
+      ) : null}
+      <div
+        style={{
+          fontFamily: FF_ZH,
+          fontSize: logoSrc ? 32 : 38,
+          fontWeight: 900,
+          color: C.ink,
+          lineHeight: 1.12,
+        }}
+      >
+        {nameZh}
+      </div>
     </div>
     <div
       style={{
@@ -4991,6 +5189,7 @@ const Page40: Page = () => (
     chromeRight="★ 別錯過 · Đừng bỏ lỡ ★"
     blobs={<Blob size={520} color={C.green} top={-150} right={-120} opacity={0.22} />}
   >
+    <FloatingJobQrSlot>
     <div
       style={{
         fontFamily: FF_EN,
@@ -5006,19 +5205,19 @@ const Page40: Page = () => (
     <div
       style={{
         fontFamily: FF_ZH,
-        fontSize: 76,
+        fontSize: 72,
         fontWeight: 900,
         lineHeight: 1.05,
-        marginTop: 14,
+        marginTop: 12,
         color: C.dark,
       }}
     >
       活動結束別走！
     </div>
-    <TitleVn theme="lime" size={32} style={{ marginTop: 10 }}>
+    <TitleVn theme="lime" size={30} style={{ marginTop: 8 }}>
       Sau buổi giới thiệu – Đừng vội về nhé!
     </TitleVn>
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginTop: 32 }}>
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginTop: 24 }}>
       <Card variant="hi" style={{ padding: 32 }}>
         <div
           style={{
@@ -5126,9 +5325,9 @@ const Page40: Page = () => (
       </Card>
     </div>
     <div
-      style={{ marginTop: 28, display: 'flex', alignItems: 'baseline', gap: 16, flexWrap: 'wrap' }}
+      style={{ marginTop: 20, display: 'flex', alignItems: 'baseline', gap: 16, flexWrap: 'wrap' }}
     >
-      <div style={{ fontFamily: FF_ZH, fontSize: 28, fontWeight: 800, color: C.dark }}>
+      <div style={{ fontFamily: FF_ZH, fontSize: 26, fontWeight: 800, color: C.dark }}>
         ★ 上台企業也設攤 · 歡迎認識各公司團隊
       </div>
       <div
@@ -5143,9 +5342,19 @@ const Page40: Page = () => (
         Gặp gỡ đội ngũ các doanh nghiệp đối tác
       </div>
     </div>
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginTop: 16 }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginTop: 12 }}>
       <CompanyBooth
         no="03"
+        nameZh="艾肯顧問"
+        logoSrc={logoAikenConsulting}
+        features={[
+          ['暑假打工', 'Việc làm mùa hè'],
+          ['畢業正職', 'Việc làm chính thức sau tốt nghiệp'],
+          ['履歷健檢', 'Khám hồ sơ xin việc'],
+        ]}
+      />
+      <CompanyBooth
+        no="04"
         nameZh="精立數位"
         features={[
           ['Meta / Google 數位廣告', 'Quảng cáo Meta · Google'],
@@ -5153,19 +5362,15 @@ const Page40: Page = () => (
         ]}
       />
       <CompanyBooth
-        no="04"
+        no="05"
         nameZh="智慧老人"
         features={[
           ['房務清潔 · 彈性排班', 'Dọn phòng · ca linh hoạt'],
           ['6 個月可晉升營運', 'Thăng tiến vận hành sau 6 tháng'],
         ]}
       />
-      <CompanyBooth
-        no="05"
-        nameZh="機童科技"
-        features={[['車廠、客服、年輕團隊', 'Ô tô · CSKH · đội ngũ trẻ']]}
-      />
     </div>
+    </FloatingJobQrSlot>
   </PageFrame>
 );
 
@@ -5349,18 +5554,6 @@ const Page42: Page = () => (
 );
 
 export default [
-  Page1,
-  Page2,
-  Page3,
-  Page4,
-  PageKainan,
-  Page5,
-  Page6,
-  Page7,
-  Page8,
-  Page10,
-  Page11,
-  Page12,
   Page15,
   Page16,
   Page18,
@@ -5368,8 +5561,23 @@ export default [
   Page20,
   Page21,
   Page22,
-  Page23,
   Page25,
+  Page1,
+  Page4,
+  PageKainan,
+  Page6,
+  Page8,
+  Page7,
+  Page44,
+  Page43,
+  Page40,
+  Page3,
+  Page5,
+  Page2,
+  Page10,
+  Page11,
+  Page12,
+  Page23,
   Page27,
   Page28,
   Page29,
@@ -5386,10 +5594,7 @@ export default [
   PageRehoSpotlight,
   PageRehoWhyJoin1,
   PageRehoWhyJoin2,
-  Page43,
-  Page44,
   Page45,
-  Page40,
   Page41,
   Page42,
 ] satisfies Page[];
