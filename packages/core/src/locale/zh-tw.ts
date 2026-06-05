@@ -44,6 +44,7 @@ export const zhTW: Locale = {
     folders: '資料夾',
     newFolder: '新增資料夾',
     folderName: '資料夾名稱',
+    updateAvailable: 'open-slide {version} 已發布，請更新套件以取得最新版本。',
     changeIcon: '變更圖示',
     iconEmojiTab: 'Emoji',
     iconColorTab: '顏色',
@@ -104,7 +105,12 @@ export const zhTW: Locale = {
     toastCopyLinkFailed: '複製連結失敗',
     exportAsHtml: '匯出為 HTML',
     exportAsPdf: '匯出為 PDF',
+    exportAsImagePptx: '匯出圖片 PPTX',
+    exportAsPptx: '匯出 PPTX',
+    comingSoon: '即將推出',
+    pptxComingSoonTooltip: '可編輯的 PPTX 匯出尚未支援，在此之前可以先使用「匯出圖片 PPTX」。',
     pdfExportFailed: 'PDF 匯出失敗',
+    imagePptxExportFailed: 'PPTX 匯出失敗',
     pdfExportSafariUnsupported:
       '匯出 PDF 目前不支援 Safari 裝置，請嘗試用 Chromium 基底瀏覽器替代。',
     present: '簡報',
@@ -336,12 +342,21 @@ export const zhTW: Locale = {
     toastDuplicateFailed: '無法複製頁面',
     toastDeleteFailed: '無法刪除頁面',
     resizeRail: '調整縮圖欄寬度',
+    transitionIndicator: '有換頁轉場',
+    stepsIndicator: '有逐步揭示',
   },
 
   pdfToast: {
     title: '匯出 PDF',
     processing: '處理第 {current} / {total} 頁',
     printing: '正在開啟列印對話框…',
+    done: '完成',
+  },
+
+  pptxToast: {
+    title: '匯出 PPTX',
+    processing: '正在算繪第 {current} / {total} 頁',
+    generating: '正在組合簡報…',
     done: '完成',
   },
 
@@ -353,9 +368,9 @@ export const zhTW: Locale = {
     system: '系統',
   },
 
-  clickNav: {
-    prevAria: '上一頁',
-    nextAria: '下一頁',
+  languageToggle: {
+    toggleAria: '切換語言',
+    title: '語言',
   },
 
   imagePlaceholder: {

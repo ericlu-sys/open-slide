@@ -1,5 +1,45 @@
 # @open-slide/core
 
+## 1.10.0
+
+### Minor Changes
+
+- [#164](https://github.com/1weiho/open-slide/pull/164) [`411a8c7`](https://github.com/1weiho/open-slide/commit/411a8c743e94e6703ab4d535529c853822179b3e) Thanks [@1weiho](https://github.com/1weiho)! - Add `Steps` / `Step` primitive for revealing page elements one-by-one via next/previous inputs.
+
+## 1.9.0
+
+### Minor Changes
+
+- [#188](https://github.com/1weiho/open-slide/pull/188) [`0d78b73`](https://github.com/1weiho/open-slide/commit/0d78b73549d6804d39263617bdcb8cd9ad3483f2) Thanks [@1weiho](https://github.com/1weiho)! - Add an "Export as image PPTX" download option that renders each slide to an image via html-to-image and stitches them into a one-page-per-slide PPTX, plus a coming-soon "Export as PPTX" entry for the editable format.
+
+- [#196](https://github.com/1weiho/open-slide/pull/196) [`0c99cf6`](https://github.com/1weiho/open-slide/commit/0c99cf60aa094c3bc3cd6d242ceba110742c9856) Thanks [@1weiho](https://github.com/1weiho)! - Show the open-slide version at the bottom of the home sidebar, with a hover hint to update when a newer release is available.
+
+- [#189](https://github.com/1weiho/open-slide/pull/189) [`6ae2dd9`](https://github.com/1weiho/open-slide/commit/6ae2dd9b188032d0b21bf43a7e3ab549b98db282) Thanks [@1weiho](https://github.com/1weiho)! - Add an in-UI language switcher (next to the theme toggle) that remembers the choice locally; deprecate `config.locale` and drop the `init` language prompt and `--locale` flag.
+
+### Patch Changes
+
+- [#180](https://github.com/1weiho/open-slide/pull/180) [`9b8202e`](https://github.com/1weiho/open-slide/commit/9b8202e8b17abc85caf5cd5a62c59e277a4f91ef) Thanks [@1weiho](https://github.com/1weiho)! - Remove duplicated internal helpers (HTTP `readBody`/`json`, slide-path resolution, the `SLIDE_ID_RE` pattern, and locale `format`/`plural`) by routing them through a single source.
+
+## 1.8.0
+
+### Minor Changes
+
+- [#165](https://github.com/1weiho/open-slide/pull/165) [`b6dfc99`](https://github.com/1weiho/open-slide/commit/b6dfc9954a5aa320aeb0475b49de0734a8755197) Thanks [@1weiho](https://github.com/1weiho)! - Drag folders in the sidebar to reorder them.
+
+### Patch Changes
+
+- [#174](https://github.com/1weiho/open-slide/pull/174) [`2b70cb4`](https://github.com/1weiho/open-slide/commit/2b70cb4f6e913365ca63caed5a5d6749cdf96a77) Thanks [@1weiho](https://github.com/1weiho)! - Stop marking imported assets as unused when they are passed as props to wrapper components (e.g. `<DiagramImage src={img} />`) instead of consumed directly by `<img src={img}>`.
+
+- [#160](https://github.com/1weiho/open-slide/pull/160) [`608ce61`](https://github.com/1weiho/open-slide/commit/608ce6134e8019a9c5e28c68b8f7458f41c0bb50) Thanks [@1weiho](https://github.com/1weiho)! - Fix invalid YAML in the create-theme skill frontmatter so it loads correctly.
+
+- [#179](https://github.com/1weiho/open-slide/pull/179) [`ea67658`](https://github.com/1weiho/open-slide/commit/ea67658061889f5e257af87b6f9e39953d92c153) Thanks [@1weiho](https://github.com/1weiho)! - Click-to-navigate no longer covers the slide in present mode or the mobile viewer — embedded videos, links, and other interactive content near the left/right edges stay clickable, and a stray outline no longer flashes on click.
+
+- [#172](https://github.com/1weiho/open-slide/pull/172) [`155049f`](https://github.com/1weiho/open-slide/commit/155049f30b6de64bc704eb9eee4eebea0bb76f44) Thanks [@why39](https://github.com/why39)! - Fix Inspect overlay on Windows: normalize path separators and strip HMR query/hash when matching slide source files.
+
+- [#175](https://github.com/1weiho/open-slide/pull/175) [`5e65d64`](https://github.com/1weiho/open-slide/commit/5e65d6438b10f8c9ff7ea23445eac05dd4ac692d) Thanks [@ridemountainpig](https://github.com/ridemountainpig)! - Fix sidebar Draft/Themes/Assets rows not switching when clicking the icon — the whole icon area is now part of the select target. Also close the inspector comment panel when clicking outside it.
+
+- [#176](https://github.com/1weiho/open-slide/pull/176) [`c6cb866`](https://github.com/1weiho/open-slide/commit/c6cb8667fa0a0ffe1e661bdc34a4cd9c0bef7157) Thanks [@1weiho](https://github.com/1weiho)! - Edit a slide title by clicking it directly — hovering shows an outline, the title becomes an input on click, and the title is centered to the viewport. Replaces the pencil icon.
+
 ## 1.7.0
 
 ### Minor Changes
