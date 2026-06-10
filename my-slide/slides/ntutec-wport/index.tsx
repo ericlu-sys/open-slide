@@ -5,7 +5,6 @@ import pitchPropertyPhoto from './assets/pitch-property.jpg';
 import pitchTravelPhoto from './assets/pitch-travel.jpg';
 import session1on1Photo from './assets/session-1on1.jpg';
 import sessionTeamPhoto from './assets/session-team.jpg';
-// Assets
 import wportLogo from './assets/wport-logo.png';
 
 export const meta: SlideMeta = {
@@ -21,9 +20,167 @@ const colors = {
   border: '#E5E5E5',
 };
 
-// Define all pages
-const pages: Page[] = [
-  // Page 1: Cover
+interface Company {
+  idx: string;
+  name: string;
+  topic: string;
+  uniform: string;
+  capital: string;
+}
+
+function CompanySection({
+  sessionNum,
+  date,
+  tag,
+  companies,
+}: {
+  sessionNum: string;
+  date: string;
+  tag: string;
+  companies: Company[];
+}) {
+  return (
+    <div style={{ marginTop: 24 }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'baseline',
+          gap: 24,
+          paddingBottom: 10,
+          borderBottom: `2px solid ${colors.text}`,
+        }}
+      >
+        <span style={{ fontSize: 32, fontWeight: 'bold', color: colors.text }}>{sessionNum}</span>
+        <span style={{ fontSize: 24, color: colors.text, fontWeight: 500 }}>{date}</span>
+        <span
+          style={{
+            marginLeft: 'auto',
+            fontSize: 24,
+            padding: '6px 18px',
+            background: 'rgba(0,0,0,0.08)',
+            borderRadius: 4,
+            color: colors.text,
+          }}
+        >
+          {tag}
+        </span>
+      </div>
+      {companies.map((company, i) => (
+        <div
+          key={i}
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '56px 1fr 300px 220px',
+            alignItems: 'center',
+            gap: 28,
+            padding: '10px 0',
+            borderBottom: `1px solid ${colors.border}`,
+          }}
+        >
+          <div style={{ fontSize: 24, color: colors.textMuted }}>{company.idx}</div>
+          <div>
+            <div
+              style={{
+                fontSize: 26,
+                fontWeight: 'bold',
+                color: colors.text,
+                lineHeight: 1.3,
+              }}
+            >
+              {company.name}
+              <span
+                style={{
+                  display: 'inline',
+                  fontSize: 24,
+                  fontWeight: 'normal',
+                  color: colors.textMuted,
+                  marginLeft: 12,
+                }}
+              >
+                {company.topic}
+              </span>
+            </div>
+          </div>
+          <div style={{ fontSize: 24, color: colors.text }}>
+            <span style={{ color: colors.textMuted, marginRight: 8 }}>統一編號</span>
+            {company.uniform}
+          </div>
+          <div style={{ fontSize: 24, color: colors.text, fontWeight: 500, textAlign: 'right' }}>
+            <span style={{ color: colors.textMuted, marginRight: 8 }}>實收資本額</span>
+            {company.capital}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+const styles = {
+  slide: {
+    width: 1920,
+    height: 1080,
+    padding: '90px 140px 80px',
+    display: 'flex',
+    flexDirection: 'column' as const,
+    background: colors.bg,
+    color: colors.text,
+    fontFamily: 'system-ui, -apple-system, sans-serif',
+    overflow: 'hidden',
+  } as React.CSSProperties,
+  slideHeader: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: 20,
+  } as React.CSSProperties,
+  eyebrowRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 24,
+  } as React.CSSProperties,
+  eyebrow: {
+    fontSize: 24,
+    fontWeight: 500,
+    color: colors.textMuted,
+    letterSpacing: '0.18em',
+    textTransform: 'uppercase' as const,
+  } as React.CSSProperties,
+  slideTitle: {
+    fontSize: 80,
+    fontWeight: 'bold',
+    lineHeight: 1.15,
+    color: colors.text,
+    letterSpacing: '-0.01em',
+    margin: 0,
+  } as React.CSSProperties,
+  slideSubtitle: {
+    fontSize: 36,
+    fontWeight: 'normal',
+    lineHeight: 1.5,
+    color: colors.text,
+    maxWidth: 1100,
+    margin: 0,
+  } as React.CSSProperties,
+  badge: {
+    fontSize: 24,
+    color: colors.textMuted,
+    letterSpacing: '0.18em',
+    textTransform: 'uppercase' as const,
+  } as React.CSSProperties,
+  footerBar: {
+    paddingTop: 24,
+    borderTop: `1px solid ${colors.border}`,
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'baseline',
+    fontSize: 24,
+    color: colors.textMuted,
+  } as React.CSSProperties,
+  footerOrg: {
+    color: colors.text,
+  } as React.CSSProperties,
+};
+
+export default [
   {
     label: '01 封面',
     render: () => (
@@ -83,7 +240,6 @@ const pages: Page[] = [
     ),
   },
 
-  // Page 2: 緣起 (Origin)
   {
     label: '02 緣起',
     render: () => (
@@ -150,7 +306,12 @@ const pages: Page[] = [
                 }}
               >
                 <div
-                  style={{ fontSize: 32, fontWeight: 'bold', color: colors.primary, lineHeight: 1 }}
+                  style={{
+                    fontSize: 32,
+                    fontWeight: 'bold',
+                    color: colors.primary,
+                    lineHeight: 1,
+                  }}
                 >
                   {point.num}
                 </div>
@@ -198,7 +359,12 @@ const pages: Page[] = [
               }}
             >
               <strong
-                style={{ display: 'block', fontSize: 26, fontWeight: 'bold', marginBottom: 2 }}
+                style={{
+                  display: 'block',
+                  fontSize: 26,
+                  fontWeight: 'bold',
+                  marginBottom: 2,
+                }}
               >
                 Eric / WPORT職航站 CEO
               </strong>
@@ -215,7 +381,6 @@ const pages: Page[] = [
     ),
   },
 
-  // Page 3: 計畫定位
   {
     label: '03 計畫定位',
     render: () => (
@@ -322,7 +487,6 @@ const pages: Page[] = [
     ),
   },
 
-  // Page 4: 成果數據
   {
     label: '04 成果數據',
     render: () => (
@@ -426,7 +590,7 @@ const pages: Page[] = [
           }}
         >
           每家新創平均獲得{' '}
-          <span style={{ color: colors.primary, fontWeight: 'bold' }}>30–60 分鐘 VC 一對一</span>{' '}
+          <span style={{ color: colors.primary, fontWeight: 'bold' }}>30–60 分鐘 VC 一對一</span>
           深度回饋——這是比賽式媒合無法達成的密度。
         </p>
 
@@ -438,7 +602,6 @@ const pages: Page[] = [
     ),
   },
 
-  // Page 5: 場次時序
   {
     label: '05 場次時序',
     render: () => (
@@ -585,7 +748,6 @@ const pages: Page[] = [
     ),
   },
 
-  // Page 6: 現場紀實
   {
     label: '06 現場紀實',
     render: () => (
@@ -616,32 +778,17 @@ const pages: Page[] = [
             {
               src: pitchTravelPhoto,
               cap: '新創 Pitch｜旅遊 ERP 拆解',
-              className: 'wide-top',
               colSpan: 2,
               rowSpan: 1,
             },
             {
               src: sessionTeamPhoto,
               cap: '全體團隊｜WPORT × 台大創創 × 參與新創',
-              className: 'tall',
               colSpan: 1,
               rowSpan: 2,
-              col: 3,
             },
-            {
-              src: session1on1Photo,
-              cap: 'VC 一對一診斷現場',
-              className: '',
-              colSpan: 1,
-              rowSpan: 1,
-            },
-            {
-              src: pitchPropertyPhoto,
-              cap: '新創 Pitch｜房東管理拆解',
-              className: '',
-              colSpan: 1,
-              rowSpan: 1,
-            },
+            { src: session1on1Photo, cap: 'VC 一對一診斷現場', colSpan: 1, rowSpan: 1 },
+            { src: pitchPropertyPhoto, cap: '新創 Pitch｜房東管理拆解', colSpan: 1, rowSpan: 1 },
           ].map((photo, i) => (
             <div
               key={i}
@@ -686,7 +833,6 @@ const pages: Page[] = [
     ),
   },
 
-  // Page 7: 參與新創（上）
   {
     label: '07 參與新創（上）',
     render: () => (
@@ -754,7 +900,6 @@ const pages: Page[] = [
     ),
   },
 
-  // Page 8: 參與新創（下）
   {
     label: '08 參與新創（下）',
     render: () => (
@@ -829,7 +974,6 @@ const pages: Page[] = [
     ),
   },
 
-  // Page 9: 深度回饋差異點
   {
     label: '09 深度回饋差異點',
     render: () => (
@@ -910,7 +1054,6 @@ const pages: Page[] = [
     ),
   },
 
-  // Page 10: VC 五大評估面向
   {
     label: '10 VC 五大評估面向',
     render: () => (
@@ -980,7 +1123,12 @@ const pages: Page[] = [
               </div>
               <div>
                 <div
-                  style={{ fontSize: 30, fontWeight: 'bold', color: colors.text, lineHeight: 1.25 }}
+                  style={{
+                    fontSize: 30,
+                    fontWeight: 'bold',
+                    color: colors.text,
+                    lineHeight: 1.25,
+                  }}
                 >
                   {criterion.title}
                 </div>
@@ -1013,7 +1161,6 @@ const pages: Page[] = [
     ),
   },
 
-  // Page 11: 複製到桃園
   {
     label: '11 複製到桃園',
     render: () => (
@@ -1083,174 +1230,4 @@ const pages: Page[] = [
       </div>
     ),
   },
-];
-
-interface Company {
-  idx: string;
-  name: string;
-  topic: string;
-  uniform: string;
-  capital: string;
-}
-
-function CompanySection({
-  sessionNum,
-  date,
-  tag,
-  companies,
-}: {
-  sessionNum: string;
-  date: string;
-  tag: string;
-  companies: Company[];
-}) {
-  return (
-    <div style={{ marginTop: 24 }}>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'baseline',
-          gap: 24,
-          paddingBottom: 10,
-          borderBottom: `2px solid ${colors.text}`,
-        }}
-      >
-        <span
-          style={{ fontSize: 32, fontWeight: 'bold', color: colors.text, letterSpacing: '-0.01em' }}
-        >
-          {sessionNum}
-        </span>
-        <span style={{ fontSize: 24, color: colors.text, fontWeight: 500 }}>{date}</span>
-        <span
-          style={{
-            marginLeft: 'auto',
-            fontSize: 24,
-            padding: '6px 18px',
-            background: 'rgba(0,0,0,0.08)',
-            borderRadius: 4,
-            color: colors.text,
-          }}
-        >
-          {tag}
-        </span>
-      </div>
-      {companies.map((company, i) => (
-        <div
-          key={i}
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '56px 1fr 300px 220px',
-            alignItems: 'center',
-            gap: 28,
-            padding: '10px 0',
-            borderBottom: `1px solid ${colors.border}`,
-          }}
-        >
-          <div style={{ fontSize: 24, color: colors.textMuted, letterSpacing: '0.08em' }}>
-            {company.idx}
-          </div>
-          <div>
-            <div style={{ fontSize: 26, fontWeight: 'bold', color: colors.text, lineHeight: 1.3 }}>
-              {company.name}
-              <span
-                style={{
-                  display: 'inline',
-                  fontSize: 24,
-                  fontWeight: 'normal',
-                  color: colors.textMuted,
-                  marginLeft: 12,
-                  letterSpacing: '0.02em',
-                }}
-              >
-                {company.topic}
-              </span>
-            </div>
-          </div>
-          <div style={{ fontSize: 24, color: colors.text, letterSpacing: '0.08em' }}>
-            <span style={{ color: colors.textMuted, marginRight: 8 }}>統一編號</span>
-            {company.uniform}
-          </div>
-          <div
-            style={{
-              fontSize: 24,
-              color: colors.text,
-              fontWeight: 500,
-              textAlign: 'right',
-              letterSpacing: '0.08em',
-            }}
-          >
-            <span style={{ color: colors.textMuted, marginRight: 8 }}>實收資本額</span>
-            {company.capital}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-const styles = {
-  slide: {
-    width: 1920,
-    height: 1080,
-    padding: '90px 140px 80px',
-    display: 'flex',
-    flexDirection: 'column' as const,
-    background: colors.bg,
-    color: colors.text,
-    fontFamily: 'system-ui, -apple-system, sans-serif',
-    overflow: 'hidden',
-  } as React.CSSProperties,
-  slideHeader: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: 20,
-  } as React.CSSProperties,
-  eyebrowRow: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 24,
-  } as React.CSSProperties,
-  eyebrow: {
-    fontSize: 24,
-    fontWeight: 500,
-    color: colors.textMuted,
-    letterSpacing: '0.18em',
-    textTransform: 'uppercase' as const,
-  } as React.CSSProperties,
-  slideTitle: {
-    fontSize: 80,
-    fontWeight: 'bold',
-    lineHeight: 1.15,
-    color: colors.text,
-    letterSpacing: '-0.01em',
-    margin: 0,
-  } as React.CSSProperties,
-  slideSubtitle: {
-    fontSize: 36,
-    fontWeight: 'normal',
-    lineHeight: 1.5,
-    color: colors.text,
-    maxWidth: 1100,
-    margin: 0,
-  } as React.CSSProperties,
-  badge: {
-    fontSize: 24,
-    color: colors.textMuted,
-    letterSpacing: '0.18em',
-    textTransform: 'uppercase' as const,
-  } as React.CSSProperties,
-  footerBar: {
-    paddingTop: 24,
-    borderTop: `1px solid ${colors.border}`,
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'baseline',
-    fontSize: 24,
-    color: colors.textMuted,
-  } as React.CSSProperties,
-  footerOrg: {
-    color: colors.text,
-  } as React.CSSProperties,
-};
-
-export default pages;
+] satisfies Page[];
