@@ -11,6 +11,15 @@ export type SlideMeta = {
   createdAt?: string;
 };
 
+export type ContentLocaleId = string;
+
+export type ContentLocaleBundle = {
+  pages: Page[];
+  notes?: (string | undefined)[];
+};
+
+export type SlideMessages = Record<string, string>;
+
 export type SlideModule = {
   default: Page[];
   meta?: SlideMeta;
@@ -18,6 +27,14 @@ export type SlideModule = {
   // Index-aligned with `default`.
   notes?: (string | undefined)[];
   transition?: SlideTransition;
+  /** Locale id for `default`. Falls back to `"default"` when omitted. */
+  defaultLocale?: ContentLocaleId;
+  /** Additional locale variants keyed by locale id. */
+  locales?: Record<ContentLocaleId, ContentLocaleBundle>;
+  /** Display labels for the present-mode locale picker. */
+  localeLabels?: Record<ContentLocaleId, string>;
+  /** Per-locale copy keyed by dot paths (e.g. `cover.title`). */
+  messages?: Record<ContentLocaleId, SlideMessages>;
 };
 
 export type FolderIcon = { type: 'emoji'; value: string } | { type: 'color'; value: string };

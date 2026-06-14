@@ -25,6 +25,8 @@ Once installed, the `open-slide` bin is available in the workspace:
 | `open-slide dev` | Start the dev server. Flags: `-p, --port <port>`, `--host [host]`, `--open`. |
 | `open-slide build` | Build a static site. Flags: `--out-dir <dir>` (defaults to `dist`). |
 | `open-slide preview` | Preview the production build. Flags: `-p, --port <port>`, `--host [host]`, `--open`. |
+| `open-slide i18n <slide-id>` | Scaffold `slides/<id>/messages.ts` for multilingual copy. Flags: `--extract`, `--locales en,ja`, `--primary <id>`. Pair with the `/slide-i18n` agent skill. |
+| `open-slide sync:skills` | Sync built-in agent skills (including `/slide-i18n`) into `.agents/skills`. |
 
 ## Config
 

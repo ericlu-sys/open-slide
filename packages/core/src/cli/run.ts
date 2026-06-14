@@ -142,5 +142,34 @@ export async function run(argv: string[]): Promise<void> {
       await syncSkills(resolveBuiltinSkillsDir(), flags);
     });
 
+  program
+    .command('i18n')
+    .description('Scaffold slide copy for multiple content locales')
+    .argument('<slide-id>', 'slide folder name under slides/')
+    .option('--locales <ids>', 'comma-separated target locales (default: en)', parseLocalesList)
+    .option('--primary <id>', 'primary locale id (default: zh-TW or existing defaultLocale)')
+    .option('--extract', 'extract JSX text from page components into message keys')
+    .action(async (slideId: string, flags: I18nCommandFlags) => {
+      const { i18n } = await import('./i18n.ts');
+      await i18n(slideId, {
+        locales: flags.locales,
+        primary: flags.primary,
+        extract: flags.extract,
+      });
+    });
+
   await program.parseAsync(argv, { from: 'user' });
+}
+
+interface I18nCommandFlags {
+  locales?: string[];
+  primary?: string;
+  extract?: boolean;
+}
+
+function parseLocalesList(value: string): string[] {
+  return value
+    .split(',')
+    .map((part) => part.trim())
+    .filter((part) => part.length > 0);
 }

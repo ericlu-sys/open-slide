@@ -26,6 +26,7 @@ Works with any coding agent (Claude Code, Codex, Cursor, …). The scaffolder sh
 
 - **`/create-slide`** — drafts a deck end-to-end. Asks four scoping questions (topic & aesthetic, page count, text density, motion vs. static), picks an id, plans the structure, and writes the pages.
 - **`/slide-authoring`** — the technical reference for the 1920 × 1080 canvas, type scale, palette, and layout rules. The agent reads this before writing.
+- **`/slide-i18n`** — adds or updates multilingual slide copy. Scaffolds `messages.ts`, wires `useSlideT()`, and translates target locales. Pair with `open-slide i18n <slide-id>`.
 
 From a one-line prompt to a polished deck, no boilerplate.
 

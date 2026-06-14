@@ -28,6 +28,7 @@ import {
   useInspector,
 } from '@/components/inspector/inspector-provider';
 import { SaveBar } from '@/components/inspector/save-bar';
+import { SlideContentLocaleToggle } from '@/components/slide-content-locale-toggle';
 import { SlideImageDropLayer } from '@/components/slide-image-drop-layer';
 import { DesignProvider } from '@/components/style-panel/design-provider';
 import { DesignPanel, DesignToggleButton } from '@/components/style-panel/style-panel';
@@ -42,7 +43,15 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  getContentLocaleOptions,
+  primaryContentLocaleId,
+  resolveContentLocaleBundle,
+} from '@/lib/content-locale';
+import { ContentLocaleProvider } from '@/lib/content-locale-context';
+import { useContentLocaleForSlide } from '@/lib/content-locale-store';
 import { useFolders } from '@/lib/folders';
+import { SlideMessagesProvider } from '@/lib/slide-messages-context';
 import { useAgentSocketConnected } from '@/lib/use-agent-socket';
 import { useClickPageNavigation } from '@/lib/use-click-page-navigation';
 import { useIsMobile } from '@/lib/use-is-mobile';
@@ -91,7 +100,27 @@ export function Slide() {
   useEffect(() => {
     setPages(modulePages);
   }, [modulePages]);
-  const pageCount = pages.length;
+
+  const contentLocaleOptions = useMemo(
+    () => (slide ? getContentLocaleOptions(slide) : []),
+    [slide],
+  );
+  const primaryContentLocale = slide ? primaryContentLocaleId(slide) : 'default';
+  const contentLocaleIds = useMemo(
+    () => contentLocaleOptions.map((option) => option.id),
+    [contentLocaleOptions],
+  );
+  const [contentLocale, setContentLocale] = useContentLocaleForSlide(
+    slideId,
+    contentLocaleIds,
+    primaryContentLocale,
+  );
+  const displayPages = useMemo(() => {
+    if (!slide) return pages;
+    return resolveContentLocaleBundle(slide, contentLocale, pages).pages;
+  }, [slide, contentLocale, pages]);
+
+  const pageCount = displayPages.length;
   const rawIndex = Number(searchParams.get('p') ?? '1') - 1;
   const index = Number.isFinite(rawIndex) ? Math.max(0, Math.min(pageCount - 1, rawIndex)) : 0;
   const view = searchParams.get('view') === 'assets' ? 'assets' : 'slides';
@@ -350,7 +379,7 @@ export function Slide() {
   if (playMode) {
     return (
       <Player
-        pages={pages}
+        pages={displayPages}
         design={slide.design}
         transition={slide.transition}
         index={index}
@@ -358,6 +387,9 @@ export function Slide() {
         onExit={() => setPlayMode(null)}
         controls
         slideId={slideId}
+        contentLocale={contentLocale}
+        primaryContentLocale={primaryContentLocale}
+        messages={slide.messages}
         fullscreen={playMode === 'fullscreen'}
       />
     );
@@ -413,6 +445,13 @@ export function Slide() {
             </div>
 
             <div className="ml-auto flex shrink-0 items-center gap-1">
+              {view === 'slides' && contentLocaleOptions.length > 1 && (
+                <SlideContentLocaleToggle
+                  options={contentLocaleOptions}
+                  value={contentLocale}
+                  onChange={setContentLocale}
+                />
+              )}
               {view === 'slides' && (
                 <button
                   type="button"
@@ -655,61 +694,73 @@ export function Slide() {
           ) : (
             <DesignProvider slideId={slideId}>
               <div className="flex min-h-0 flex-1 flex-col">
-                <div className="flex min-h-0 flex-1 flex-col md:flex-row">
-                  <ResizableRail
-                    pages={pages}
-                    design={slide.design}
-                    current={index}
-                    onSelect={goTo}
-                    onReorder={import.meta.env.DEV ? reorderPage : undefined}
-                    actions={thumbnailActions}
-                    moduleTransition={slide.transition}
-                  />
-                  <main
-                    ref={slideViewportRef}
-                    data-inspector-root
-                    data-slide-id={slideId}
-                    className="paper relative min-h-0 min-w-0 flex-1 bg-canvas p-2 md:p-10"
+                <ContentLocaleProvider locale={contentLocale}>
+                  <SlideMessagesProvider
+                    messages={slide.messages}
+                    locale={contentLocale}
+                    primaryLocale={primaryContentLocale}
                   >
-                    <SlideViewportNavigation
-                      targetRef={slideViewportRef}
-                      onPrev={() => goTo(index - 1)}
-                      onNext={() => goTo(index + 1)}
-                      canPrev={index > 0}
-                      canNext={index < pageCount - 1}
-                    />
-                    <SlideCanvas design={slide.design}>
-                      <SlideTransitionLayer
-                        pages={pages}
-                        index={index}
-                        total={pageCount}
+                    <div className="flex min-h-0 flex-1 flex-col md:flex-row">
+                      <ResizableRail
+                        pages={displayPages}
+                        design={slide.design}
+                        current={index}
+                        onSelect={goTo}
+                        onReorder={
+                          import.meta.env.DEV && contentLocale === primaryContentLocale
+                            ? reorderPage
+                            : undefined
+                        }
+                        actions={thumbnailActions}
                         moduleTransition={slide.transition}
-                        disabled={prefersReducedMotion}
                       />
-                    </SlideCanvas>
-                    <InspectOverlay />
-                    <SaveBar />
-                    {import.meta.env.DEV && <SlideImageDropLayer slideId={slideId} />}
-                    {import.meta.env.DEV && <CommentWidget />}
-                  </main>
-                  {/* Mobile-only horizontal rail. Sits below the canvas and
+                      <main
+                        ref={slideViewportRef}
+                        data-inspector-root
+                        data-slide-id={slideId}
+                        className="paper relative min-h-0 min-w-0 flex-1 bg-canvas p-2 md:p-10"
+                      >
+                        <SlideViewportNavigation
+                          targetRef={slideViewportRef}
+                          onPrev={() => goTo(index - 1)}
+                          onNext={() => goTo(index + 1)}
+                          canPrev={index > 0}
+                          canNext={index < pageCount - 1}
+                        />
+                        <SlideCanvas design={slide.design}>
+                          <SlideTransitionLayer
+                            pages={displayPages}
+                            index={index}
+                            total={pageCount}
+                            moduleTransition={slide.transition}
+                            disabled={prefersReducedMotion}
+                          />
+                        </SlideCanvas>
+                        <InspectOverlay />
+                        <SaveBar />
+                        {import.meta.env.DEV && <SlideImageDropLayer slideId={slideId} />}
+                        {import.meta.env.DEV && <CommentWidget />}
+                      </main>
+                      {/* Mobile-only horizontal rail. Sits below the canvas and
                     pads its bottom for the iOS home indicator / Safari URL bar. */}
-                  <div
-                    className="shrink-0 border-t border-hairline md:hidden"
-                    style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
-                  >
-                    <ThumbnailRail
-                      pages={pages}
-                      design={slide.design}
-                      current={index}
-                      onSelect={goTo}
-                      orientation="horizontal"
-                      actions={thumbnailActions}
-                    />
-                  </div>
-                  <InspectorPanel />
-                  <DesignPanel open={designOpen} onClose={() => setDesignOpen(false)} />
-                </div>
+                      <div
+                        className="shrink-0 border-t border-hairline md:hidden"
+                        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+                      >
+                        <ThumbnailRail
+                          pages={displayPages}
+                          design={slide.design}
+                          current={index}
+                          onSelect={goTo}
+                          orientation="horizontal"
+                          actions={thumbnailActions}
+                        />
+                      </div>
+                      <InspectorPanel />
+                      <DesignPanel open={designOpen} onClose={() => setDesignOpen(false)} />
+                    </div>
+                  </SlideMessagesProvider>
+                </ContentLocaleProvider>
                 {import.meta.env.DEV && (
                   <NotesDrawer
                     slideId={slideId}

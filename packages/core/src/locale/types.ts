@@ -187,6 +187,7 @@ export type Locale = {
     /** template: "Go to slide {n}" */
     overviewGoToAria: string;
     nowBadge: string;
+    contentLocaleToggleAria: string;
   };
 
   inspector: {

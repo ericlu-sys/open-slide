@@ -186,6 +186,7 @@ export const ja: Locale = {
     overviewEyebrow: '一覧',
     overviewGoToAria: 'スライド {n} へ移動',
     nowBadge: '現在',
+    contentLocaleToggleAria: 'スライドの言語',
   },
 
   inspector: {

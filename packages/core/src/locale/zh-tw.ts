@@ -183,6 +183,7 @@ export const zhTW: Locale = {
     overviewEyebrow: '總覽',
     overviewGoToAria: '前往第 {n} 張投影片',
     nowBadge: '目前',
+    contentLocaleToggleAria: '簡報語系',
   },
 
   inspector: {

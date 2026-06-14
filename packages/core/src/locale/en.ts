@@ -185,6 +185,7 @@ export const en: Locale = {
     overviewEyebrow: 'Overview',
     overviewGoToAria: 'Go to slide {n}',
     nowBadge: 'Now',
+    contentLocaleToggleAria: 'Slide language',
   },
 
   inspector: {

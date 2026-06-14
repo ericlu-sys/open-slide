@@ -1,4 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ContentLocaleProvider } from '@/lib/content-locale-context';
+import type { ContentLocaleId, SlideMessages } from '@/lib/sdk';
+import { SlideMessagesProvider } from '@/lib/slide-messages-context';
 import { useClickPageNavigation } from '@/lib/use-click-page-navigation';
 import { useWheelPageNavigation } from '@/lib/use-wheel-page-navigation';
 import { cn } from '@/lib/utils';
@@ -38,6 +41,9 @@ type Props = {
   allowExit?: boolean;
   controls?: boolean;
   slideId?: string;
+  contentLocale?: ContentLocaleId;
+  primaryContentLocale?: ContentLocaleId;
+  messages?: Record<ContentLocaleId, SlideMessages>;
   /**
    * When true, the Player enters the browser Fullscreen API on mount.
    * When false, it renders as a window-sized overlay (viewport-filling)
@@ -56,6 +62,9 @@ export function Player({
   allowExit = true,
   controls = false,
   slideId,
+  contentLocale = 'default',
+  primaryContentLocale = 'default',
+  messages,
   fullscreen = true,
 }: Props) {
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -82,8 +91,16 @@ export function Player({
   const windowedRef = useRef(windowed);
   windowedRef.current = windowed;
 
+  const activePages = pages;
+
+  useEffect(() => {
+    if (index >= activePages.length) {
+      onIndexChange(Math.max(0, activePages.length - 1));
+    }
+  }, [activePages.length, index, onIndexChange]);
+
   const canPrev = index > 0;
-  const canNext = index < pages.length - 1;
+  const canNext = index < activePages.length - 1;
 
   const stepControllerRef = useRef<StepController | null>(null);
   const [entryDirection, setEntryDirection] = useState<EntryDirection>('jump');
@@ -105,8 +122,8 @@ export function Player({
   }, [index, handleIndexChange]);
   const goNext = useCallback(() => {
     if (stepControllerRef.current?.advance()) return;
-    if (index < pages.length - 1) handleIndexChange(index + 1);
-  }, [index, pages.length, handleIndexChange]);
+    if (index < activePages.length - 1) handleIndexChange(index + 1);
+  }, [index, activePages.length, handleIndexChange]);
 
   const overlayActive = controls && (overviewOpen || helpOpen);
 
@@ -164,8 +181,14 @@ export function Player({
   // and answers `request-state` pings so newly opened presenter windows
   // hydrate immediately.
   const presenterState = useMemo<PresenterState>(
-    () => ({ index, pageCount: pages.length, blackout, startedAt }),
-    [index, pages.length, blackout, startedAt],
+    () => ({
+      index,
+      pageCount: activePages.length,
+      blackout,
+      startedAt,
+      contentLocale,
+    }),
+    [index, activePages.length, blackout, startedAt, contentLocale],
   );
   const presenterStateRef = useRef(presenterState);
   presenterStateRef.current = presenterState;
@@ -175,14 +198,14 @@ export function Player({
       if (msg.type === 'next') goNext();
       else if (msg.type === 'prev') goPrev();
       else if (msg.type === 'goto') {
-        handleIndexChange(Math.max(0, Math.min(pages.length - 1, msg.index)));
+        handleIndexChange(Math.max(0, Math.min(activePages.length - 1, msg.index)));
       } else if (msg.type === 'toggle-blackout') {
         setBlackout((cur) => (cur === msg.mode ? null : msg.mode));
       } else if (msg.type === 'request-state') {
         send({ type: 'state', state: presenterStateRef.current });
       }
     },
-    [goNext, goPrev, handleIndexChange, pages.length],
+    [goNext, goPrev, handleIndexChange, activePages.length],
   );
 
   const channel = usePresenterChannel(slideId ?? '__none__', (msg) => {
@@ -253,7 +276,7 @@ export function Player({
       }
       if (e.key === 'End') {
         setKeyboardDriven(true);
-        handleIndexChange(pages.length - 1);
+        handleIndexChange(activePages.length - 1);
         return;
       }
 
@@ -295,7 +318,7 @@ export function Player({
     goNext,
     goPrev,
     handleIndexChange,
-    pages.length,
+    activePages.length,
     slideId,
   ]);
 
@@ -326,27 +349,35 @@ export function Player({
       )}
     >
       <SlideCanvas flat design={design}>
-        <SlideTransitionLayer
-          pages={pages}
-          index={index}
-          total={pages.length}
-          moduleTransition={transition}
-          disabled={prefersReducedMotion}
-          stepControllerRef={stepControllerRef}
-          entryDirection={entryDirection}
-        />
+        <ContentLocaleProvider locale={contentLocale}>
+          <SlideMessagesProvider
+            messages={messages}
+            locale={contentLocale}
+            primaryLocale={primaryContentLocale}
+          >
+            <SlideTransitionLayer
+              pages={activePages}
+              index={index}
+              total={activePages.length}
+              moduleTransition={transition}
+              disabled={prefersReducedMotion}
+              stepControllerRef={stepControllerRef}
+              entryDirection={entryDirection}
+            />
+          </SlideMessagesProvider>
+        </ContentLocaleProvider>
       </SlideCanvas>
 
       {controls && (
         <div data-osd-chrome style={{ display: 'contents' }}>
-          <PresentProgressBar index={index} total={pages.length} visible={chromeVisible} />
+          <PresentProgressBar index={index} total={activePages.length} visible={chromeVisible} />
           <PresentBlackoutOverlay mode={blackout} />
-          <PresentJumpInput pageCount={pages.length} onJump={handleIndexChange} />
+          <PresentJumpInput pageCount={activePages.length} onJump={handleIndexChange} />
           <PresentLaserPointer enabled={laser} />
           <PresentControlBar
             tooltipContainer={rootEl}
             index={index}
-            total={pages.length}
+            total={activePages.length}
             visible={chromeVisible}
             startedAt={startedAt}
             blackout={blackout}
@@ -364,7 +395,7 @@ export function Player({
             onExit={onExit}
           />
           <PresentOverviewGrid
-            pages={pages}
+            pages={activePages}
             design={design}
             open={overviewOpen}
             current={index}

@@ -5,6 +5,7 @@ export type PresenterState = {
   pageCount: number;
   blackout: 'black' | 'white' | null;
   startedAt: number; // epoch ms when present mode began
+  contentLocale?: string;
 };
 
 export type PresenterCommand =
@@ -14,7 +15,8 @@ export type PresenterCommand =
   | { type: 'prev' }
   | { type: 'request-state' }
   | { type: 'restart-timer' }
-  | { type: 'toggle-blackout'; mode: 'black' | 'white' };
+  | { type: 'toggle-blackout'; mode: 'black' | 'white' }
+  | { type: 'set-content-locale'; locale: string };
 
 type Handler = (msg: PresenterCommand) => void;
 

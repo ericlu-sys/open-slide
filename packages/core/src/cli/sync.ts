@@ -56,6 +56,7 @@ export async function syncSkills(skillsDir: string, opts: SyncSkillsOptions = {}
   const cwd = process.cwd();
   const agentsSkillsDir = path.join(cwd, '.agents', 'skills');
   const claudeSkillsDir = path.join(cwd, '.claude', 'skills');
+  const cursorSkillsDir = path.join(cwd, '.cursor', 'skills');
 
   const results = await detectSkillsDrift(skillsDir);
 
@@ -70,22 +71,24 @@ export async function syncSkills(skillsDir: string, opts: SyncSkillsOptions = {}
 
     if (dryRun) continue;
     if (status === 'unchanged') {
-      await ensureClaudeSymlink(claudeSkillsDir, name);
+      await ensureSkillSymlink(claudeSkillsDir, name);
+      await ensureSkillSymlink(cursorSkillsDir, name);
       continue;
     }
 
     await mkdir(path.dirname(dst), { recursive: true });
     if (existsSync(dst)) await rm(dst, { recursive: true, force: true });
     await cp(src, dst, { recursive: true });
-    await ensureClaudeSymlink(claudeSkillsDir, name);
+    await ensureSkillSymlink(claudeSkillsDir, name);
+    await ensureSkillSymlink(cursorSkillsDir, name);
   }
 
   printSummary(results, dryRun);
 }
 
-async function ensureClaudeSymlink(claudeSkillsDir: string, name: string): Promise<void> {
-  await mkdir(claudeSkillsDir, { recursive: true });
-  const linkPath = path.join(claudeSkillsDir, name);
+async function ensureSkillSymlink(skillsDir: string, name: string): Promise<void> {
+  await mkdir(skillsDir, { recursive: true });
+  const linkPath = path.join(skillsDir, name);
   const target = path.join('..', '..', '.agents', 'skills', name);
 
   if (existsSync(linkPath)) {
@@ -106,7 +109,7 @@ async function ensureClaudeSymlink(claudeSkillsDir: string, name: string): Promi
   } catch (err) {
     const code = (err as NodeJS.ErrnoException).code;
     if (code === 'EPERM' || code === 'EEXIST') {
-      const absoluteTarget = path.resolve(claudeSkillsDir, target);
+      const absoluteTarget = path.resolve(skillsDir, target);
       await cp(absoluteTarget, linkPath, { recursive: true });
     } else {
       throw err;

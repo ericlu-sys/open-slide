@@ -70,7 +70,10 @@ export async function createViteConfig(opts: CreateViteConfigOptions): Promise<I
       alias: {
         '@': APP_ROOT,
         '@assets': assetsAbs,
+        '@open-slide/core': path.join(PKG_ROOT, 'src/index.ts'),
+        '@open-slide/core/locale': path.join(PKG_ROOT, 'src/locale/index.ts'),
       },
+      dedupe: ['react', 'react-dom'],
     },
     optimizeDeps: {
       entries: [path.join(APP_ROOT, 'main.tsx')],

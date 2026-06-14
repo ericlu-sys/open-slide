@@ -1,11 +1,20 @@
-import type { Page, SlideMeta } from '@open-slide/core';
+import { useSlideT, type Page, type SlideMeta } from '@open-slide/core';
 import stickerNew from './assets/新創.png';
 import stickerLine from './assets/線條skr蛙.png';
 import stickerRacer from './assets/車手蛙.png';
+import { messages } from './messages';
 
 export const meta: SlideMeta = {
   title: '台大創創 · WPORT 方形封面',
   createdAt: '2026-06-05T16:51:05.525Z',
+};
+
+export { messages };
+export const defaultLocale = 'zh-TW';
+export const localeLabels = {
+  'zh-TW': '繁體中文',
+  en: 'English',
+  ja: '日本語',
 };
 
 type StylePreset = {
@@ -24,12 +33,9 @@ type StylePreset = {
 
 type Job = {
   style: keyof typeof STYLE_PRESETS;
-  title: string;
-  subtitle: string;
+  subtitleKey: `banner.subtitle.${number}`;
   sticker: string;
 };
-
-const TOP_LABEL = 'NTUTEC x WPORT';
 
 const STYLE_PRESETS = {
   'spectrum-00-amber': {
@@ -165,66 +171,16 @@ const STYLE_PRESETS = {
 } satisfies Record<string, StylePreset>;
 
 const jobs: Job[] = [
-  {
-    style: 'spectrum-00-amber',
-    title: 'WPORT挺新創',
-    subtitle: '台大創創 創業小聚#1',
-    sticker: stickerNew,
-  },
-  {
-    style: 'spectrum-01-red',
-    title: 'WPORT挺新創',
-    subtitle: '台大創創 創業小聚#2',
-    sticker: stickerRacer,
-  },
-  {
-    style: 'spectrum-02-rose',
-    title: 'WPORT挺新創',
-    subtitle: '台大創創 創業小聚#3',
-    sticker: stickerLine,
-  },
-  {
-    style: 'spectrum-03-fuchsia',
-    title: 'WPORT挺新創',
-    subtitle: '台大創創 創業小聚#4',
-    sticker: stickerNew,
-  },
-  {
-    style: 'spectrum-04-purple',
-    title: 'WPORT挺新創',
-    subtitle: '台大創創 創業小聚#5',
-    sticker: stickerRacer,
-  },
-  {
-    style: 'spectrum-05-violet',
-    title: 'WPORT挺新創',
-    subtitle: '台大創創 創業小聚#6',
-    sticker: stickerNew,
-  },
-  {
-    style: 'spectrum-06-indigo',
-    title: 'WPORT挺新創',
-    subtitle: '台大創創 創業小聚#7',
-    sticker: stickerLine,
-  },
-  {
-    style: 'spectrum-07-sky',
-    title: 'WPORT挺新創',
-    subtitle: '台大創創 創業小聚#8',
-    sticker: stickerRacer,
-  },
-  {
-    style: 'spectrum-08-blue',
-    title: 'WPORT挺新創',
-    subtitle: '台大創創 創業小聚#9',
-    sticker: stickerNew,
-  },
-  {
-    style: 'spectrum-09-azure',
-    title: 'WPORT挺新創',
-    subtitle: '台大創創 創業小聚#10',
-    sticker: stickerLine,
-  },
+  { style: 'spectrum-00-amber', subtitleKey: 'banner.subtitle.1', sticker: stickerNew },
+  { style: 'spectrum-01-red', subtitleKey: 'banner.subtitle.2', sticker: stickerRacer },
+  { style: 'spectrum-02-rose', subtitleKey: 'banner.subtitle.3', sticker: stickerLine },
+  { style: 'spectrum-03-fuchsia', subtitleKey: 'banner.subtitle.4', sticker: stickerNew },
+  { style: 'spectrum-04-purple', subtitleKey: 'banner.subtitle.5', sticker: stickerRacer },
+  { style: 'spectrum-05-violet', subtitleKey: 'banner.subtitle.6', sticker: stickerNew },
+  { style: 'spectrum-06-indigo', subtitleKey: 'banner.subtitle.7', sticker: stickerLine },
+  { style: 'spectrum-07-sky', subtitleKey: 'banner.subtitle.8', sticker: stickerRacer },
+  { style: 'spectrum-08-blue', subtitleKey: 'banner.subtitle.9', sticker: stickerNew },
+  { style: 'spectrum-09-azure', subtitleKey: 'banner.subtitle.10', sticker: stickerLine },
 ];
 
 const stage: React.CSSProperties = {
@@ -238,11 +194,13 @@ const stage: React.CSSProperties = {
 
 function WportSquareBanner({
   preset,
+  topLabel,
   title,
   subtitle,
   sticker,
 }: {
   preset: StylePreset;
+  topLabel: string;
   title: string;
   subtitle: string;
   sticker: string;
@@ -302,7 +260,7 @@ function WportSquareBanner({
               letterSpacing: '0.02em',
             }}
           >
-            {TOP_LABEL}
+            {topLabel}
           </div>
           <h1
             style={{
@@ -357,14 +315,18 @@ function WportSquareBanner({
 
 function makeJobPage(job: Job): Page {
   const preset = STYLE_PRESETS[job.style];
-  const PageComponent: Page = () => (
-    <WportSquareBanner
-      preset={preset}
-      title={job.title}
-      subtitle={job.subtitle}
-      sticker={job.sticker}
-    />
-  );
+  const PageComponent: Page = () => {
+    const t = useSlideT();
+    return (
+      <WportSquareBanner
+        preset={preset}
+        topLabel={t('banner.top-label')}
+        title={t('banner.title')}
+        subtitle={t(job.subtitleKey)}
+        sticker={job.sticker}
+      />
+    );
+  };
   return PageComponent;
 }
 

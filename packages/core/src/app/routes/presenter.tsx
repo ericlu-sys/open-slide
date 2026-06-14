@@ -9,8 +9,15 @@ import {
   usePresenterChannel,
 } from '../components/present/use-presenter-channel';
 import { SlideCanvas } from '../components/slide-canvas';
+import {
+  getContentLocaleOptions,
+  primaryContentLocaleId,
+  resolveContentLocaleBundle,
+} from '../lib/content-locale';
+import { ContentLocaleProvider } from '../lib/content-locale-context';
 import { SlidePageProvider } from '../lib/page-context';
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from '../lib/sdk';
+import { SlideMessagesProvider } from '../lib/slide-messages-context';
 import { useSlideModule } from '../lib/use-slide-module';
 
 export function Presenter() {
@@ -111,14 +118,20 @@ export function Presenter() {
     );
   }
 
-  const pages = slide.default;
+  const contentLocaleOptions = getContentLocaleOptions(slide);
+  const primaryLocale = primaryContentLocaleId(slide);
+  const contentLocale = state?.contentLocale ?? primaryLocale;
+  const resolved = resolveContentLocaleBundle(slide, contentLocale);
+  const pages = resolved.pages;
   const total = pages.length;
   const index = Math.max(0, Math.min(total - 1, state?.index ?? 0));
   const nextIndex = Math.min(total - 1, index + 1);
   const hasNext = index < total - 1;
-  const note = slide.notes?.[index];
+  const note = resolved.notes?.[index];
   const blackout = state?.blackout ?? null;
   const startedAt = state?.startedAt ?? localStart;
+  const activeLocaleLabel =
+    contentLocaleOptions.find((option) => option.id === contentLocale)?.label ?? contentLocale;
 
   const CurrentPage = pages[index];
   const NextPage = hasNext ? pages[nextIndex] : null;
@@ -131,6 +144,7 @@ export function Presenter() {
         startedAt={startedAt}
         slideTitle={slide.meta?.title ?? slideId}
         connected={hasProjection}
+        contentLocaleLabel={contentLocaleOptions.length > 1 ? activeLocaleLabel : undefined}
       />
 
       <div className="grid min-h-0 flex-1 grid-cols-1 gap-6 px-6 pb-4 lg:grid-cols-[2fr_1fr]">
@@ -139,9 +153,17 @@ export function Presenter() {
           <SectionLabel>{t.presenter.nowShowing}</SectionLabel>
           <div className="relative min-h-0 flex-1 overflow-hidden rounded-[8px] bg-black ring-1 ring-border">
             <SlideCanvas flat design={slide.design}>
-              <SlidePageProvider index={index} total={total}>
-                <CurrentPage />
-              </SlidePageProvider>
+              <ContentLocaleProvider locale={contentLocale}>
+                <SlideMessagesProvider
+                  messages={slide.messages}
+                  locale={contentLocale}
+                  primaryLocale={primaryLocale}
+                >
+                  <SlidePageProvider index={index} total={total}>
+                    <CurrentPage />
+                  </SlidePageProvider>
+                </SlideMessagesProvider>
+              </ContentLocaleProvider>
             </SlideCanvas>
             {blackout && (
               <div
@@ -167,9 +189,17 @@ export function Presenter() {
             >
               {NextPage ? (
                 <SlideCanvas flat freezeMotion design={slide.design}>
-                  <SlidePageProvider index={nextIndex} total={total}>
-                    <NextPage />
-                  </SlidePageProvider>
+                  <ContentLocaleProvider locale={contentLocale}>
+                    <SlideMessagesProvider
+                      messages={slide.messages}
+                      locale={contentLocale}
+                      primaryLocale={primaryLocale}
+                    >
+                      <SlidePageProvider index={nextIndex} total={total}>
+                        <NextPage />
+                      </SlidePageProvider>
+                    </SlideMessagesProvider>
+                  </ContentLocaleProvider>
                 </SlideCanvas>
               ) : (
                 <div className="grid h-full place-items-center text-[11.5px] text-muted-foreground">
@@ -219,12 +249,14 @@ function PresenterTopBar({
   startedAt,
   slideTitle,
   connected,
+  contentLocaleLabel,
 }: {
   index: number;
   total: number;
   startedAt: number;
   slideTitle: string;
   connected: boolean;
+  contentLocaleLabel?: string;
 }) {
   const t = useLocale();
   return (
@@ -241,6 +273,11 @@ function PresenterTopBar({
         )}
       </div>
       <div className="flex items-center gap-6">
+        {contentLocaleLabel ? (
+          <span className="rounded-[3px] border border-border bg-card px-2 py-0.5 font-mono text-[10px] tracking-[0.08em] text-muted-foreground uppercase">
+            {contentLocaleLabel}
+          </span>
+        ) : null}
         <Clock />
         <ElapsedClock startedAt={startedAt} />
         <div className="font-mono text-[18px] tabular-nums">

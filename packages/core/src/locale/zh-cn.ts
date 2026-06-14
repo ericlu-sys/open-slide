@@ -183,6 +183,7 @@ export const zhCN: Locale = {
     overviewEyebrow: '总览',
     overviewGoToAria: '前往第 {n} 张幻灯片',
     nowBadge: '当前',
+    contentLocaleToggleAria: '幻灯片语言',
   },
 
   inspector: {
