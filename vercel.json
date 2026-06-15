@@ -1,6 +1,6 @@
 {
-  "installCommand": "cd my-slide && npm ci",
-  "buildCommand": "cd my-slide && npm run build",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "buildCommand": "pnpm turbo run build --filter=my-slide",
   "outputDirectory": "my-slide/dist",
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }
