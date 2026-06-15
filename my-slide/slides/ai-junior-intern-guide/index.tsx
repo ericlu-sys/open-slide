@@ -1,5 +1,5 @@
 import type { DesignSystem, Page, SlideMeta } from '@open-slide/core';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SmartStationVol3 } from '../smart-station/index';
 import {
   PageRehoSpotlight,
@@ -112,6 +112,23 @@ if (typeof document !== 'undefined') {
       .aj-link-motion-scope a[href]:hover {
         animation-play-state: paused;
       }
+      @keyframes ajCursorBlink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
+      }
+      @keyframes ajMsgIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes ajDotPulse {
+        0%, 80%, 100% { opacity: 0.25; transform: scale(0.85); }
+        40% { opacity: 1; transform: scale(1); }
+      }
+      .aj-chat-cursor { animation: ajCursorBlink 0.75s step-end infinite; }
+      .aj-chat-msg { animation: ajMsgIn 0.28s ease-out both; }
+      .aj-chat-dot:nth-child(1) { animation: ajDotPulse 1.2s ease-in-out infinite; }
+      .aj-chat-dot:nth-child(2) { animation: ajDotPulse 1.2s ease-in-out 0.15s infinite; }
+      .aj-chat-dot:nth-child(3) { animation: ajDotPulse 1.2s ease-in-out 0.3s infinite; }
     `;
     document.head.appendChild(style);
   }
@@ -1298,28 +1315,28 @@ const WfItem = ({ n, children }: { n: string; children: React.ReactNode }) => (
   </div>
 );
 
-const FlowStep = ({ n, children }: { n: number; children: React.ReactNode }) => (
+const FlowStep = ({ n, children, compact = false }: { n: number; children: React.ReactNode; compact?: boolean }) => (
   <div
     style={{
       display: 'flex',
-      gap: 22,
+      gap: compact ? 16 : 22,
       alignItems: 'flex-start',
       background: c.white,
       border: `1px solid ${c.border}`,
       borderLeft: `4px solid ${c.primary}`,
       borderRadius: 8,
-      padding: '22px 26px',
+      padding: compact ? '14px 18px' : '22px 26px',
     }}
   >
     <div
       style={{
         flexShrink: 0,
         fontFamily: mono,
-        fontSize: 22,
+        fontSize: compact ? 18 : 22,
         fontWeight: 700,
         color: c.primary,
-        width: 48,
-        height: 48,
+        width: compact ? 40 : 48,
+        height: compact ? 40 : 48,
         border: `2px solid ${c.primary}`,
         borderRadius: 999,
         display: 'flex',
@@ -1329,9 +1346,272 @@ const FlowStep = ({ n, children }: { n: number; children: React.ReactNode }) => 
     >
       {n}
     </div>
-    <div style={{ fontSize: 24, lineHeight: 1.55, color: c.body, paddingTop: 2 }}>{children}</div>
+    <div style={{ fontSize: compact ? 21 : 24, lineHeight: 1.55, color: c.body, paddingTop: compact ? 0 : 2 }}>
+      {children}
+    </div>
   </div>
 );
+
+type ChatMsg = { role: 'user' | 'bot'; text: string };
+
+const CLI_CHAT_STEPS = [
+  {
+    cmd: 'obsidian cli read resume.md',
+    reply: '→ 自動讀取本地最權威的履歷 markdown ✓',
+  },
+  {
+    cmd: 'google cli push docs://resume',
+    reply: '→ 已上傳 Google Docs，導師與朋友可線上共編 ✓',
+  },
+  {
+    cmd: 'wport cli search "桃園地區最新 PM 職缺"',
+    reply: '→ 聯網搜尋完成，找到 12 筆符合職缺 ✓',
+  },
+  {
+    cmd: 'load skill interviewer',
+    reply: '→ 面試官 skill 已載入，生成 10 題高頻面試 Q&A ✓',
+  },
+  {
+    cmd: 'run resume-optimizer --keywords',
+    reply: '→ 針對關鍵字產出 100% 客製化履歷 ✓',
+  },
+  {
+    cmd: 'wport list | google sheet | vercel deploy',
+    reply: '→ 職缺 Sheet 已建立 · 網站一鍵部署上架 ✓',
+  },
+] as const;
+
+const CliChatDemo = ({ variant = 'light' }: { variant?: 'light' | 'dark' }) => {
+  const dark = variant === 'dark';
+  const [messages, setMessages] = useState<ChatMsg[]>([]);
+  const [draft, setDraft] = useState('');
+  const [stepIdx, setStepIdx] = useState(0);
+  const [phase, setPhase] = useState<'typing' | 'bot' | 'pause'>('typing');
+  const [botTyping, setBotTyping] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
+  }, [messages, draft, botTyping]);
+
+  useEffect(() => {
+    const step = CLI_CHAT_STEPS[stepIdx];
+    if (phase === 'typing') {
+      if (draft.length < step.cmd.length) {
+        const t = setTimeout(() => setDraft(step.cmd.slice(0, draft.length + 1)), 28);
+        return () => clearTimeout(t);
+      }
+      const t = setTimeout(() => {
+        setMessages((m) => [...m, { role: 'user', text: step.cmd }]);
+        setDraft('');
+        setBotTyping(true);
+        setPhase('bot');
+      }, 320);
+      return () => clearTimeout(t);
+    }
+    if (phase === 'bot') {
+      const t = setTimeout(() => {
+        setMessages((m) => [...m, { role: 'bot', text: step.reply }]);
+        setBotTyping(false);
+        setPhase('pause');
+      }, 680);
+      return () => clearTimeout(t);
+    }
+    const t = setTimeout(() => {
+      const next = (stepIdx + 1) % CLI_CHAT_STEPS.length;
+      if (next === 0) setMessages([]);
+      setStepIdx(next);
+      setPhase('typing');
+    }, 1400);
+    return () => clearTimeout(t);
+  }, [phase, draft, stepIdx]);
+
+  const panelBg = dark ? '#1a1a1a' : c.white;
+  const panelBorder = dark ? '#3a3a3a' : c.border;
+  const headerBg = dark ? '#252525' : c.tint;
+  const userBubble = dark ? 'rgba(86,199,187,0.18)' : c.primaryLight;
+  const botBubble = dark ? '#2e2e2e' : c.tint;
+  const textColor = dark ? '#e8e8e8' : c.ink;
+  const mutedColor = dark ? '#8a8a8a' : c.muted;
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        minHeight: 0,
+        borderRadius: 14,
+        border: `1px solid ${panelBorder}`,
+        background: panelBg,
+        boxShadow: dark ? '0 24px 64px rgba(0,0,0,0.45)' : '0 16px 48px rgba(0,0,0,0.08)',
+        overflow: 'hidden',
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 14,
+          padding: '16px 22px',
+          background: headerBg,
+          borderBottom: `1px solid ${panelBorder}`,
+          flexShrink: 0,
+        }}
+      >
+        <div style={{ display: 'flex', gap: 8 }}>
+          {['#ff5f57', '#febc2e', '#28c840'].map((dot) => (
+            <span
+              key={dot}
+              style={{ width: 12, height: 12, borderRadius: 999, background: dot, opacity: dark ? 0.85 : 1 }}
+            />
+          ))}
+        </div>
+        <span
+          style={{
+            fontFamily: mono,
+            fontSize: 17,
+            fontWeight: 600,
+            color: mutedColor,
+            letterSpacing: '0.04em',
+            marginLeft: 8,
+          }}
+        >
+          wport agent · cli runner
+        </span>
+        <span
+          style={{
+            marginLeft: 'auto',
+            fontFamily: mono,
+            fontSize: 14,
+            color: c.primary,
+            background: dark ? 'rgba(86,199,187,0.12)' : c.primaryLight,
+            padding: '4px 10px',
+            borderRadius: 999,
+          }}
+        >
+          live
+        </span>
+      </div>
+
+      <div
+        ref={scrollRef}
+        style={{
+          flex: 1,
+          minHeight: 0,
+          overflow: 'hidden',
+          padding: '22px 20px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 14,
+        }}
+      >
+        {messages.length === 0 && phase === 'typing' && draft.length === 0 && (
+          <div style={{ fontSize: 18, color: mutedColor, fontFamily: mono, textAlign: 'center', marginTop: 24 }}>
+            等待指令…
+          </div>
+        )}
+        {messages.map((msg, i) => (
+          <div
+            key={`${msg.role}-${i}-${msg.text.slice(0, 12)}`}
+            className="aj-chat-msg"
+            style={{
+              alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
+              maxWidth: '92%',
+              fontFamily: mono,
+              fontSize: 17,
+              lineHeight: 1.55,
+              padding: '12px 16px',
+              borderRadius: msg.role === 'user' ? '14px 14px 4px 14px' : '14px 14px 14px 4px',
+              background: msg.role === 'user' ? userBubble : botBubble,
+              color: msg.role === 'user' ? (dark ? c.primaryMuted : c.primaryHover) : textColor,
+              border: msg.role === 'bot' ? `1px solid ${panelBorder}` : 'none',
+            }}
+          >
+            {msg.role === 'user' ? (
+              <>
+                <span style={{ color: c.primary, fontWeight: 700 }}>$ </span>
+                {msg.text}
+              </>
+            ) : (
+              msg.text
+            )}
+          </div>
+        ))}
+        {botTyping && (
+          <div
+            className="aj-chat-msg"
+            style={{
+              alignSelf: 'flex-start',
+              display: 'flex',
+              gap: 6,
+              padding: '14px 18px',
+              borderRadius: '14px 14px 14px 4px',
+              background: botBubble,
+              border: `1px solid ${panelBorder}`,
+            }}
+          >
+            {[0, 1, 2].map((i) => (
+              <span
+                key={i}
+                className="aj-chat-dot"
+                style={{
+                  width: 7,
+                  height: 7,
+                  borderRadius: 999,
+                  background: c.primary,
+                  display: 'inline-block',
+                }}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div
+        style={{
+          flexShrink: 0,
+          borderTop: `1px solid ${panelBorder}`,
+          padding: '16px 20px',
+          background: headerBg,
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            fontFamily: mono,
+            fontSize: 17,
+            color: textColor,
+            background: dark ? '#141414' : c.white,
+            border: `1px solid ${panelBorder}`,
+            borderRadius: 10,
+            padding: '14px 16px',
+            minHeight: 48,
+          }}
+        >
+          <span style={{ color: c.primary, fontWeight: 700, flexShrink: 0 }}>$</span>
+          <span style={{ flex: 1, wordBreak: 'break-all' }}>
+            {draft}
+            {phase === 'typing' && <span className="aj-chat-cursor">▌</span>}
+          </span>
+        </div>
+        <div
+          style={{
+            marginTop: 10,
+            fontSize: 14,
+            fontFamily: mono,
+            color: mutedColor,
+            letterSpacing: '0.06em',
+          }}
+        >
+          step {String(stepIdx + 1).padStart(2, '0')} / {String(CLI_CHAT_STEPS.length).padStart(2, '0')}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const UltimateWorkflow: Page = () => (
   <SlideShell variant="dark">
@@ -1339,63 +1619,75 @@ const UltimateWorkflow: Page = () => (
     <Title dark>
       未來終極想像：當 <Accent>Skill + Agent + CLI</Accent> 聯手
     </Title>
-    <p
+    <div
       style={{
-        fontSize: 30,
-        lineHeight: 1.65,
-        color: '#C9C9C9',
-        margin: '28px 0 0',
-        maxWidth: 1180,
+        display: 'grid',
+        gridTemplateColumns: '1fr 480px',
+        gap: 56,
+        marginTop: 28,
+        flex: 1,
+        minHeight: 0,
       }}
     >
-      把今天學的工具全部串接——這是你能在 2026 實現的「
-      <span style={{ color: '#fff', fontWeight: 700 }}>秒級求職自動化流</span>」。
-    </p>
-    <div style={{ marginTop: 40, flex: 1, display: 'flex', flexDirection: 'column' }}>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gridAutoRows: '1fr',
-          gap: '24px 80px',
-          flex: 1,
-          alignContent: 'stretch',
-        }}
-      >
-        <WfItem n="01">
-          <DarkInlineCode>obsidian cli</DarkInlineCode> 自動讀取本地最權威的履歷 markdown。
-        </WfItem>
-        <WfItem n="02">
-          <DarkInlineCode>google cli</DarkInlineCode> 上傳至 Google Docs，導師與朋友線上共編。
-        </WfItem>
-        <WfItem n="03">
-          <DarkInlineCode>wport cli</DarkInlineCode> 聯網搜尋「桃園地區最新 PM 職缺」。
-        </WfItem>
-        <WfItem n="04">
-          載入 <DarkInlineCode>面試官 skill</DarkInlineCode>，自動生成 10 題高頻面試 Q&amp;A。
-        </WfItem>
-        <WfItem n="05">
-          <DarkInlineCode>resume-optimizer skill</DarkInlineCode> 針對關鍵字，產出 100% 客製化履歷。
-        </WfItem>
-        <WfItem n="06">
-          <DarkInlineCode>wport</DarkInlineCode> 列出職缺 →{' '}
-          <DarkInlineCode>google cli</DarkInlineCode> 做成 Sheet →{' '}
-          <DarkInlineCode>vercel cli</DarkInlineCode> 一鍵部署上架！
-        </WfItem>
-      </div>
-      <div style={{ paddingTop: 28, borderTop: '1px solid #4a4a4a', marginTop: 'auto' }}>
-        <p style={{ fontSize: 30, color: '#fff', fontWeight: 700, margin: 0 }}>
-          一鍵執行，<span style={{ color: c.primary }}>10 秒</span>搞定別人要花 3 天的手動地獄。
-          <span style={{ color: '#C9C9C9', fontWeight: 500 }}>這就是為什麼企業搶著要你。</span>
+      <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+        <p
+          style={{
+            fontSize: 28,
+            lineHeight: 1.65,
+            color: '#C9C9C9',
+            margin: 0,
+            maxWidth: 900,
+          }}
+        >
+          把今天學的工具全部串接——這是你能在 2026 實現的「
+          <span style={{ color: '#fff', fontWeight: 700 }}>秒級求職自動化流</span>」。
         </p>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 18,
+            marginTop: 28,
+            flex: 1,
+            minHeight: 0,
+          }}
+        >
+          <WfItem n="01">
+            <DarkInlineCode>obsidian cli</DarkInlineCode> 自動讀取本地最權威的履歷 markdown。
+          </WfItem>
+          <WfItem n="02">
+            <DarkInlineCode>google cli</DarkInlineCode> 上傳至 Google Docs，導師與朋友線上共編。
+          </WfItem>
+          <WfItem n="03">
+            <DarkInlineCode>wport cli</DarkInlineCode> 聯網搜尋「桃園地區最新 PM 職缺」。
+          </WfItem>
+          <WfItem n="04">
+            載入 <DarkInlineCode>面試官 skill</DarkInlineCode>，自動生成 10 題高頻面試 Q&amp;A。
+          </WfItem>
+          <WfItem n="05">
+            <DarkInlineCode>resume-optimizer skill</DarkInlineCode> 針對關鍵字，產出 100% 客製化履歷。
+          </WfItem>
+          <WfItem n="06">
+            <DarkInlineCode>wport</DarkInlineCode> 列出職缺 →{' '}
+            <DarkInlineCode>google cli</DarkInlineCode> 做成 Sheet →{' '}
+            <DarkInlineCode>vercel cli</DarkInlineCode> 一鍵部署上架！
+          </WfItem>
+        </div>
+        <div style={{ paddingTop: 20, borderTop: '1px solid #4a4a4a', marginTop: 'auto', flexShrink: 0 }}>
+          <p style={{ fontSize: 26, color: '#fff', fontWeight: 700, margin: 0 }}>
+            一鍵執行，<span style={{ color: c.primary }}>10 秒</span>搞定別人要花 3 天的手動地獄。
+            <span style={{ color: '#C9C9C9', fontWeight: 500 }}> 這就是為什麼企業搶著要你。</span>
+          </p>
+        </div>
       </div>
+      <CliChatDemo variant="dark" />
     </div>
   </SlideShell>
 );
 
 const Closing: Page = () => (
   <SlideShell>
-    <TopBar num="13" eyebrow="總結與行動 · Call to Action" />
+    <TopBar num="14" eyebrow="總結與行動 · Call to Action" />
     <Title>
       你的<Accent>下一步</Accent>。
     </Title>
@@ -1529,7 +1821,7 @@ const CombinatoricsCalculator: Page = () => {
 
   return (
     <SlideShell>
-      <TopBar num="14" eyebrow="Finale · Combinatorics Calculator" />
+      <TopBar num="15" eyebrow="Finale · Combinatorics Calculator" />
       <Title>
         你的工作流，是一道<Accent>乘法題</Accent>。
       </Title>
@@ -1645,52 +1937,66 @@ const CombinatoricsCalculator: Page = () => {
 
 const WhatYouCanDo: Page = () => (
   <SlideShell variant="tint">
-    <TopBar num="15" eyebrow="實戰路線圖 · What You Can Build" />
+    <TopBar num="13" eyebrow="實戰路線圖 · What You Can Build" />
     <Title>
       具體來說，你可以<Accent>做到這些</Accent>
     </Title>
-    <p
-      style={{
-        fontSize: 28,
-        lineHeight: 1.6,
-        color: c.body,
-        margin: '24px 0 0',
-        maxWidth: 1200,
-      }}
-    >
-      從 Obsidian 個人資料到網站上線、寄信給教授——今天就能跑通的完整六步驟。
-    </p>
     <div
       style={{
         display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: '20px 44px',
-        marginTop: 32,
+        gridTemplateColumns: '1fr 480px',
+        gap: 48,
+        marginTop: 24,
         flex: 1,
-        alignContent: 'start',
+        minHeight: 0,
       }}
     >
-      <FlowStep n={1}>
-        <Ink>Obsidian</Ink> 讀取個人資訊——履歷、自傳與專長筆記，作為唯一權威資料源（SSOT）。
-      </FlowStep>
-      <FlowStep n={2}>
-        在 IDE 載入 <InlineCode>wport skill</InlineCode>
-        ，以此資訊一鍵產生結構化、可部署的個人履歷。
-      </FlowStep>
-      <FlowStep n={3}>
-        以 Obsidian 資料呼叫 <InlineCode>靜態網站 skill</InlineCode>
-        ，製作個人作品集網站。
-      </FlowStep>
-      <FlowStep n={4}>
-        透過 <InlineCode>google speed cli</InlineCode> 檢查網站速度，依報告迭代優化後再更新。
-      </FlowStep>
-      <FlowStep n={5}>
-        使用 <InlineCode>vercel cli</InlineCode> 將靜態網站一鍵上架，取得公開網址。
-      </FlowStep>
-      <FlowStep n={6}>
-        使用 <InlineCode>google workspace cli</InlineCode>
-        ，網站上線後自動寄信通知教授你的作品連結。
-      </FlowStep>
+      <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+        <p
+          style={{
+            fontSize: 26,
+            lineHeight: 1.6,
+            color: c.body,
+            margin: 0,
+            maxWidth: 900,
+          }}
+        >
+          從 Obsidian 個人資料到網站上線、寄信給教授——今天就能跑通的完整六步驟。
+        </p>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 14,
+            marginTop: 22,
+            flex: 1,
+            minHeight: 0,
+          }}
+        >
+          <FlowStep n={1} compact>
+            <Ink>Obsidian</Ink> 讀取個人資訊——履歷、自傳與專長筆記，作為唯一權威資料源（SSOT）。
+          </FlowStep>
+          <FlowStep n={2} compact>
+            在 IDE 載入 <InlineCode>wport skill</InlineCode>
+            ，以此資訊一鍵產生結構化、可部署的個人履歷。
+          </FlowStep>
+          <FlowStep n={3} compact>
+            以 Obsidian 資料呼叫 <InlineCode>靜態網站 skill</InlineCode>
+            ，製作個人作品集網站。
+          </FlowStep>
+          <FlowStep n={4} compact>
+            透過 <InlineCode>google speed cli</InlineCode> 檢查網站速度，依報告迭代優化後再更新。
+          </FlowStep>
+          <FlowStep n={5} compact>
+            使用 <InlineCode>vercel cli</InlineCode> 將靜態網站一鍵上架，取得公開網址。
+          </FlowStep>
+          <FlowStep n={6} compact>
+            使用 <InlineCode>google workspace cli</InlineCode>
+            ，網站上線後自動寄信通知教授你的作品連結。
+          </FlowStep>
+        </div>
+      </div>
+      <CliChatDemo variant="light" />
     </div>
   </SlideShell>
 );
@@ -1737,9 +2043,9 @@ export default [
   CliPower,
   WportCliResume,
   UltimateWorkflow,
+  WhatYouCanDo,
   Closing,
   CombinatoricsCalculator,
-  WhatYouCanDo,
   WportRehoSpotlightPage,
   WportRehoWhyJoin1Page,
   WportRehoWhyJoin2Page,
