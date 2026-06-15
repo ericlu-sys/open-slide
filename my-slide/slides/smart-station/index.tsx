@@ -5,6 +5,9 @@ import eric from './assets/eric.png';
 import gugu from './assets/gugu.png';
 import logoIcon from './assets/logo-icon.png';
 
+const TALENT_HUB_EVENT_URL = 'https://hypelink.app/@wport/events/wport-talent-hub-3';
+const SMART_STATION_VENUE_URL = 'https://maps.app.goo.gl/WKPHvWLCd4h9V2UTA';
+
 export const meta: SlideMeta = {
   title: '聰電站 · 講座橫幅',
   createdAt: '2026-06-05T16:51:05.525Z',
@@ -308,10 +311,18 @@ const BannerC: Page = () => (
             <span className="v">VOL.3</span>
           </div>
           <h1 className="c-title">
-            <span className="c-title-line">沒有資科背景的人</span>
-            <span className="c-title-line">
-              也能實作的 <em>AI 課程</em>
-            </span>
+            <a
+              href={TALENT_HUB_EVENT_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="aj-interactive-link"
+              style={{ color: 'inherit', textDecoration: 'none', display: 'inline-block' }}
+            >
+              <span className="c-title-line">沒有資科背景的人</span>
+              <span className="c-title-line">
+                也能實作的 <em>AI 課程</em>
+              </span>
+            </a>
           </h1>
         </div>
         <div className="c-cast">
@@ -342,12 +353,22 @@ const BannerC: Page = () => (
           <span className="div" />
           <span className="c-bar-place">
             <PinIcon />
-            <span className="place">想享一隅共享空間 · 桃園蘆竹</span>
+            <a
+              href={SMART_STATION_VENUE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="aj-interactive-link place"
+              style={{ color: 'inherit', textDecoration: 'none', display: 'inline-block' }}
+            >
+              想享一隅共享空間 · 桃園蘆竹
+            </a>
           </span>
         </div>
       </div>
     </div>
   </CongFrame>
 );
+
+export { BannerC as SmartStationVol3 };
 
 export default [BannerA, BannerB, BannerC] satisfies Page[];

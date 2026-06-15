@@ -1,5 +1,11 @@
 import type { DesignSystem, Page, SlideMeta } from '@open-slide/core';
 import { useState } from 'react';
+import { SmartStationVol3 } from '../smart-station/index';
+import {
+  PageRehoSpotlight,
+  PageRehoWhyJoin1,
+  PageRehoWhyJoin2,
+} from '../wport-campus-info-session/index';
 
 export const design: DesignSystem = {
   palette: { bg: '#FFFFFF', text: '#5D5D5D', accent: '#56C7BB' },
@@ -26,6 +32,12 @@ const c = {
 
 const mono = '"JetBrains Mono", "Fira Code", monospace';
 const PAD = { top: 104, right: 132, bottom: 96, left: 132 };
+
+const STARTER_KIT_REPO_URL = 'https://github.com/hotfire-digital/wport-agents';
+const STARTER_KIT_REPO_LABEL = 'hotfire-digital/wport-agents';
+const GIT_INIT = 'git init';
+const GIT_REMOTE = 'git remote add origin <your-private-repo>';
+const GIT_PUSH = 'git push';
 
 if (typeof document !== 'undefined') {
   const fontId = 'ai-junior-intern-guide-fonts';
@@ -77,6 +89,29 @@ if (typeof document !== 'undefined') {
         100% { transform: scale(1); }
       }
       .aj-pop { animation: ajPop 0.32s cubic-bezier(0.34, 1.56, 0.64, 1); }
+      @keyframes ajLinkWiggle {
+        0%, 100% { transform: rotate(0deg) translateY(0); }
+        20% { transform: rotate(-2.2deg) translateY(-1px); }
+        40% { transform: rotate(2deg) translateY(0); }
+        60% { transform: rotate(-1.6deg) translateY(-1px); }
+        80% { transform: rotate(1.4deg) translateY(0); }
+      }
+      .aj-interactive-link,
+      .aj-link-motion-scope a[href] {
+        animation: ajLinkWiggle 2.6s ease-in-out infinite;
+        transform-origin: center center;
+        cursor: pointer;
+      }
+      .aj-interactive-link {
+        display: inline-block;
+      }
+      .aj-link-motion-scope a[href] {
+        display: inline-block;
+      }
+      .aj-interactive-link:hover,
+      .aj-link-motion-scope a[href]:hover {
+        animation-play-state: paused;
+      }
     `;
     document.head.appendChild(style);
   }
@@ -240,6 +275,70 @@ const InlineCode = ({ children }: { children: React.ReactNode }) => (
   </code>
 );
 
+const INTERACTIVE_LINK_CLASS = 'aj-interactive-link';
+
+const LinkMotionScope = ({ children }: { children: React.ReactNode }) => (
+  <div
+    className="aj-link-motion-scope"
+    style={{
+      width: '100%',
+      height: '100%',
+      position: 'relative',
+      overflow: 'hidden',
+    }}
+  >
+    {children}
+  </div>
+);
+
+const ExternalLink = ({
+  href,
+  children,
+  style,
+  mono: useMono = false,
+}: {
+  href: string;
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+  mono?: boolean;
+}) => (
+  <a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    className={INTERACTIVE_LINK_CLASS}
+    style={{
+      color: c.primaryHover,
+      textDecoration: 'none',
+      borderBottom: `2px solid ${c.primaryMuted}`,
+      ...(useMono ? { fontFamily: mono } : {}),
+      ...style,
+    }}
+  >
+    {children}
+  </a>
+);
+
+const RepoCallout = ({ href, children }: { href: string; children: React.ReactNode }) => (
+  <ExternalLink
+    href={href}
+    mono
+    style={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: 14,
+      fontSize: 26,
+      background: c.primaryLight,
+      border: `1px solid ${c.primaryMuted}`,
+      borderRadius: 8,
+      padding: '20px 30px',
+      borderBottom: `1px solid ${c.primaryMuted}`,
+    }}
+  >
+    {children}
+  </ExternalLink>
+);
+
 const DarkInlineCode = ({ children }: { children: React.ReactNode }) => (
   <code
     style={{
@@ -353,23 +452,86 @@ const CodeBlock = ({
   </div>
 );
 
-const RepoCallout = ({ children }: { children: React.ReactNode }) => (
+const CopyIcon = () => (
+  <svg aria-hidden width="18" height="18" viewBox="0 0 24 24" fill="none">
+    <rect x="7" y="7" width="12" height="13" rx="2" stroke="currentColor" strokeWidth="1.5" />
+    <path
+      d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+const CopyButton = ({ text }: { text: string }) => {
+  const [copied, setCopied] = useState(false);
+
+  const onCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1600);
+    } catch {
+      /* ignore */
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={onCopy}
+      aria-label={copied ? '已複製' : '複製指令'}
+      style={{
+        flexShrink: 0,
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 8,
+        fontFamily: mono,
+        fontSize: 17,
+        fontWeight: 600,
+        letterSpacing: '0.04em',
+        color: copied ? c.primaryHover : c.muted,
+        background: copied ? c.white : 'transparent',
+        border: `1px solid ${copied ? c.primaryMuted : c.border}`,
+        borderRadius: 6,
+        padding: '8px 14px',
+        cursor: 'pointer',
+        transition: 'color 0.15s, border-color 0.15s, background 0.15s',
+      }}
+    >
+      {copied ? (
+        <>
+          <span style={{ color: c.primary, fontSize: 15 }}>✓</span>
+          已複製
+        </>
+      ) : (
+        <>
+          <CopyIcon />
+          複製
+        </>
+      )}
+    </button>
+  );
+};
+
+const CopyableCodeLine = ({
+  command,
+  children,
+}: {
+  command: string;
+  children: React.ReactNode;
+}) => (
   <div
     style={{
-      display: 'inline-flex',
+      display: 'flex',
       alignItems: 'center',
-      gap: 18,
-      fontFamily: mono,
-      fontSize: 26,
-      color: c.primaryHover,
-      background: c.primaryLight,
-      border: `1px solid ${c.primaryMuted}`,
-      borderRadius: 8,
-      padding: '20px 30px',
+      justifyContent: 'space-between',
+      gap: 20,
     }}
   >
-    <span style={{ color: c.muted }}>$</span>
-    {children}
+    <span>{children}</span>
+    <CopyButton text={command} />
   </div>
 );
 
@@ -406,10 +568,12 @@ const Quote = ({ children, small }: { children: React.ReactNode; small?: string 
 const ToolCol = ({
   label,
   name,
+  href,
   sections,
 }: {
   label?: string;
   name: string;
+  href?: string;
   sections: { heading: string; body: string }[];
 }) => (
   <div
@@ -438,7 +602,21 @@ const ToolCol = ({
         {label}
       </div>
     ) : null}
-    <div style={{ fontSize: 36, fontWeight: 700, color: c.ink, fontFamily: mono }}>{name}</div>
+    {href ? (
+      <ExternalLink
+        href={href}
+        mono
+        style={{
+          fontSize: 36,
+          fontWeight: 700,
+          color: c.ink,
+        }}
+      >
+        {name}
+      </ExternalLink>
+    ) : (
+      <div style={{ fontSize: 36, fontWeight: 700, color: c.ink, fontFamily: mono }}>{name}</div>
+    )}
     {sections.map((s) => (
       <div key={s.heading || s.body} style={{ fontSize: 24, lineHeight: 1.55, color: c.body }}>
         {s.heading ? (
@@ -627,7 +805,7 @@ const WhyHere: Page = () => (
         <Body style={{ marginBottom: 32 }}>
           現場帶走一套<Ink>開箱即用的工具包</Ink>——這不只是一個 Repo，這是你進入職場的加速器。
         </Body>
-        <RepoCallout>git clone …/ai-junior-starter-kit</RepoCallout>
+        <RepoCallout href={STARTER_KIT_REPO_URL}>{STARTER_KIT_REPO_LABEL}</RepoCallout>
       </div>
     </div>
   </SlideShell>
@@ -705,14 +883,23 @@ const GitHubSync: Page = () => (
           <Ink>「版本控制」</Ink>。
         </Body>
         <CodeBlock tint>
-          <span style={{ color: c.muted }}># 在本地 Obsidian 資料夾</span>
-          <br />
-          <span style={{ color: c.primary, fontWeight: 700 }}>$</span> git init
-          <br />
-          <span style={{ color: c.primary, fontWeight: 700 }}>$</span> git remote add origin{' '}
-          <span style={{ color: c.primaryHover }}>&lt;your-private-repo&gt;</span>
-          <br />
-          <span style={{ color: c.primary, fontWeight: 700 }}>$</span> git push
+          <span style={{ color: c.muted, display: 'block', marginBottom: 16 }}>
+            # 在本地 Obsidian 資料夾
+          </span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <CopyableCodeLine command={GIT_INIT}>
+              <span style={{ color: c.primary, fontWeight: 700 }}>$</span> {GIT_INIT}
+            </CopyableCodeLine>
+            <CopyableCodeLine command={GIT_REMOTE}>
+              <span>
+                <span style={{ color: c.primary, fontWeight: 700 }}>$</span> git remote add origin{' '}
+                <span style={{ color: c.primaryHover }}>&lt;your-private-repo&gt;</span>
+              </span>
+            </CopyableCodeLine>
+            <CopyableCodeLine command={GIT_PUSH}>
+              <span style={{ color: c.primary, fontWeight: 700 }}>$</span> {GIT_PUSH}
+            </CopyableCodeLine>
+          </div>
         </CodeBlock>
       </div>
       <div>
@@ -811,6 +998,7 @@ const IdeToolbox: Page = () => (
     >
       <ToolCol
         name="Antigravity 2.0"
+        href="https://antigravity.google/product/antigravity-2"
         sections={[
           { heading: '核心特色', body: 'Google 推出的 AI 優先 Desktop 開發環境。' },
           { heading: '實習生優勢', body: '整合 Gemini 高算力，適合快速構建 UI 與專案邏輯分析。' },
@@ -818,18 +1006,20 @@ const IdeToolbox: Page = () => (
       />
       <ToolCol
         name="Kiro IDE"
+        href="https://kiro.dev/downloads/"
         sections={[
           { heading: '核心特色', body: 'AWS 支援、Spec-First（規格書驅動）環境。' },
           { heading: '實習生優勢', body: '內建 MCP 支援與自動化 commit 訊息生成。' },
         ]}
       />
       <ToolCol
-        name="Codex CLI"
+        name="Codex IDE"
+        href="https://chatgpt.com/zh-Hant/download/"
         sections={[
-          { heading: '核心特色', body: '輕量化、終端機優先的程式助理。' },
+          { heading: '核心特色', body: 'OpenAI 推出的 AI 優先 IDE，深度整合 Codex 程式助理。' },
           {
             heading: '實習生優勢',
-            body: '可在任何 Terminal 快速啟動，不受單一 IDE 限制，隨插隨用。',
+            body: '在編輯器內直接對話、改碼與除錯，降低從想法到實作的切換成本。',
           },
         ]}
       />
@@ -1108,6 +1298,41 @@ const WfItem = ({ n, children }: { n: string; children: React.ReactNode }) => (
   </div>
 );
 
+const FlowStep = ({ n, children }: { n: number; children: React.ReactNode }) => (
+  <div
+    style={{
+      display: 'flex',
+      gap: 22,
+      alignItems: 'flex-start',
+      background: c.white,
+      border: `1px solid ${c.border}`,
+      borderLeft: `4px solid ${c.primary}`,
+      borderRadius: 8,
+      padding: '22px 26px',
+    }}
+  >
+    <div
+      style={{
+        flexShrink: 0,
+        fontFamily: mono,
+        fontSize: 22,
+        fontWeight: 700,
+        color: c.primary,
+        width: 48,
+        height: 48,
+        border: `2px solid ${c.primary}`,
+        borderRadius: 999,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      {n}
+    </div>
+    <div style={{ fontSize: 24, lineHeight: 1.55, color: c.body, paddingTop: 2 }}>{children}</div>
+  </div>
+);
+
 const UltimateWorkflow: Page = () => (
   <SlideShell variant="dark">
     <TopBar num="12" eyebrow="企業級 AI 實習生" dark />
@@ -1188,7 +1413,10 @@ const Closing: Page = () => (
         <BulletList
           items={[
             <>
-              Clone 本日 repo：<InlineCode>git clone …/ai-junior-starter-kit</InlineCode>
+              Fork 本日 repo：
+              <ExternalLink href={STARTER_KIT_REPO_URL} mono>
+                {STARTER_KIT_REPO_LABEL}
+              </ExternalLink>
             </>,
             <>
               建立你的第一個 Obsidian 知識庫，並
@@ -1200,7 +1428,7 @@ const Closing: Page = () => (
           ]}
         />
         <div style={{ marginTop: 44 }}>
-          <RepoCallout>git clone …/ai-junior-starter-kit.git</RepoCallout>
+          <RepoCallout href={STARTER_KIT_REPO_URL}>{STARTER_KIT_REPO_LABEL}</RepoCallout>
         </div>
       </div>
       <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -1415,6 +1643,82 @@ const CombinatoricsCalculator: Page = () => {
   );
 };
 
+const WhatYouCanDo: Page = () => (
+  <SlideShell variant="tint">
+    <TopBar num="15" eyebrow="實戰路線圖 · What You Can Build" />
+    <Title>
+      具體來說，你可以<Accent>做到這些</Accent>
+    </Title>
+    <p
+      style={{
+        fontSize: 28,
+        lineHeight: 1.6,
+        color: c.body,
+        margin: '24px 0 0',
+        maxWidth: 1200,
+      }}
+    >
+      從 Obsidian 個人資料到網站上線、寄信給教授——今天就能跑通的完整六步驟。
+    </p>
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: '20px 44px',
+        marginTop: 32,
+        flex: 1,
+        alignContent: 'start',
+      }}
+    >
+      <FlowStep n={1}>
+        <Ink>Obsidian</Ink> 讀取個人資訊——履歷、自傳與專長筆記，作為唯一權威資料源（SSOT）。
+      </FlowStep>
+      <FlowStep n={2}>
+        在 IDE 載入 <InlineCode>wport skill</InlineCode>
+        ，以此資訊一鍵產生結構化、可部署的個人履歷。
+      </FlowStep>
+      <FlowStep n={3}>
+        以 Obsidian 資料呼叫 <InlineCode>靜態網站 skill</InlineCode>
+        ，製作個人作品集網站。
+      </FlowStep>
+      <FlowStep n={4}>
+        透過 <InlineCode>google speed cli</InlineCode> 檢查網站速度，依報告迭代優化後再更新。
+      </FlowStep>
+      <FlowStep n={5}>
+        使用 <InlineCode>vercel cli</InlineCode> 將靜態網站一鍵上架，取得公開網址。
+      </FlowStep>
+      <FlowStep n={6}>
+        使用 <InlineCode>google workspace cli</InlineCode>
+        ，網站上線後自動寄信通知教授你的作品連結。
+      </FlowStep>
+    </div>
+  </SlideShell>
+);
+
+const WportRehoSpotlightPage: Page = () => (
+  <LinkMotionScope>
+    <PageRehoSpotlight />
+  </LinkMotionScope>
+);
+
+const WportRehoWhyJoin1Page: Page = () => (
+  <LinkMotionScope>
+    <PageRehoWhyJoin1 />
+  </LinkMotionScope>
+);
+
+const WportRehoWhyJoin2Page: Page = () => (
+  <LinkMotionScope>
+    <PageRehoWhyJoin2 />
+  </LinkMotionScope>
+);
+
+const SmartStationVol3Page: Page = () => (
+  <LinkMotionScope>
+    <SmartStationVol3 />
+  </LinkMotionScope>
+);
+
 export const meta: SlideMeta = {
   title: 'AI 實習生速成指南',
   createdAt: '2026-06-14T14:54:44.234Z',
@@ -1435,4 +1739,9 @@ export default [
   UltimateWorkflow,
   Closing,
   CombinatoricsCalculator,
+  WhatYouCanDo,
+  WportRehoSpotlightPage,
+  WportRehoWhyJoin1Page,
+  WportRehoWhyJoin2Page,
+  SmartStationVol3Page,
 ] satisfies Page[];

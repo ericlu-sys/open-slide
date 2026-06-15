@@ -4667,11 +4667,32 @@ const RehoWhyJoinHeader = ({ part }: { part: '1' | '2' }) => (
   >
     <div>
       <Eyebrow>Why join us · 為什麼加入我們</Eyebrow>
-      <TitleZh size={56}>為什麼選擇熱火數碼？</TitleZh>
+      <a
+        href={WPORT_HOTFIRE_COMPANY_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="aj-interactive-link"
+        style={{ color: 'inherit', textDecoration: 'none', display: 'inline-block' }}
+      >
+        <TitleZh size={56}>為什麼選擇熱火數碼？</TitleZh>
+      </a>
       <TitleVn size={36}>Vì sao nên gia nhập Reho Digital?</TitleVn>
     </div>
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 12 }}>
-      <img src={logoWportCo} alt="熱火數碼資訊 Logo" style={{ height: 64, objectFit: 'contain' }} />
+      <a
+        href={WPORT_HOTFIRE_COMPANY_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="aj-interactive-link"
+        style={{ display: 'inline-block', lineHeight: 0 }}
+        aria-label="熱火數碼資訊"
+      >
+        <img
+          src={logoWportCo}
+          alt="熱火數碼資訊 Logo"
+          style={{ height: 64, objectFit: 'contain' }}
+        />
+      </a>
       <Pill variant="lime">{part} / 2</Pill>
     </div>
   </div>
@@ -4728,6 +4749,7 @@ const CompanySpotlightPage = ({
   num,
   total = '03',
   companyZh,
+  companyHref,
   photoHint,
   photoSrc,
   photoFallback,
@@ -4743,6 +4765,7 @@ const CompanySpotlightPage = ({
   num: string;
   total?: string;
   companyZh: string;
+  companyHref?: string;
   photoHint: string;
   photoSrc?: string;
   photoFallback?: React.ReactNode;
@@ -4765,7 +4788,19 @@ const CompanySpotlightPage = ({
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <div>
           <Eyebrow>Company Spotlight · 企業宣傳</Eyebrow>
-          <TitleZh size={56}>{companyZh}</TitleZh>
+          {companyHref ? (
+            <a
+              href={companyHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="aj-interactive-link"
+              style={{ color: 'inherit', textDecoration: 'none', display: 'inline-block' }}
+            >
+              <TitleZh size={56}>{companyZh}</TitleZh>
+            </a>
+          ) : (
+            <TitleZh size={56}>{companyZh}</TitleZh>
+          )}
           <TitleVn size={36}>Doanh nghiệp đối tác · Giới thiệu công ty</TitleVn>
         </div>
         <Pill variant="lime">
@@ -4918,6 +4953,8 @@ const CompanySpotlightPage = ({
 const WPORT_REHO_JOBS_URL =
   'https://wport.me/foreign-student-zone?keyword=%E7%86%B1%E7%81%AB&page=1&pageSize=10';
 
+const WPORT_HOTFIRE_COMPANY_URL = 'https://wport.me/companies/62048ae543d970d1ea50b1d9205e23c7';
+
 type WportRehoJob = {
   title: string;
   area: string;
@@ -4999,6 +5036,7 @@ const PageRehoSpotlight: Page = () => {
       num="01"
       total="04"
       companyZh="熱火數碼資訊"
+      companyHref={WPORT_HOTFIRE_COMPANY_URL}
       photoHint="熱火數碼資訊 公司團隊照"
       photoSrc={iMG4598}
       logoSrc={logoWportCo}
@@ -5651,6 +5689,8 @@ const Page42: Page = () => (
     </div>
   </PageFrame>
 );
+
+export { PageRehoSpotlight, PageRehoWhyJoin1, PageRehoWhyJoin2 };
 
 export default [
   Page15,
