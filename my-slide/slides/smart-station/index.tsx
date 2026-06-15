@@ -5,7 +5,8 @@ import eric from './assets/eric.png';
 import gugu from './assets/gugu.png';
 import logoIcon from './assets/logo-icon.png';
 
-const TALENT_HUB_EVENT_URL = 'https://hypelink.app/@wport/events/wport-talent-hub-3';
+const TALENT_HUB_EVENT_URL =
+  'https://hypelink.app/@wport/events/wport-talent-hub-3?utm_source=university';
 const SMART_STATION_VENUE_URL = 'https://maps.app.goo.gl/WKPHvWLCd4h9V2UTA';
 
 export const meta: SlideMeta = {
