@@ -33,8 +33,11 @@ const c = {
 const mono = '"JetBrains Mono", "Fira Code", monospace';
 const PAD = { top: 104, right: 132, bottom: 96, left: 132 };
 
-const STARTER_KIT_REPO_URL = 'https://github.com/hotfire-digital/wport-agents';
-const STARTER_KIT_REPO_LABEL = 'hotfire-digital/wport-agents';
+const AI_JUNIOR_STARTER_KIT_URL = 'https://github.com/ericlu-sys/ai-junior-starter-kit';
+const AI_JUNIOR_STARTER_KIT_LABEL = 'ericlu-sys/ai-junior-starter-kit';
+const WPORT_AGENTS_REPO_URL = 'https://github.com/hotfire-digital/wport-agents';
+const WPORT_AGENTS_REPO_LABEL = 'hotfire-digital/wport-agents';
+const OBSIDIAN_URL = 'https://obsidian.md/';
 const GIT_INIT = 'git init';
 const GIT_REMOTE = 'git remote add origin <your-private-repo>';
 const GIT_PUSH = 'git push';
@@ -336,6 +339,30 @@ const ExternalLink = ({
   </a>
 );
 
+const ObsidianLink = ({
+  children = 'Obsidian',
+  dark = false,
+  mono = false,
+  style,
+}: {
+  children?: React.ReactNode;
+  dark?: boolean;
+  mono?: boolean;
+  style?: React.CSSProperties;
+}) => (
+  <ExternalLink
+    href={OBSIDIAN_URL}
+    mono={mono}
+    style={{
+      color: dark ? c.primaryMuted : c.primaryHover,
+      fontWeight: 700,
+      ...style,
+    }}
+  >
+    {children}
+  </ExternalLink>
+);
+
 const RepoCallout = ({ href, children }: { href: string; children: React.ReactNode }) => (
   <ExternalLink
     href={href}
@@ -354,6 +381,71 @@ const RepoCallout = ({ href, children }: { href: string; children: React.ReactNo
   >
     {children}
   </ExternalLink>
+);
+
+const ToolkitCard = ({
+  num,
+  title,
+  href,
+  repo,
+  desc,
+  badge,
+}: {
+  num: string;
+  title: string;
+  href: string;
+  repo: string;
+  desc: React.ReactNode;
+  badge?: string;
+}) => (
+  <div
+    style={{
+      border: `1px solid ${c.border}`,
+      borderLeft: `4px solid ${c.primary}`,
+      borderRadius: 8,
+      padding: '22px 26px',
+      background: c.white,
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 12,
+    }}
+  >
+    <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+      <span
+        style={{
+          fontFamily: mono,
+          fontSize: 20,
+          fontWeight: 700,
+          color: c.primary,
+        }}
+      >
+        {num}
+      </span>
+      <span style={{ fontSize: 28, fontWeight: 700, color: c.ink }}>{title}</span>
+      {badge ? (
+        <span
+          style={{
+            fontFamily: mono,
+            fontSize: 16,
+            fontWeight: 700,
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            color: c.primaryHover,
+            background: c.primaryLight,
+            border: `1px solid ${c.primaryMuted}`,
+            borderRadius: 999,
+            padding: '4px 12px',
+          }}
+        >
+          {badge}
+        </span>
+      ) : null}
+    </div>
+    <ExternalLink href={href} mono style={{ fontSize: 22, alignSelf: 'flex-start' }}>
+      {repo}
+    </ExternalLink>
+    <div style={{ fontSize: 22, lineHeight: 1.55, color: c.body }}>{desc}</div>
+  </div>
 );
 
 const DarkInlineCode = ({ children }: { children: React.ReactNode }) => (
@@ -726,7 +818,7 @@ const Cover: Page = () => (
         }}
       >
         企業主親授：如何利用 <b style={{ color: c.primaryMuted, fontWeight: 700 }}>AI</b>、
-        <b style={{ color: c.primaryMuted, fontWeight: 700 }}>Obsidian</b> 與{' '}
+        <ObsidianLink dark /> 與{' '}
         <b style={{ color: c.primaryMuted, fontWeight: 700 }}>CLI</b>
         <br />
         打造你的「個人核心競爭力」。
@@ -819,10 +911,26 @@ const WhyHere: Page = () => (
       </div>
       <div>
         <Subhead>今日解藥</Subhead>
-        <Body style={{ marginBottom: 32 }}>
-          現場帶走一套<Ink>開箱即用的工具包</Ink>——這不只是一個 Repo，這是你進入職場的加速器。
+        <Body style={{ marginBottom: 28 }}>
+          現場帶走兩套<Ink>開箱即用的工具包</Ink>——這不只是一個 Repo，這是你進入職場的加速器。
         </Body>
-        <RepoCallout href={STARTER_KIT_REPO_URL}>{STARTER_KIT_REPO_LABEL}</RepoCallout>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+          <ToolkitCard
+            num="01"
+            title="AI 新手包"
+            href={AI_JUNIOR_STARTER_KIT_URL}
+            repo={AI_JUNIOR_STARTER_KIT_LABEL}
+            badge="Fork"
+            desc="PRD、Storybook、CLI Executor Skills 教學沙盒——請 Fork 成自己的副本再開始練習。"
+          />
+          <ToolkitCard
+            num="02"
+            title="wport-agents"
+            href={WPORT_AGENTS_REPO_URL}
+            repo={WPORT_AGENTS_REPO_LABEL}
+            desc="職涯 Skills 插件庫：用 SKILL 定義 AI 專家能力，用 @wport/cli 串接真實職缺資料。"
+          />
+        </div>
       </div>
     </div>
   </SlideShell>
@@ -832,7 +940,7 @@ const SSOT: Page = () => (
   <SlideShell variant="tint">
     <TopBar num="03" eyebrow="知識管理觀念" />
     <Title>
-      大腦的<Accent>單一事實來源</Accent>：SSOT 與 Obsidian
+      大腦的<Accent>單一事實來源</Accent>：SSOT 與 <ObsidianLink />
     </Title>
     <div
       style={{
@@ -857,7 +965,9 @@ const SSOT: Page = () => (
         </div>
       </div>
       <div>
-        <Subhead>為什麼選擇 Obsidian？</Subhead>
+        <Subhead>
+          為什麼選擇 <ObsidianLink />？
+        </Subhead>
         <BulletList
           items={[
             <>
@@ -873,6 +983,9 @@ const SSOT: Page = () => (
             </>,
           ]}
         />
+        <div style={{ marginTop: 28 }}>
+          <RepoCallout href={OBSIDIAN_URL}>obsidian.md</RepoCallout>
+        </div>
       </div>
     </div>
   </SlideShell>
@@ -894,7 +1007,9 @@ const GitHubSync: Page = () => (
       }}
     >
       <div>
-        <Subhead>Obsidian 本質就是一個資料夾</Subhead>
+        <Subhead>
+          <ObsidianLink /> 本質就是一個資料夾
+        </Subhead>
         <Body style={{ marginBottom: 36 }}>
           你的所有筆記，在電腦裡都只是 <InlineCode>.md</InlineCode> 純文字檔案——這代表它天生契合
           <Ink>「版本控制」</Ink>。
@@ -948,12 +1063,12 @@ const IdeObsidian: Page = () => (
   <SlideShell variant="tint">
     <TopBar num="05" eyebrow="工具整合" />
     <Title>
-      用工程師思維整理資訊：<Accent>IDE + Obsidian</Accent>
+      用工程師思維整理資訊：<Accent>IDE + <ObsidianLink /></Accent>
     </Title>
     <p
       style={{ fontSize: 30, lineHeight: 1.65, color: c.body, maxWidth: 1180, margin: '36px 0 0' }}
     >
-      為什麼要用 <Ink>VS Code / Cursor</Ink> 等 IDE 開啟你的 Obsidian
+      為什麼要用 <Ink>VS Code / Cursor</Ink> 等 IDE 開啟你的 <ObsidianLink />
       筆記？打破傳統筆記框架的三大整合優勢——
     </p>
     <div
@@ -1048,7 +1163,7 @@ const HandsOn01: Page = () => (
   <SlideShell variant="tint">
     <TopBar num="07" eyebrow="實作流程 · Step-by-Step" />
     <Title>
-      實戰演練 01：從 AI 到 Obsidian 的<Accent>知識流</Accent>
+      實戰演練 01：從 AI 到 <ObsidianLink /> 的<Accent>知識流</Accent>
     </Title>
     <div
       style={{
@@ -1075,8 +1190,8 @@ const HandsOn01: Page = () => (
           title="沉澱至本地資料庫"
           desc={
             <>
-              將精煉後的內容以 <InlineCode>Markdown</InlineCode> 格式儲存到你的 Obsidian
-              本地資料庫（SSOT）。
+              將精煉後的內容以 <InlineCode>Markdown</InlineCode> 格式儲存到你的{' '}
+              <ObsidianLink /> 本地資料庫（SSOT）。
             </>
           }
         />
@@ -1102,20 +1217,29 @@ const SkillCli: Page = () => (
         display: 'grid',
         gridTemplateColumns: '1fr 1fr',
         gap: 72,
-        marginTop: 60,
+        marginTop: 48,
         flex: 1,
       }}
     >
       <div>
         <Subhead>01 — 什麼是 Skill（技能包）</Subhead>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 30 }}>
-          <Def term="定義" desc="定義 AI Agent 的「特化能力」與 System Prompts（系統提示詞）。" />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+          <Def
+            term="定義"
+            desc={
+              <>
+                存在 <InlineCode>.cursor/skills/&lt;name&gt;/SKILL.md</InlineCode>{' '}
+                的指令檔，定義 AI Agent 的特化能力與輸出規範。
+              </>
+            }
+          />
           <Def
             term="作用"
             desc={
               <>
-                讓普通 AI 擁有特定領域（履歷優化、程式重構、文案撰寫）的專家思考邏輯與輸出規範，
-                <Ink>避免 AI 講廢話。</Ink>
+                讓普通 AI 擁有專家邏輯——例如{' '}
+                <InlineCode>gen-resume</InlineCode>、<InlineCode>interviewer-ai</InlineCode>
+                ——<Ink>避免 AI 講廢話。</Ink>
               </>
             }
           />
@@ -1123,19 +1247,46 @@ const SkillCli: Page = () => (
       </div>
       <div>
         <Subhead>02 — 什麼是 CLI（命令列介面）</Subhead>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 30 }}>
-          <Def term="Command Line Interface" desc="用鍵盤輸入純文字指令，直接指揮作業系統。" />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+          <Def
+            term="Command Line Interface"
+            desc={
+              <>
+                用鍵盤輸入純文字指令的執行通道，例如 <InlineCode>wport jobs search</InlineCode>、
+                <InlineCode>gh pr create</InlineCode>。
+              </>
+            }
+          />
           <Def
             term="作用"
             desc={
               <>
-                高效率的實習生，透過 Terminal 讓 Agent 直接在底層修改檔案、打包專案，
+                Agent 透過 CLI 拿真實資料、改檔案、部署專案——
                 <Ink>而不是手動複製貼上。</Ink>
               </>
             }
           />
         </div>
       </div>
+    </div>
+    <div
+      style={{
+        marginTop: 36,
+        padding: '22px 28px',
+        background: c.primaryLight,
+        border: `1px solid ${c.primaryMuted}`,
+        borderRadius: 8,
+        fontSize: 24,
+        lineHeight: 1.55,
+        color: c.body,
+        flexShrink: 0,
+      }}
+    >
+      <strong style={{ color: c.ink }}>本課範例：</strong>
+      <ExternalLink href={WPORT_AGENTS_REPO_URL} mono style={{ fontSize: 22, marginLeft: 8 }}>
+        {WPORT_AGENTS_REPO_LABEL}
+      </ExternalLink>
+      — Agent 讀 Skills、跑 <InlineCode>@wport/cli</InlineCode>，產出履歷 HTML、面試題與職涯報告。
     </div>
   </SlideShell>
 );
@@ -1254,7 +1405,11 @@ const WportCliResume: Page = () => (
         <StepItem
           n={1}
           title="知識沉澱"
-          desc="Obsidian 中已儲存你請 AI 潤飾好的履歷 Markdown 檔案（SSOT）。"
+          desc={
+            <>
+              <ObsidianLink /> 中已儲存你請 AI 潤飾好的履歷 Markdown 檔案（SSOT）。
+            </>
+          }
         />
         <StepItem
           n={2}
@@ -1705,13 +1860,19 @@ const Closing: Page = () => (
         <BulletList
           items={[
             <>
-              Fork 本日 repo：
-              <ExternalLink href={STARTER_KIT_REPO_URL} mono>
-                {STARTER_KIT_REPO_LABEL}
+              <strong style={{ color: c.ink }}>Fork</strong> AI 新手包：
+              <ExternalLink href={AI_JUNIOR_STARTER_KIT_URL} mono>
+                {AI_JUNIOR_STARTER_KIT_LABEL}
               </ExternalLink>
             </>,
             <>
-              建立你的第一個 Obsidian 知識庫，並
+              Clone wport-agents 並 symlink Skills：
+              <ExternalLink href={WPORT_AGENTS_REPO_URL} mono>
+                {WPORT_AGENTS_REPO_LABEL}
+              </ExternalLink>
+            </>,
+            <>
+              下載 <ObsidianLink mono>obsidian.md</ObsidianLink> 並建立知識庫，再
               <strong style={{ color: c.ink }}>同步至 GitHub</strong>。
             </>,
             <>
@@ -1719,8 +1880,10 @@ const Closing: Page = () => (
             </>,
           ]}
         />
-        <div style={{ marginTop: 44 }}>
-          <RepoCallout href={STARTER_KIT_REPO_URL}>{STARTER_KIT_REPO_LABEL}</RepoCallout>
+        <div style={{ marginTop: 32, display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <RepoCallout href={AI_JUNIOR_STARTER_KIT_URL}>{AI_JUNIOR_STARTER_KIT_LABEL}</RepoCallout>
+          <RepoCallout href={WPORT_AGENTS_REPO_URL}>{WPORT_AGENTS_REPO_LABEL}</RepoCallout>
+          <RepoCallout href={OBSIDIAN_URL}>obsidian.md</RepoCallout>
         </div>
       </div>
       <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -1961,7 +2124,7 @@ const WhatYouCanDo: Page = () => (
             maxWidth: 900,
           }}
         >
-          從 Obsidian 個人資料到網站上線、寄信給教授——今天就能跑通的完整六步驟。
+          從 <ObsidianLink /> 個人資料到網站上線、寄信給教授——今天就能跑通的完整六步驟。
         </p>
         <div
           style={{
@@ -1974,14 +2137,14 @@ const WhatYouCanDo: Page = () => (
           }}
         >
           <FlowStep n={1} compact>
-            <Ink>Obsidian</Ink> 讀取個人資訊——履歷、自傳與專長筆記，作為唯一權威資料源（SSOT）。
+            <ObsidianLink /> 讀取個人資訊——履歷、自傳與專長筆記，作為唯一權威資料源（SSOT）。
           </FlowStep>
           <FlowStep n={2} compact>
             在 IDE 載入 <InlineCode>wport skill</InlineCode>
             ，以此資訊一鍵產生結構化、可部署的個人履歷。
           </FlowStep>
           <FlowStep n={3} compact>
-            以 Obsidian 資料呼叫 <InlineCode>靜態網站 skill</InlineCode>
+            以 <ObsidianLink /> 資料呼叫 <InlineCode>靜態網站 skill</InlineCode>
             ，製作個人作品集網站。
           </FlowStep>
           <FlowStep n={4} compact>
