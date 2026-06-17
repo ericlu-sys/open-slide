@@ -11,6 +11,7 @@ import nankaiClass2 from './assets/nankai-class-2.jpg';
 import smartStationVibeCoding from './assets/smart-station-vibe-coding.jpg';
 import smartStationDavid from '../smart-station/assets/david.png';
 import smartStationEric from '../smart-station/assets/eric.png';
+import { useEffect, useState } from 'react';
 import {
   type DesignSystem,
   type Page,
@@ -114,6 +115,18 @@ const keyframes = `
 }
 .ai-fadeUp { opacity: 0; animation: aiFadeUp 900ms cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 .ai-fadeIn { opacity: 0; animation: aiFadeIn 1000ms ease forwards; }
+@keyframes aiChatIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes aiDotPulse {
+  0%, 100% { opacity: 0.35; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1); }
+}
+.ai-chatIn { animation: aiChatIn 0.35s ease-out both; }
+.ai-dot:nth-child(1) { animation: aiDotPulse 1.2s ease-in-out infinite; }
+.ai-dot:nth-child(2) { animation: aiDotPulse 1.2s ease-in-out 0.15s infinite; }
+.ai-dot:nth-child(3) { animation: aiDotPulse 1.2s ease-in-out 0.3s infinite; }
 `;
 
 const Style = () => <style>{keyframes}</style>;
@@ -1497,6 +1510,283 @@ const CurriculumTopics: Page = () => (
   </div>
 );
 
+const INTERN_GUIDE_SLIDER_DEMO = '/s/ai-junior-intern-guide?p=15';
+const INTERN_GUIDE_ANIM_DEMO = '/s/ai-junior-intern-guide?p=13';
+
+const OutcomeSliderPreview = () => {
+  const [ssot, setSsot] = useState(5);
+  const [skill, setSkill] = useState(6);
+  const total = ssot * 3 * skill * 4;
+
+  return (
+    <div
+      data-osd-interactive
+      style={{
+        marginTop: 20,
+        padding: '24px 28px',
+        borderRadius: 'var(--osd-radius)',
+        background: palette.surface,
+        border: `1px solid ${palette.line}`,
+      }}
+    >
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+        <span style={{ fontSize: 22, fontWeight: 700 }}>SSOT 筆記</span>
+        <span style={{ fontSize: 32, fontWeight: 800, color: 'var(--osd-accent)' }}>{ssot}</span>
+      </div>
+      <input
+        type="range"
+        min={1}
+        max={12}
+        value={ssot}
+        onChange={(e) => setSsot(Number(e.target.value))}
+        style={{ width: '100%', marginTop: 12, accentColor: 'var(--osd-accent)' }}
+      />
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: 20 }}>
+        <span style={{ fontSize: 22, fontWeight: 700 }}>Skill</span>
+        <span style={{ fontSize: 32, fontWeight: 800, color: palette.supportBlue }}>{skill}</span>
+      </div>
+      <input
+        type="range"
+        min={1}
+        max={12}
+        value={skill}
+        onChange={(e) => setSkill(Number(e.target.value))}
+        style={{ width: '100%', marginTop: 12, accentColor: palette.supportBlue }}
+      />
+      <div
+        style={{
+          marginTop: 24,
+          paddingTop: 20,
+          borderTop: `1px solid ${palette.line}`,
+          textAlign: 'center',
+        }}
+      >
+        <div style={{ fontSize: 56, fontWeight: 800, color: 'var(--osd-accent)', lineHeight: 1 }}>
+          {total.toLocaleString('en-US')}
+        </div>
+        <div style={{ fontSize: 20, color: palette.muted, marginTop: 8 }}>種自動化工作流組合</div>
+      </div>
+    </div>
+  );
+};
+
+const CHAT_PREVIEW_STEPS = [
+  { cmd: 'wport skill run resume', reply: '→ 履歷已產生 · 可部署 ✓' },
+  { cmd: 'vercel deploy', reply: '→ 網站已上架 · 取得公開網址 ✓' },
+] as const;
+
+const OutcomeChatPreview = () => {
+  const [messages, setMessages] = useState<{ role: 'user' | 'bot'; text: string }[]>([]);
+  const [draft, setDraft] = useState('');
+  const [stepIdx, setStepIdx] = useState(0);
+  const [phase, setPhase] = useState<'typing' | 'bot' | 'pause'>('typing');
+  const [botTyping, setBotTyping] = useState(false);
+
+  useEffect(() => {
+    const step = CHAT_PREVIEW_STEPS[stepIdx];
+    if (phase === 'typing') {
+      if (draft.length < step.cmd.length) {
+        const t = setTimeout(() => setDraft(step.cmd.slice(0, draft.length + 1)), 32);
+        return () => clearTimeout(t);
+      }
+      const t = setTimeout(() => {
+        setMessages((m) => [...m, { role: 'user', text: step.cmd }]);
+        setDraft('');
+        setBotTyping(true);
+        setPhase('bot');
+      }, 280);
+      return () => clearTimeout(t);
+    }
+    if (phase === 'bot') {
+      const t = setTimeout(() => {
+        setMessages((m) => [...m, { role: 'bot', text: step.reply }]);
+        setBotTyping(false);
+        setPhase('pause');
+      }, 620);
+      return () => clearTimeout(t);
+    }
+    const t = setTimeout(() => {
+      const next = (stepIdx + 1) % CHAT_PREVIEW_STEPS.length;
+      if (next === 0) setMessages([]);
+      setStepIdx(next);
+      setPhase('typing');
+    }, 1200);
+    return () => clearTimeout(t);
+  }, [phase, draft, stepIdx]);
+
+  return (
+    <div
+      data-osd-interactive
+      style={{
+        marginTop: 20,
+        borderRadius: 'var(--osd-radius)',
+        border: `1px solid ${palette.line}`,
+        background: palette.surface,
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        height: 280,
+      }}
+    >
+      <div
+        style={{
+          padding: '12px 18px',
+          background: palette.accentSoft,
+          borderBottom: `1px solid ${palette.line}`,
+          fontSize: 16,
+          fontWeight: 600,
+          color: palette.muted,
+          letterSpacing: '0.06em',
+        }}
+      >
+        wport agent · cli runner
+      </div>
+      <div style={{ flex: 1, padding: '16px 18px', overflow: 'hidden', display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {messages.map((msg) => (
+          <div
+            key={`${msg.role}-${msg.text}`}
+            className="ai-chatIn"
+            style={{
+              alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
+              maxWidth: '88%',
+              padding: '10px 14px',
+              borderRadius: 12,
+              fontSize: 17,
+              lineHeight: 1.45,
+              fontFamily: 'ui-monospace, monospace',
+              background: msg.role === 'user' ? palette.tealSoft : palette.blueSoft,
+              color: palette.muted,
+            }}
+          >
+            {msg.text}
+          </div>
+        ))}
+        {botTyping ? (
+          <div style={{ display: 'flex', gap: 6, padding: '8px 4px' }}>
+            {[0, 1, 2].map((i) => (
+              <span
+                key={i}
+                className="ai-dot"
+                style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  background: 'var(--osd-accent)',
+                }}
+              />
+            ))}
+          </div>
+        ) : null}
+        {draft ? (
+          <div
+            style={{
+              alignSelf: 'flex-end',
+              fontSize: 17,
+              fontFamily: 'ui-monospace, monospace',
+              color: palette.muted,
+              opacity: 0.7,
+            }}
+          >
+            {draft}
+            <span style={{ color: 'var(--osd-accent)' }}>|</span>
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+};
+
+const DemoLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
+  <a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    data-osd-interactive
+    className="ai-fadeUp"
+    style={{
+      display: 'inline-flex',
+      marginTop: 16,
+      fontSize: 22,
+      fontWeight: 700,
+      color: 'var(--osd-accent)',
+      textDecoration: 'none',
+    }}
+  >
+    {children} →
+  </a>
+);
+
+const AchievableOutcomes: Page = () => (
+  <div style={{ ...fill, padding: `${PAD_Y}px ${PAD_X}px` }}>
+    <Style />
+    <GridBg />
+    <LabGlow />
+    <div style={{ position: 'relative', zIndex: 1 }}>
+      <Eyebrow>學習成果</Eyebrow>
+      <PageHeading delay={80}>具體可以做到什麼地步</PageHeading>
+      <p
+        className="ai-fadeUp"
+        style={{
+          animationDelay: '160ms',
+          fontSize: 30,
+          lineHeight: 1.5,
+          color: palette.muted,
+          margin: '20px 0 0',
+          maxWidth: 1200,
+        }}
+      >
+        課後不只是懂概念 — 簡報本身就能做成可互動、可操作的展示品
+      </p>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: 32,
+          marginTop: 36,
+        }}
+      >
+        <div
+          className="ai-fadeUp"
+          style={{
+            animationDelay: '220ms',
+            padding: '28px 32px',
+            borderRadius: 'var(--osd-radius)',
+            background: palette.surface,
+            border: `1px solid ${palette.line}`,
+          }}
+        >
+          <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--osd-accent)' }}>① 互動式拖拉</div>
+          <p style={{ fontSize: 26, lineHeight: 1.5, color: palette.muted, margin: '14px 0 0' }}>
+            拉動滑桿，即時看見 SSOT、Skill 等工具能組合出多少種自動化工作流
+          </p>
+          <OutcomeSliderPreview />
+          <DemoLink href={INTERN_GUIDE_SLIDER_DEMO}>查看完整示範（AI 實習生指南 · 第 15 頁）</DemoLink>
+        </div>
+        <div
+          className="ai-fadeUp"
+          style={{
+            animationDelay: '300ms',
+            padding: '28px 32px',
+            borderRadius: 'var(--osd-radius)',
+            background: palette.surface,
+            border: `1px solid ${palette.line}`,
+          }}
+        >
+          <div style={{ fontSize: 22, fontWeight: 700, color: palette.supportBlue }}>
+            ② 程式驅動的互動動畫
+          </div>
+          <p style={{ fontSize: 26, lineHeight: 1.5, color: palette.muted, margin: '14px 0 0' }}>
+            CLI 對話視窗自動打字、機器人回覆 — 用 React 程式做成的簡報動畫
+          </p>
+          <OutcomeChatPreview />
+          <DemoLink href={INTERN_GUIDE_ANIM_DEMO}>查看完整示範（AI 實習生指南 · 第 13 頁）</DemoLink>
+        </div>
+      </div>
+    </div>
+    <PageNumber />
+  </div>
+);
+
 const Offerings: Page = () => (
   <div style={{ ...fill, padding: `${PAD_Y}px ${PAD_X}px` }}>
     <Style />
@@ -1656,5 +1946,6 @@ export default [
   CaseSmartStation3,
   CaseSmartStation4,
   CurriculumTopics,
+  AchievableOutcomes,
   Offerings,
 ] satisfies Page[];
