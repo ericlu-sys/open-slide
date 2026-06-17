@@ -6,9 +6,13 @@ import ericJingli from '@assets/eric_精立數位.jpg';
 import ericNankai from '@assets/eric_開南.jpg';
 import wportLogo from '@assets/wport.png';
 import wportSquare from '@assets/wport_方形logo.png';
+import nankaiClass1 from './assets/nankai-class-1.jpg';
+import nankaiClass2 from './assets/nankai-class-2.jpg';
+import smartStationVibeCoding from './assets/smart-station-vibe-coding.jpg';
+import smartStationDavid from '../smart-station/assets/david.png';
+import smartStationEric from '../smart-station/assets/eric.png';
 import {
   type DesignSystem,
-  ImagePlaceholder,
   type Page,
   type SlideMeta,
   type SlideTransition,
@@ -1170,7 +1174,62 @@ const CaseCorporate: Page = () => (
   </div>
 );
 
-const CaseCommunity: Page = () => (
+const CaseUniversity2: Page = () => (
+  <div
+    style={{
+      ...fill,
+      padding: `${PAD_Y}px ${PAD_X}px`,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+    }}
+  >
+    <Style />
+    <GridBg />
+    <div
+      style={{
+        position: 'relative',
+        zIndex: 1,
+        display: 'grid',
+        gridTemplateColumns: '1fr 640px',
+        gap: 48,
+        alignItems: 'center',
+      }}
+    >
+      <div>
+        <Eyebrow>案例 ④</Eyebrow>
+        <PageHeading delay={80}>大學正式課 ② · 開南資管系</PageHeading>
+        <CaseMeta>2026 · 30 人 · 電腦教室實機 · David , Eric 合授</CaseMeta>
+        <BulletList
+          startDelay={320}
+          items={[
+            '以學生進入企業需要的即戰力，講解實務工具鏈',
+            'Obsidian · GitHub · CLI · SKILL · IDE 選型與工作流',
+            '現場實機操作，讓學員帶走可複用的環境設定',
+          ]}
+        />
+      </div>
+      <div
+        className="ai-fadeUp"
+        style={{ animationDelay: '240ms', display: 'flex', flexDirection: 'column', gap: 16 }}
+      >
+        <img
+          src={nankaiClass1}
+          alt="開南大學資管系 — 電腦教室實機授課現場"
+          style={{ width: 640, height: 232, objectFit: 'cover', objectPosition: '50% 40%' }}
+        />
+        <img
+          src={nankaiClass2}
+          alt="開南大學資管系 — 學員實作畫面"
+          style={{ width: 640, height: 232, objectFit: 'cover', objectPosition: '50% 45%' }}
+        />
+      </div>
+    </div>
+    <PageNumber />
+  </div>
+);
+
+const CaseSmartStation3: Page = () => (
   <div
     style={{
       ...fill,
@@ -1194,20 +1253,244 @@ const CaseCommunity: Page = () => (
       }}
     >
       <div>
-        <Eyebrow>案例 ④</Eyebrow>
-        <PageHeading delay={80}>聰電站第三場 · AI 基礎</PageHeading>
-        <CaseMeta>2026-06-18 · 桃園在地 · 非技術背景 · 約 3 小時 · David + Eric 合授</CaseMeta>
+        <Eyebrow>案例 ⑤</Eyebrow>
+        <PageHeading delay={80}>聰電站 ③ · Vibe Coding 工作坊</PageHeading>
+        <CaseMeta>2026 · 10 人 · 古古 , Eric 合授</CaseMeta>
         <BulletList
           startDelay={320}
           items={[
-            'David：Antigravity、Model 切換、Skill 概念',
-            'Eric：Obsidian、openslide、GitHub Pages',
-            '結束時每位學員應有可分享的公開網址',
+            '使用 SKILL 產生 PRD 後，帶領學員實作產品',
+            '政府公開資料 CSV 匯入 RDB，完成資料驅動原型',
+            'Claude design 設計 UI/UX，從規格到可展示成果',
           ]}
         />
       </div>
       <div className="ai-fadeUp" style={{ animationDelay: '240ms' }}>
-        <ImagePlaceholder hint="未來準備中" width={640} height={480} />
+        <img
+          src={smartStationVibeCoding}
+          alt="聰電站 Vibe Coding 工作坊 — 現場合影"
+          style={{ width: 640, height: 480, objectFit: 'cover', objectPosition: '50% 40%' }}
+        />
+      </div>
+    </div>
+    <PageNumber />
+  </div>
+);
+
+const CaseSmartStation4: Page = () => (
+  <div
+    style={{
+      ...fill,
+      padding: `${PAD_Y}px ${PAD_X}px`,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+    }}
+  >
+    <Style />
+    <GridBg />
+    <LabGlow />
+    <div
+      style={{
+        position: 'relative',
+        zIndex: 1,
+        display: 'grid',
+        gridTemplateColumns: '1fr 640px',
+        gap: 48,
+        alignItems: 'center',
+      }}
+    >
+      <div>
+        <Eyebrow>案例 ⑥</Eyebrow>
+        <PageHeading delay={80}>聰電站 ④ · AI 入門實作</PageHeading>
+        <CaseMeta>2026 · 14 人 · David , Eric 合授</CaseMeta>
+        <BulletList
+          startDelay={320}
+          items={[
+            'Obsidian 建立 SSOT；GitHub commit / push 基礎',
+            'IDE 實測：Antigravity · Kiro · Cursor · Codex',
+            'AI 協作 open-slide 開源簡報；CLI · MCP · API 概念解析',
+          ]}
+        />
+      </div>
+      <div
+        className="ai-fadeUp"
+        style={{
+          animationDelay: '240ms',
+          width: 640,
+          height: 480,
+          borderRadius: 'var(--osd-radius)',
+          overflow: 'hidden',
+          background: 'linear-gradient(180deg, #081320 0%, #050b13 100%)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 28,
+          padding: '40px 32px',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 48 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+            <img
+              src={smartStationEric}
+              alt="Eric — 聰電站講師"
+              style={{
+                width: 200,
+                height: 200,
+                borderRadius: '50%',
+                objectFit: 'cover',
+                objectPosition: '52% 32%',
+                border: '3px solid rgba(126, 200, 200, 0.45)',
+              }}
+            />
+            <span style={{ fontSize: 28, fontWeight: 700, color: '#eef5f6' }}>Eric</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+            <img
+              src={smartStationDavid}
+              alt="David — 聰電站講師"
+              style={{
+                width: 200,
+                height: 200,
+                borderRadius: '50%',
+                objectFit: 'cover',
+                objectPosition: 'center 22%',
+                border: '3px solid rgba(126, 200, 200, 0.45)',
+              }}
+            />
+            <span style={{ fontSize: 28, fontWeight: 700, color: '#eef5f6' }}>David</span>
+          </div>
+        </div>
+        <p
+          style={{
+            margin: 0,
+            fontSize: 22,
+            fontWeight: 600,
+            letterSpacing: '0.08em',
+            color: '#7ec8c8',
+            textAlign: 'center',
+          }}
+        >
+          沒有資科背景的人，也能實作的 AI 課程
+        </p>
+      </div>
+    </div>
+    <PageNumber />
+  </div>
+);
+
+const CURRICULUM_TOPICS = [
+  'Obsidian 當作 SSOT',
+  'Prompt 到 Skill 的差別',
+  '什麼是 GitHub？push、commit 又是什麼意思',
+  'Chatbox 型態與 IDE 的不同',
+  '四個 AI IDE 免費額度輪流用（Cursor · Antigravity · Kiro · Codex）',
+  'CLI、MCP、API 分別代表什麼意義',
+  '用 open-slide 開源專案做出簡報',
+  '什麼是 Local 與推上雲端的差別',
+  '如何用 Vercel 將作品推上雲端',
+] as const;
+
+const CurriculumTopics: Page = () => (
+  <div style={{ ...fill, padding: `${PAD_Y}px ${PAD_X}px` }}>
+    <Style />
+    <GridBg />
+    <LabGlow />
+    <div style={{ position: 'relative', zIndex: 1 }}>
+      <Eyebrow>授課內容</Eyebrow>
+      <PageHeading delay={80}>具體能教什麼</PageHeading>
+      <p
+        className="ai-fadeUp"
+        style={{
+          animationDelay: '160ms',
+          fontSize: 30,
+          lineHeight: 1.5,
+          color: palette.muted,
+          margin: '20px 0 0',
+          maxWidth: 1100,
+        }}
+      >
+        AI Coding 基礎模組 — 可依對象與時數挑選、組合授課
+      </p>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          columnGap: 56,
+          rowGap: 18,
+          marginTop: 36,
+        }}
+      >
+        {CURRICULUM_TOPICS.map((topic, index) => (
+          <div
+            key={topic}
+            className="ai-fadeUp"
+            style={{
+              animationDelay: `${220 + index * 40}ms`,
+              display: 'flex',
+              gap: 18,
+              alignItems: 'flex-start',
+            }}
+          >
+            <span
+              style={{
+                flexShrink: 0,
+                width: 40,
+                height: 40,
+                borderRadius: 10,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontFamily: 'var(--osd-font-display)',
+                fontSize: 20,
+                fontWeight: 800,
+                color: index % 2 === 0 ? 'var(--osd-accent)' : palette.supportBlue,
+                background: index % 2 === 0 ? palette.tealSoft : palette.blueSoft,
+              }}
+            >
+              {index + 1}
+            </span>
+            <span
+              style={{
+                fontSize: 28,
+                lineHeight: 1.45,
+                color: palette.muted,
+                paddingTop: 4,
+              }}
+            >
+              {topic}
+            </span>
+          </div>
+        ))}
+      </div>
+      <div
+        className="ai-fadeUp"
+        style={{
+          animationDelay: '600ms',
+          marginTop: 36,
+          padding: '24px 32px',
+          borderRadius: 'var(--osd-radius)',
+          background: palette.tealSoft,
+          border: `1px solid ${palette.line}`,
+          maxWidth: 1480,
+        }}
+      >
+        <p
+          style={{
+            margin: 0,
+            fontSize: 30,
+            lineHeight: 1.5,
+            fontWeight: 600,
+            color: 'var(--osd-text)',
+          }}
+        >
+          這些都是 AI Coding 的基礎 — 讓員工與學生贏在起跑點。
+          <span style={{ color: palette.muted, fontWeight: 500 }}>
+            {' '}
+            每一項皆已在公開課、校園與企業內訓中實際授課驗證。
+          </span>
+        </p>
       </div>
     </div>
     <PageNumber />
@@ -1220,7 +1503,7 @@ const Offerings: Page = () => (
     <GridBg />
     <div style={{ position: 'relative', zIndex: 1 }}>
       <Eyebrow>課程模組</Eyebrow>
-      <PageHeading delay={80}>可依對象組合的課程型態</PageHeading>
+      <PageHeading delay={80}>不同程度的課程都能組合</PageHeading>
       <div
         style={{
           display: 'grid',
@@ -1239,12 +1522,9 @@ const Offerings: Page = () => (
             border: `1px solid ${palette.line}`,
           }}
         >
-          <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--osd-accent)' }}>公開課</div>
-          <div style={{ fontSize: 32, fontWeight: 700, margin: '12px 0', lineHeight: 1.3 }}>
-            AI 入門與生活應用
-          </div>
-          <div style={{ fontSize: 28, lineHeight: 1.45, color: palette.muted }}>
-            語言學習、提問法、非技術族群友善節奏
+          <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--osd-accent)' }}>① 新手小白</div>
+          <div style={{ fontSize: 28, lineHeight: 1.45, color: palette.muted, marginTop: 16 }}>
+            語言學習、提問法、非技術族群友善節奏，單純了解 ChatGPT 基礎工具使用
           </div>
         </div>
         <div
@@ -1257,12 +1537,9 @@ const Offerings: Page = () => (
             border: `1px solid ${palette.line}`,
           }}
         >
-          <div style={{ fontSize: 22, fontWeight: 700, color: palette.supportBlue }}>校園</div>
-          <div style={{ fontSize: 32, fontWeight: 700, margin: '12px 0', lineHeight: 1.3 }}>
-            產學工作坊
-          </div>
-          <div style={{ fontSize: 28, lineHeight: 1.45, color: palette.muted }}>
-            PRD、Vibe Coding、業界流程實作
+          <div style={{ fontSize: 22, fontWeight: 700, color: palette.supportBlue }}>② 學生</div>
+          <div style={{ fontSize: 28, lineHeight: 1.45, color: palette.muted, marginTop: 16 }}>
+            IDE、SKILL、CLI 實作自己的靜態網站
           </div>
         </div>
         <div
@@ -1275,12 +1552,9 @@ const Offerings: Page = () => (
             border: `1px solid ${palette.line}`,
           }}
         >
-          <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--osd-accent)' }}>企業</div>
-          <div style={{ fontSize: 32, fontWeight: 700, margin: '12px 0', lineHeight: 1.3 }}>
-            內訓與顧問
-          </div>
-          <div style={{ fontSize: 28, lineHeight: 1.45, color: palette.muted }}>
-            n8n 自動化、Claude Skills、團隊工作流導入
+          <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--osd-accent)' }}>③ 企業內訓</div>
+          <div style={{ fontSize: 28, lineHeight: 1.45, color: palette.muted, marginTop: 16 }}>
+            n8n、API、GAS、Vercel、DB 進入到實際產出
           </div>
         </div>
       </div>
@@ -1377,7 +1651,10 @@ export default [
   EricExperience,
   CasePublic,
   CaseUniversity,
+  CaseUniversity2,
   CaseCorporate,
-  CaseCommunity,
+  CaseSmartStation3,
+  CaseSmartStation4,
+  CurriculumTopics,
   Offerings,
 ] satisfies Page[];
