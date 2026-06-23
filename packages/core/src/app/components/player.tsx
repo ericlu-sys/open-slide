@@ -7,15 +7,15 @@ import { useWheelPageNavigation } from '@/lib/use-wheel-page-navigation';
 import { cn } from '@/lib/utils';
 import type { DesignSystem } from '../lib/design';
 import type { Page } from '../lib/sdk';
-import type { EntryDirection, StepController } from '../lib/step-context';
+import type { EntryDirection, StepAggregate, StepController } from '../lib/step-context';
 import type { SlideTransition } from '../lib/transition';
 import { usePrefersReducedMotion } from '../lib/use-prefers-reduced-motion';
+import { OverviewGrid } from './overview-grid';
 import { PresentBlackoutOverlay } from './present/blackout-overlay';
 import { PresentControlBar } from './present/control-bar';
 import { PresentHelpOverlay } from './present/help-overlay';
 import { PresentJumpInput } from './present/jump-input';
 import { PresentLaserPointer } from './present/laser-pointer';
-import { PresentOverviewGrid } from './present/overview-grid';
 import { PresentProgressBar } from './present/progress-bar';
 import { useIdle } from './present/use-idle';
 import { usePointerNearBottom } from './present/use-pointer-near-bottom';
@@ -104,6 +104,15 @@ export function Player({
 
   const stepControllerRef = useRef<StepController | null>(null);
   const [entryDirection, setEntryDirection] = useState<EntryDirection>('jump');
+  const [stepAggregate, setStepAggregate] = useState<StepAggregate>({
+    revealed: 0,
+    stepCount: 0,
+  });
+  const handleAggregateChange = useCallback((a: StepAggregate) => {
+    setStepAggregate((cur) =>
+      cur.revealed === a.revealed && cur.stepCount === a.stepCount ? cur : a,
+    );
+  }, []);
 
   // Every navigation funnels through here so entryDirection is settled
   // synchronously, before the incoming page's <Steps> reads it on mount.
@@ -186,9 +195,11 @@ export function Player({
       pageCount: activePages.length,
       blackout,
       startedAt,
+      stepIndex: stepAggregate.revealed,
+      stepCount: stepAggregate.stepCount,
       contentLocale,
     }),
-    [index, activePages.length, blackout, startedAt, contentLocale],
+    [index, activePages.length, blackout, startedAt, stepAggregate, contentLocale],
   );
   const presenterStateRef = useRef(presenterState);
   presenterStateRef.current = presenterState;
@@ -363,6 +374,7 @@ export function Player({
               disabled={prefersReducedMotion}
               stepControllerRef={stepControllerRef}
               entryDirection={entryDirection}
+              onStepAggregateChange={handleAggregateChange}
             />
           </SlideMessagesProvider>
         </ContentLocaleProvider>
@@ -394,13 +406,16 @@ export function Player({
             onHelp={() => setHelpOpen(true)}
             onExit={onExit}
           />
-          <PresentOverviewGrid
+          <OverviewGrid
             pages={activePages}
             design={design}
             open={overviewOpen}
             current={index}
             onClose={() => setOverviewOpen(false)}
             onSelect={handleIndexChange}
+            variant="present"
+            moduleTransition={transition}
+            tooltipContainer={rootEl}
           />
           <PresentHelpOverlay open={helpOpen} onOpenChange={setHelpOpen} container={rootEl} />
         </div>
@@ -411,6 +426,6 @@ export function Player({
 
 export function openPresenterWindow(slideId: string) {
   if (typeof window === 'undefined') return;
-  const url = `/s/${encodeURIComponent(slideId)}/presenter`;
+  const url = `${import.meta.env.BASE_URL}s/${encodeURIComponent(slideId)}/presenter`;
   window.open(url, `open-slide-presenter-${slideId}`, 'popup,width=1280,height=800');
 }
