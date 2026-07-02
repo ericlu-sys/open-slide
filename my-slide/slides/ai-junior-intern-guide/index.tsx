@@ -1952,7 +1952,7 @@ const CalcSlider = ({
   </div>
 );
 
-const CombinatoricsCalculator: Page = () => {
+export const CombinatoricsCalculator: Page = () => {
   const [ssot, setSsot] = useState(5);
   const [agent, setAgent] = useState(3);
   const [skill, setSkill] = useState(6);
@@ -2098,7 +2098,7 @@ const CombinatoricsCalculator: Page = () => {
   );
 };
 
-const WhatYouCanDo: Page = () => (
+export const WhatYouCanDo: Page = () => (
   <SlideShell variant="tint">
     <TopBar num="13" eyebrow="實戰路線圖 · What You Can Build" />
     <Title>
