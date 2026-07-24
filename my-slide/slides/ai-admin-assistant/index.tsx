@@ -6,6 +6,13 @@ import {
   PageRehoWhyJoin1,
   PageRehoWhyJoin2,
 } from '../wport-campus-info-session/index';
+import {
+  Commit,
+  CourseModuleBoard,
+  CourseMoreIntro,
+  IdeToolbox,
+  NodeToken,
+} from '../xinshou-xiaobai/index';
 
 export const design: DesignSystem = {
   palette: { bg: '#FFFFFF', text: '#5D5D5D', accent: '#56C7BB' },
@@ -42,8 +49,18 @@ const GIT_INIT = 'git init';
 const GIT_REMOTE = 'git remote add origin <your-private-repo>';
 const GIT_PUSH = 'git push';
 
+const WEB_AI_HTML_PROMPT = `你現在是一位專業且親切的個人網站製作助教。你的目標是透過簡單的對話，幫我產出一份可直接用瀏覽器開啟的「個人網站 / 線上履歷」靜態 HTML。
+
+【執行步驟與規則】：
+1. 請先問我 5～7 個關於個人網站的需求問題（例如：網站主題/姓名、關於我簡介、想放的區塊如作品或經歷、偏好的視覺風格、聯絡方式等）。可以一次問完，並提醒我可以跳過不想填的題。
+2. 等我回答後，請將所有內容整合，寫出一份單一檔案的靜態 HTML（CSS 內嵌在 <style>，簡潔美觀、具備響應式設計 RWD，不需要安裝任何建置工具）。
+3. 請直接輸出完整的 HTML 程式碼，不要只給摘要或說明。
+4. 程式碼輸出後，最後請用簡短的三句話教我：如何複製程式碼 ➔ 另存為 .html 檔案 ➔ 用瀏覽器打開預覽。
+
+準備好開始了嗎？`;
+
 if (typeof document !== 'undefined') {
-  const fontId = 'ai-junior-intern-guide-fonts';
+  const fontId = 'ai-admin-assistant-fonts';
   if (!document.getElementById(fontId)) {
     const link = document.createElement('link');
     link.id = fontId;
@@ -52,7 +69,7 @@ if (typeof document !== 'undefined') {
       'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap';
     document.head.appendChild(link);
   }
-  const styleId = 'ai-junior-intern-guide-deck-styles';
+  const styleId = 'ai-admin-assistant-deck-styles';
   let style = document.getElementById(styleId) as HTMLStyleElement | null;
   if (!style) {
     style = document.createElement('style');
@@ -398,71 +415,6 @@ const RepoCallout = ({ href, children }: { href: string; children: React.ReactNo
   >
     {children}
   </ExternalLink>
-);
-
-const ToolkitCard = ({
-  num,
-  title,
-  href,
-  repo,
-  desc,
-  badge,
-}: {
-  num: string;
-  title: string;
-  href: string;
-  repo: string;
-  desc: React.ReactNode;
-  badge?: string;
-}) => (
-  <div
-    style={{
-      border: `1px solid ${c.border}`,
-      borderLeft: `4px solid ${c.primary}`,
-      borderRadius: 8,
-      padding: '22px 26px',
-      background: c.white,
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 12,
-    }}
-  >
-    <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
-      <span
-        style={{
-          fontFamily: mono,
-          fontSize: 20,
-          fontWeight: 700,
-          color: c.primary,
-        }}
-      >
-        {num}
-      </span>
-      <span style={{ fontSize: 28, fontWeight: 700, color: c.ink }}>{title}</span>
-      {badge ? (
-        <span
-          style={{
-            fontFamily: mono,
-            fontSize: 16,
-            fontWeight: 700,
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            color: c.primaryHover,
-            background: c.primaryLight,
-            border: `1px solid ${c.primaryMuted}`,
-            borderRadius: 999,
-            padding: '4px 12px',
-          }}
-        >
-          {badge}
-        </span>
-      ) : null}
-    </div>
-    <ExternalLink href={href} mono style={{ fontSize: 22, alignSelf: 'flex-start' }}>
-      {repo}
-    </ExternalLink>
-    <div style={{ fontSize: 22, lineHeight: 1.55, color: c.body }}>{desc}</div>
-  </div>
 );
 
 const DarkInlineCode = ({ children }: { children: React.ReactNode }) => (
@@ -821,9 +773,9 @@ const Cover: Page = () => (
           margin: '0 0 40px',
         }}
       >
-        AI 實習生
+        AI
         <br />
-        速成指南
+        行政助手
       </h1>
       <p
         style={{
@@ -876,9 +828,7 @@ const Cover: Page = () => (
           >
             對象 / Audience
           </div>
-          <div style={{ fontSize: 26, color: '#e8e8e8', fontWeight: 500 }}>
-            開南大學 · 實戰培訓教材
-          </div>
+          <div style={{ fontSize: 26, color: '#e8e8e8', fontWeight: 500 }}>工作人士</div>
         </div>
         <div>
           <div
@@ -900,54 +850,95 @@ const Cover: Page = () => (
   </SlideShell>
 );
 
-const WhyHere: Page = () => (
+const AGENDA_ITEMS: { n: string; text: React.ReactNode }[] = [
+  {
+    n: '01',
+    text: (
+      <>
+        先動手練習：用 <Ink>ChatGPT / Gemini</Ink> 問你問題，製作網站 HTML
+      </>
+    ),
+  },
+  {
+    n: '02',
+    text: (
+      <>
+        下載後要改怎麼辦？Web 版 AI 只能幫一次，<Ink>無法控制你的電腦</Ink>
+      </>
+    ),
+  },
+  { n: '03', text: <>IDE 可以控制你的電腦</> },
+  {
+    n: '04',
+    text: (
+      <>
+        把剛請 Chat Web AI 做的指令做成 Prompt；常用的就變成 <Ink>Skill</Ink>
+      </>
+    ),
+  },
+  {
+    n: '05',
+    text: <>AI 新手包裡有 Skill，下載下來用</>,
+  },
+  { n: '06', text: <>一樣產生履歷</> },
+  { n: '07', text: <>為什麼要存入 Obsidian</> },
+  {
+    n: '08',
+    text: <>Obsidian 可以存入印章、存簿</>,
+  },
+  { n: '09', text: <>使用 AI 填入 Word</> },
+  { n: '10', text: <>使用 AI 填入網站</> },
+  { n: '11', text: <>產生 HTML，產生官網</> },
+  { n: '12', text: <>上架 Vercel</> },
+];
+
+const Agenda: Page = () => (
   <SlideShell>
-    <TopBar num="02" eyebrow="引言與痛點" />
+    <TopBar num="01" eyebrow="今日路線 · Agenda" />
     <Title>
-      為什麼你今天<Accent>在這裡</Accent>？
+      這堂課的<Accent>大綱</Accent>
     </Title>
     <div
       style={{
         display: 'grid',
         gridTemplateColumns: '1fr 1fr',
-        gap: 72,
-        marginTop: 64,
+        gridTemplateRows: 'repeat(6, auto)',
+        gridAutoFlow: 'column',
+        gap: '10px 56px',
+        marginTop: 40,
         flex: 1,
+        alignContent: 'start',
       }}
     >
-      <div>
-        <Subhead>企業對實習生的真實期待</Subhead>
-        <Body style={{ marginBottom: 32 }}>
-          當教授問我：「招募實習生需要什麼能力？」時——<Ink>這堂課，就是你的面試答案卷。</Ink>
-        </Body>
-        <Body>
-          企業不需要只會「手動複製貼上」的臨時工。我們需要具備
-          <span style={{ color: c.primary, fontWeight: 700 }}>工程師思維</span>的 AI 協作即戰力。
-        </Body>
-      </div>
-      <div>
-        <Subhead>今日解藥</Subhead>
-        <Body style={{ marginBottom: 28 }}>
-          現場帶走兩套<Ink>開箱即用的工具包</Ink>——這不只是一個 Repo，這是你進入職場的加速器。
-        </Body>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-          <ToolkitCard
-            num="01"
-            title="AI 新手包"
-            href={AI_JUNIOR_STARTER_KIT_URL}
-            repo={AI_JUNIOR_STARTER_KIT_LABEL}
-            badge="Fork"
-            desc="PRD、Storybook、CLI Executor Skills 教學沙盒——請 Fork 成自己的副本再開始練習。"
-          />
-          <ToolkitCard
-            num="02"
-            title="wport-agents"
-            href={WPORT_AGENTS_REPO_URL}
-            repo={WPORT_AGENTS_REPO_LABEL}
-            desc="職涯 Skills 插件庫：用 SKILL 定義 AI 專家能力，用 @wport/cli 串接真實職缺資料。"
-          />
+      {AGENDA_ITEMS.map((item) => (
+        <div
+          key={item.n}
+          style={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: 18,
+            padding: '14px 0',
+            borderBottom: `1px solid ${c.border}`,
+          }}
+        >
+          <span
+            style={{
+              fontFamily: mono,
+              fontSize: 22,
+              fontWeight: 700,
+              color: c.primary,
+              letterSpacing: '0.04em',
+              flexShrink: 0,
+              paddingTop: 2,
+            }}
+          >
+            {item.n}
+          </span>
+          <span style={{ fontSize: 26, lineHeight: 1.45, color: c.ink, fontWeight: 500 }}>
+            {item.text}
+          </span>
         </div>
-      </div>
+      ))}
     </div>
   </SlideShell>
 );
@@ -1125,52 +1116,6 @@ const IdeObsidian: Page = () => (
           {
             heading: '',
             body: '讓 IDE 內的 AI Copilot 直接讀取筆記資料夾續寫、糾錯，使 Obsidian 成為 AI Agent 的知識底座。',
-          },
-        ]}
-      />
-    </div>
-  </SlideShell>
-);
-
-const IdeToolbox: Page = () => (
-  <SlideShell>
-    <TopBar num="06" eyebrow="工具對比" />
-    <Title>
-      2026 新世代 <Accent>AI 優先</Accent> 的 IDE 工具箱
-    </Title>
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
-        gap: 40,
-        marginTop: 60,
-        flex: 1,
-      }}
-    >
-      <ToolCol
-        name="Antigravity 2.0"
-        href="https://antigravity.google/product/antigravity-2"
-        sections={[
-          { heading: '核心特色', body: 'Google 推出的 AI 優先 Desktop 開發環境。' },
-          { heading: '實習生優勢', body: '整合 Gemini 高算力，適合快速構建 UI 與專案邏輯分析。' },
-        ]}
-      />
-      <ToolCol
-        name="Kiro IDE"
-        href="https://kiro.dev/downloads/"
-        sections={[
-          { heading: '核心特色', body: 'AWS 支援、Spec-First（規格書驅動）環境。' },
-          { heading: '實習生優勢', body: '內建 MCP 支援與自動化 commit 訊息生成。' },
-        ]}
-      />
-      <ToolCol
-        name="Codex IDE"
-        href="https://chatgpt.com/zh-Hant/download/"
-        sections={[
-          { heading: '核心特色', body: 'OpenAI 推出的 AI 優先 IDE，深度整合 Codex 程式助理。' },
-          {
-            heading: '實習生優勢',
-            body: '在編輯器內直接對話、改碼與除錯，降低從想法到實作的切換成本。',
           },
         ]}
       />
@@ -2245,29 +2190,322 @@ const SmartStationVol3Page: Page = () => (
   </LinkMotionScope>
 );
 
+const GOOGLE_MAPS_REVIEW_URL =
+  'https://www.google.com/maps/place//data=!4m3!3m2!1s0x34681f2616ab9e4b:0x9464eaa164ab5c38!12e1?source=g.page.m.ia._&laa=nmx-review-solicitation-ia2';
+const GOOGLE_MAPS_REVIEW_QR = `https://api.qrserver.com/v1/create-qr-code/?size=520x520&margin=12&data=${encodeURIComponent(GOOGLE_MAPS_REVIEW_URL)}`;
+
+const ReviewCta: Page = () => (
+  <SlideShell variant="dark">
+    <TopBar num="15" eyebrow="Call to Action · 請幫我們評分" dark />
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 440px',
+        gap: 80,
+        flex: 1,
+        alignItems: 'center',
+        minHeight: 0,
+      }}
+    >
+      <div>
+        <h1
+          style={{
+            fontSize: 88,
+            fontWeight: 700,
+            lineHeight: 1.12,
+            color: '#fff',
+            letterSpacing: '-0.02em',
+            margin: '0 0 36px',
+          }}
+        >
+          喜歡今天的課？
+          <br />
+          <Accent>幫我們評個分</Accent>
+        </h1>
+        <p
+          style={{
+            fontSize: 32,
+            lineHeight: 1.55,
+            color: '#C9C9C9',
+            margin: '0 0 48px',
+            maxWidth: 980,
+          }}
+        >
+          掃右邊 QR Code，或點擊下方連結，到 Google Maps 留下評價——
+          <span style={{ color: '#fff', fontWeight: 700 }}>讓更多人知道這堂課。</span>
+        </p>
+        <ExternalLink
+          href={GOOGLE_MAPS_REVIEW_URL}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 16,
+            fontSize: 28,
+            fontWeight: 700,
+            color: c.ink,
+            background: c.primary,
+            borderBottom: 'none',
+            borderRadius: 10,
+            padding: '22px 36px',
+          }}
+        >
+          點此前往 Google Maps 評分 →
+        </ExternalLink>
+        <p
+          style={{
+            marginTop: 28,
+            fontFamily: mono,
+            fontSize: 18,
+            color: '#7a7a7a',
+            letterSpacing: '0.04em',
+          }}
+        >
+          google.com/maps · review
+        </p>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 24,
+        }}
+      >
+        <a
+          href={GOOGLE_MAPS_REVIEW_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={INTERACTIVE_LINK_CLASS}
+          style={{
+            display: 'block',
+            background: '#fff',
+            borderRadius: 16,
+            padding: 28,
+            boxShadow: '0 24px 60px rgba(0,0,0,0.35)',
+          }}
+        >
+          <img
+            src={GOOGLE_MAPS_REVIEW_QR}
+            alt="Google Maps 評分 QR Code"
+            width={360}
+            height={360}
+            style={{ display: 'block', width: 360, height: 360 }}
+          />
+        </a>
+        <div
+          style={{
+            fontFamily: mono,
+            fontSize: 20,
+            letterSpacing: '0.16em',
+            textTransform: 'uppercase',
+            color: c.primaryMuted,
+          }}
+        >
+          Scan to review
+        </div>
+      </div>
+    </div>
+  </SlideShell>
+);
+
 export const meta: SlideMeta = {
-  title: 'AI 實習生速成指南-1',
+  title: 'AI 行政助手-3',
   createdAt: '2026-06-14T14:54:44.234Z',
 };
 
+const PromptCompareCard = ({
+  label,
+  title,
+  sub,
+  points,
+  highlight = false,
+}: {
+  label: string;
+  title: string;
+  sub: string;
+  points: string[];
+  highlight?: boolean;
+}) => (
+  <div
+    style={{
+      border: `1px solid ${highlight ? c.primaryMuted : c.border}`,
+      borderTop: `5px solid ${highlight ? c.primary : c.muted}`,
+      borderRadius: 10,
+      padding: '22px 28px 26px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 10,
+      background: highlight ? c.primaryLight : c.white,
+      minHeight: 0,
+      minWidth: 0,
+    }}
+  >
+    <div
+      style={{
+        fontFamily: mono,
+        fontSize: 15,
+        letterSpacing: '0.14em',
+        textTransform: 'uppercase',
+        color: highlight ? c.primaryHover : c.muted,
+      }}
+    >
+      {label}
+    </div>
+    <div style={{ fontSize: 30, fontWeight: 700, color: c.ink, lineHeight: 1.2 }}>{title}</div>
+    <div style={{ fontSize: 19, color: highlight ? c.primaryHover : c.muted, fontWeight: 500 }}>
+      {sub}
+    </div>
+    <ul
+      style={{
+        listStyle: 'none',
+        margin: '4px 0 0',
+        padding: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 9,
+      }}
+    >
+      {points.map((p) => (
+        <li
+          key={p}
+          style={{
+            position: 'relative',
+            paddingLeft: 28,
+            fontSize: 20,
+            lineHeight: 1.5,
+            color: c.body,
+          }}
+        >
+          <span
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: 12,
+              width: 14,
+              height: 3,
+              background: highlight ? c.primary : c.muted,
+            }}
+          />
+          {p}
+        </li>
+      ))}
+    </ul>
+  </div>
+);
+
+const WebAiHtmlPractice: Page = () => (
+  <SlideShell>
+    <TopBar num="03" eyebrow="動手 · Web AI 練習" />
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'minmax(0, 1.1fr) minmax(0, 0.9fr)',
+        gap: 48,
+        flex: 1,
+        minHeight: 0,
+        alignItems: 'stretch',
+        overflow: 'hidden',
+      }}
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minHeight: 0, minWidth: 0 }}>
+        <h1
+          style={{
+            fontSize: 52,
+            fontWeight: 700,
+            lineHeight: 1.2,
+            color: c.ink,
+            letterSpacing: '-0.01em',
+            margin: 0,
+            flexShrink: 0,
+          }}
+        >
+          先讓 AI 問你，再
+          <br />
+          <Accent>產出靜態 HTML</Accent>
+        </h1>
+        <div
+          style={{
+            fontSize: 20,
+            fontFamily: mono,
+            fontWeight: 700,
+            letterSpacing: '0.06em',
+            color: c.primary,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+            flexShrink: 0,
+          }}
+        >
+          <span style={{ width: 22, height: 3, background: c.primary, display: 'inline-block' }} />
+          範例 · 一段 Prompt
+        </div>
+        <div
+          style={{
+            flex: 1,
+            minHeight: 0,
+            overflow: 'auto',
+            background: c.white,
+            border: `1px solid ${c.border}`,
+            borderLeft: `4px solid ${c.primary}`,
+            borderRadius: 8,
+            padding: '18px 24px',
+            fontFamily: mono,
+            fontSize: 18,
+            lineHeight: 1.5,
+            color: c.ink,
+            whiteSpace: 'pre-wrap',
+            overflowWrap: 'anywhere',
+            wordBreak: 'break-word',
+          }}
+        >
+          {WEB_AI_HTML_PROMPT}
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', flexShrink: 0 }}>
+          <CopyButton text={WEB_AI_HTML_PROMPT} />
+        </div>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          gap: 16,
+          minHeight: 0,
+          minWidth: 0,
+          overflow: 'hidden',
+        }}
+      >
+        <PromptCompareCard
+          label="練習目標"
+          title="Web AI"
+          sub="聊天框就能做"
+          points={['先問清楚需求', '一次產出完整 HTML', '瀏覽器直接打開']}
+        />
+        <div style={{ display: 'flex', justifyContent: 'center', color: c.primary, fontSize: 28 }}>
+          ↓
+        </div>
+        <PromptCompareCard
+          label="帶走成果"
+          title="靜態 HTML"
+          sub="單檔、可預覽"
+          highlight
+          points={['CSS 內嵌在檔案裡', '不用建置工具', '適合課堂先練手']}
+        />
+      </div>
+    </div>
+  </SlideShell>
+);
+
 export default [
   Cover,
-  WhyHere,
-  SSOT,
-  GitHubSync,
-  IdeObsidian,
+  Agenda,
+  WebAiHtmlPractice,
   IdeToolbox,
-  HandsOn01,
-  SkillCli,
-  CliMcpApi,
-  CliPower,
-  WportCliResume,
-  UltimateWorkflow,
   WhatYouCanDo,
-  Closing,
   CombinatoricsCalculator,
-  WportRehoSpotlightPage,
-  WportRehoWhyJoin1Page,
-  WportRehoWhyJoin2Page,
-  SmartStationVol3Page,
+  ReviewCta,
+  NodeToken,
+  Commit,
+  CourseMoreIntro,
+  CourseModuleBoard,
 ] satisfies Page[];

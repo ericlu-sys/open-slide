@@ -1,4 +1,59 @@
 {
-  "folders": [],
-  "assignments": {}
+  "folders": [
+    {
+      "id": "f-1a2b3c4d",
+      "name": "無白丁",
+      "icon": {
+        "type": "emoji",
+        "value": "📖"
+      }
+    },
+    {
+      "id": "f-5e6f7a8b",
+      "name": "WPORT",
+      "icon": {
+        "type": "emoji",
+        "value": "💼"
+      }
+    },
+    {
+      "id": "f-9c0d1e2f",
+      "name": "預設範本",
+      "icon": {
+        "type": "emoji",
+        "value": "📦"
+      }
+    }
+  ],
+  "assignments": {
+    "nodullar-covers": "f-1a2b3c4d",
+    "zuopin-jieshao": "f-1a2b3c4d",
+    "ai-teaching-portfolio": "f-5e6f7a8b",
+    "ntutec-wport-cover": "f-5e6f7a8b",
+    "wport-campus-info-session": "f-5e6f7a8b",
+    "ntutec-wport-proposal": "f-5e6f7a8b",
+    "smart-station": "f-5e6f7a8b",
+    "ai-junior-intern-guide": "f-5e6f7a8b",
+    "xinshou-xiaobai": "f-5e6f7a8b",
+    "ai-admin-assistant": "f-5e6f7a8b",
+    "getting-started": "f-9c0d1e2f",
+    "build-on-reveal": "f-9c0d1e2f",
+    "claude-code-intro": "f-9c0d1e2f",
+    "harness-engineering": "f-9c0d1e2f",
+    "i18n-demo": "f-9c0d1e2f",
+    "image-placeholder-demo": "f-9c0d1e2f",
+    "llm-fundamentals": "f-9c0d1e2f",
+    "material-design-2014": "f-9c0d1e2f",
+    "nextjs-ppr-cache": "f-9c0d1e2f",
+    "open-slide-anatomy": "f-9c0d1e2f",
+    "open-slide-launch": "f-9c0d1e2f",
+    "open-slide-on-replit": "f-9c0d1e2f",
+    "raycast-api": "f-9c0d1e2f",
+    "slide-transitions": "f-9c0d1e2f",
+    "slide-transitions-maximal": "f-9c0d1e2f",
+    "ssh-explained": "f-9c0d1e2f",
+    "steps-in-motion": "f-9c0d1e2f",
+    "vercel-ai-sdk": "f-9c0d1e2f",
+    "vercel-labs-2026": "f-9c0d1e2f"
+  }
 }

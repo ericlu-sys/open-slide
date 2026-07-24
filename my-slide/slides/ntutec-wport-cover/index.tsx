@@ -5,9 +5,13 @@ import stickerRacer from './assets/車手蛙.png';
 import { messages } from './messages';
 
 export const meta: SlideMeta = {
-  title: '台大創創 · WPORT 方形封面',
+  title: '台大創創 · WPORT 活動封面（4:3）',
   createdAt: '2026-06-05T16:51:05.525Z',
 };
+
+/** Hypelink 活動封面建議尺寸 1200×900（4:3） */
+const COVER_WIDTH = 1200;
+const COVER_HEIGHT = 900;
 
 export { messages };
 export const defaultLocale = 'zh-TW';
@@ -192,7 +196,7 @@ const stage: React.CSSProperties = {
   background: '#0b1020',
 };
 
-function WportSquareBanner({
+function WportCoverBanner({
   preset,
   topLabel,
   title,
@@ -208,11 +212,12 @@ function WportSquareBanner({
   return (
     <div style={stage}>
       <div
+        data-ntutec-cover
         style={{
           position: 'relative',
-          width: 1080,
-          height: 1080,
-          borderRadius: 48,
+          width: COVER_WIDTH,
+          height: COVER_HEIGHT,
+          borderRadius: 40,
           overflow: 'hidden',
           fontFamily: '"Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif',
           color: preset.textMain,
@@ -228,18 +233,18 @@ function WportSquareBanner({
             position: 'relative',
             width: '100%',
             height: '100%',
-            padding: 68,
+            padding: '52px 64px',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            gap: 20,
+            gap: 16,
           }}
         >
           <div
             style={{
               position: 'absolute',
-              inset: 18,
-              borderRadius: 36,
+              inset: 16,
+              borderRadius: 28,
               border: `1px solid ${preset.frameBorder}`,
               background: preset.frameSurface,
               backdropFilter: 'blur(2px)',
@@ -251,8 +256,8 @@ function WportSquareBanner({
               position: 'relative',
               zIndex: 1,
               alignSelf: 'flex-start',
-              padding: '8px 14px',
-              fontSize: 24,
+              padding: '8px 16px',
+              fontSize: 26,
               fontWeight: 700,
               borderRadius: 999,
               border: `1px solid ${preset.badgeBorder}`,
@@ -267,9 +272,9 @@ function WportSquareBanner({
               position: 'relative',
               zIndex: 1,
               margin: 0,
-              maxWidth: '82%',
+              maxWidth: '68%',
               fontSize: 96,
-              lineHeight: 1.12,
+              lineHeight: 1.1,
               fontWeight: 900,
               letterSpacing: '0.01em',
               textShadow: '0 8px 30px rgba(15, 23, 42, 0.4)',
@@ -283,8 +288,8 @@ function WportSquareBanner({
               position: 'relative',
               zIndex: 1,
               margin: 0,
-              maxWidth: '86%',
-              fontSize: 38,
+              maxWidth: '66%',
+              fontSize: 42,
               lineHeight: 1.35,
               color: preset.textSub,
               fontWeight: 500,
@@ -298,9 +303,9 @@ function WportSquareBanner({
             alt=""
             style={{
               position: 'absolute',
-              right: 60,
-              bottom: 52,
-              width: 220,
+              right: 36,
+              bottom: 32,
+              width: 300,
               objectFit: 'contain',
               filter: 'drop-shadow(0 14px 24px rgba(2, 6, 23, 0.35))',
               zIndex: 2,
@@ -318,7 +323,7 @@ function makeJobPage(job: Job): Page {
   const PageComponent: Page = () => {
     const t = useSlideT();
     return (
-      <WportSquareBanner
+      <WportCoverBanner
         preset={preset}
         topLabel={t('banner.top-label')}
         title={t('banner.title')}

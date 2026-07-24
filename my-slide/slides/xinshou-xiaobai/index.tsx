@@ -3,10 +3,10 @@ import { useSlidePageNumber } from '@open-slide/core';
 import { useEffect, useState } from 'react';
 import { CombinatoricsCalculator, WhatYouCanDo } from '../ai-junior-intern-guide/index';
 import { SmartStationVol3 } from '../smart-station/index';
+import aiCourseModulesMap from './assets/ai-course-modules-map.png';
+import qrDiscordSmartstation from './assets/qr-discord-smartstation.png';
 import qrWportIg from './assets/qr-wport-ig.png';
 import qrWportMe from './assets/qr-wport-me.png';
-import qrDiscordSmartstation from './assets/qr-discord-smartstation.png';
-import aiCourseModulesMap from './assets/ai-course-modules-map.png';
 
 export const design: DesignSystem = {
   palette: { bg: '#FFFFFF', text: '#5D5D5D', accent: '#56C7BB' },
@@ -105,7 +105,7 @@ const README_PREVIEW = [
 ];
 
 if (typeof document !== 'undefined') {
-  const fontId = 'ai-rookie-fonts';
+  const fontId = 'xinshou-xiaobai-fonts';
   if (!document.getElementById(fontId)) {
     const link = document.createElement('link');
     link.id = fontId;
@@ -114,20 +114,66 @@ if (typeof document !== 'undefined') {
       'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap';
     document.head.appendChild(link);
   }
-  const styleId = 'ai-rookie-deck-styles';
-  if (!document.getElementById(styleId)) {
-    const style = document.createElement('style');
+  const styleId = 'xinshou-xiaobai-deck-styles';
+  let style = document.getElementById(styleId) as HTMLStyleElement | null;
+  if (!style) {
+    style = document.createElement('style');
     style.id = styleId;
-    style.textContent = `
+    document.head.appendChild(style);
+  }
+  style.textContent = `
       @keyframes aicCursorBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
       @keyframes aicMsgIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
       .aic-cursor { animation: aicCursorBlink 0.75s step-end infinite; }
       .aic-msg { animation: aicMsgIn 0.26s ease-out both; }
-      .ar-link { color: ${c.primaryHover}; text-decoration: none; border-bottom: 2px solid ${c.primaryMuted}; }
-      .ar-link:hover { color: ${c.primary}; border-bottom-color: ${c.primary}; }
+      @keyframes ajLinkShine {
+        0%, 100% {
+          filter: brightness(1);
+          text-shadow: 0 0 0 transparent;
+        }
+        50% {
+          filter: brightness(1.06);
+          text-shadow: 0 0 8px rgba(86, 199, 187, 0.28);
+        }
+      }
+      @keyframes ajLinkColor {
+        0%, 100% {
+          color: ${c.primaryHover};
+          border-bottom-color: ${c.primaryMuted};
+        }
+        50% {
+          color: ${c.primary};
+          border-bottom-color: ${c.primary};
+        }
+      }
+      .ar-link,
+      .aj-interactive-link,
+      .aj-link-motion-scope a[href] {
+        animation: ajLinkShine 2.4s ease-in-out infinite;
+        transform: none;
+        cursor: pointer;
+        display: inline-block;
+      }
+      .ar-link,
+      .aj-interactive-link.aj-link-tint,
+      .aj-link-motion-scope a[href] {
+        animation:
+          ajLinkShine 2.4s ease-in-out infinite,
+          ajLinkColor 2.4s ease-in-out infinite;
+      }
+      .ar-link {
+        color: ${c.primaryHover};
+        text-decoration: none;
+        border-bottom: 2px solid ${c.primaryMuted};
+      }
+      .ar-link:hover,
+      .aj-interactive-link:hover,
+      .aj-link-motion-scope a[href]:hover {
+        animation-play-state: paused;
+        filter: brightness(1.08);
+        text-shadow: 0 0 8px rgba(86, 199, 187, 0.32);
+      }
     `;
-    document.head.appendChild(style);
-  }
 }
 
 type ShellVariant = 'default' | 'tint' | 'dark';
@@ -563,29 +609,32 @@ const CompareCard = ({
   sub,
   points,
   highlight = false,
+  compact = false,
 }: {
   label: string;
   title: React.ReactNode;
   sub: string;
   points: React.ReactNode[];
   highlight?: boolean;
+  compact?: boolean;
 }) => (
   <div
     style={{
       border: `1px solid ${highlight ? c.primaryMuted : c.border}`,
       borderTop: `5px solid ${highlight ? c.primary : c.muted}`,
       borderRadius: 10,
-      padding: '40px 40px 44px',
+      padding: compact ? '22px 28px 26px' : '40px 40px 44px',
       display: 'flex',
       flexDirection: 'column',
-      gap: 20,
+      gap: compact ? 10 : 20,
       background: highlight ? c.primaryLight : c.white,
+      minHeight: 0,
     }}
   >
     <div
       style={{
         fontFamily: mono,
-        fontSize: 18,
+        fontSize: compact ? 15 : 18,
         letterSpacing: '0.14em',
         textTransform: 'uppercase',
         color: highlight ? c.primaryHover : c.muted,
@@ -593,18 +642,26 @@ const CompareCard = ({
     >
       {label}
     </div>
-    <div style={{ fontSize: 40, fontWeight: 700, color: c.ink, lineHeight: 1.2 }}>{title}</div>
-    <div style={{ fontSize: 23, color: highlight ? c.primaryHover : c.muted, fontWeight: 500 }}>
+    <div style={{ fontSize: compact ? 30 : 40, fontWeight: 700, color: c.ink, lineHeight: 1.2 }}>
+      {title}
+    </div>
+    <div
+      style={{
+        fontSize: compact ? 19 : 23,
+        color: highlight ? c.primaryHover : c.muted,
+        fontWeight: 500,
+      }}
+    >
       {sub}
     </div>
     <ul
       style={{
         listStyle: 'none',
-        margin: '8px 0 0',
+        margin: compact ? '4px 0 0' : '8px 0 0',
         padding: 0,
         display: 'flex',
         flexDirection: 'column',
-        gap: 16,
+        gap: compact ? 9 : 16,
       }}
     >
       {points.map((p, i) => (
@@ -612,8 +669,8 @@ const CompareCard = ({
           key={String(i)}
           style={{
             position: 'relative',
-            paddingLeft: 34,
-            fontSize: 25,
+            paddingLeft: compact ? 28 : 34,
+            fontSize: compact ? 20 : 25,
             lineHeight: 1.5,
             color: c.body,
           }}
@@ -622,8 +679,8 @@ const CompareCard = ({
             style={{
               position: 'absolute',
               left: 0,
-              top: 14,
-              width: 16,
+              top: compact ? 12 : 14,
+              width: compact ? 14 : 16,
               height: 3,
               background: highlight ? c.primary : c.muted,
             }}
@@ -848,7 +905,14 @@ const IdeWorkspaceDemo = () => {
     return () => clearTimeout(t);
   }, [phase, draft, stepIdx]);
 
-  const folderItems = ['vault/', '  resume.md', '  about-me.md', 'site/', '  index.html', '  style.css'];
+  const folderItems = [
+    'vault/',
+    '  resume.md',
+    '  about-me.md',
+    'site/',
+    '  index.html',
+    '  style.css',
+  ];
 
   return (
     <div
@@ -889,7 +953,14 @@ const IdeWorkspaceDemo = () => {
           </div>
         ))}
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0, borderRight: `1px solid ${c.border}` }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: 0,
+          borderRight: `1px solid ${c.border}`,
+        }}
+      >
         <div
           style={{
             padding: '10px 16px',
@@ -1259,9 +1330,9 @@ const ForkReadmeIdeDemo = () => {
   const [dragOver, setDragOver] = useState(false);
   const [picked, setPicked] = useState(false);
   const [input, setInput] = useState('');
-  const [messages, setMessages] = useState<{ role: 'user' | 'bot'; text: string; attach?: string }[]>(
-    [],
-  );
+  const [messages, setMessages] = useState<
+    { role: 'user' | 'bot'; text: string; attach?: string }[]
+  >([]);
 
   const folderItems = ['kit/', '  skills/', '  doc/', '  README.md'];
 
@@ -1341,7 +1412,14 @@ const ForkReadmeIdeDemo = () => {
           );
         })}
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0, borderRight: `1px solid ${c.border}` }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: 0,
+          borderRight: `1px solid ${c.border}`,
+        }}
+      >
         <div
           style={{
             padding: '10px 16px',
@@ -1369,7 +1447,11 @@ const ForkReadmeIdeDemo = () => {
             <div
               key={`readme-line-${i}`}
               style={{
-                color: line.startsWith('#') ? c.primaryHover : line.startsWith('-') ? c.body : c.ink,
+                color: line.startsWith('#')
+                  ? c.primaryHover
+                  : line.startsWith('-')
+                    ? c.body
+                    : c.ink,
                 fontWeight: line.startsWith('#') ? 700 : 400,
                 minHeight: line ? undefined : 12,
               }}
@@ -1406,7 +1488,15 @@ const ForkReadmeIdeDemo = () => {
           }}
         >
           {messages.length === 0 ? (
-            <p style={{ fontSize: 13, lineHeight: 1.5, color: c.muted, textAlign: 'center', margin: 0 }}>
+            <p
+              style={{
+                fontSize: 13,
+                lineHeight: 1.5,
+                color: c.muted,
+                textAlign: 'center',
+                margin: 0,
+              }}
+            >
               把 README.md
               <br />
               拖進下方對話框
@@ -1652,7 +1742,7 @@ const RepoForkCard = () => (
   </a>
 );
 
-const RepoFork: Page = () => (
+export const RepoFork: Page = () => (
   <SlideShell variant="tint">
     <TopBar eyebrow="#1 動手 · Fork 課程 Repo" />
     <Title>
@@ -1702,7 +1792,8 @@ const RepoFork: Page = () => (
             }}
           >
             <span style={{ color: c.primary, fontWeight: 700 }}>$ </span>
-            git clone https://github.com/<span style={{ color: c.primaryHover }}>&lt;你的帳號&gt;</span>/wport-ai-starter-kit
+            git clone https://github.com/
+            <span style={{ color: c.primaryHover }}>&lt;你的帳號&gt;</span>/wport-ai-starter-kit
           </span>
           <CopyButton text={FORK_CLONE} />
         </div>
@@ -1724,7 +1815,9 @@ const RepoFork: Page = () => (
             borderRadius: 6,
           }}
         >
-          <span style={{ fontFamily: mono, fontSize: 18, color: c.ink, flex: 1 }}>{README_PROMPT}</span>
+          <span style={{ fontFamily: mono, fontSize: 18, color: c.ink, flex: 1 }}>
+            {README_PROMPT}
+          </span>
           <CopyButton text={README_PROMPT} />
         </div>
       </div>
@@ -1851,7 +1944,7 @@ const SsotB: Page = () => (
   </SlideShell>
 );
 
-const IdeToolbox: Page = () => (
+export const IdeToolbox: Page = () => (
   <SlideShell>
     <TopBar eyebrow="工具對比" />
     <Title>
@@ -1888,14 +1981,20 @@ const IdeToolbox: Page = () => (
         href="https://chatgpt.com/zh-Hant/download/"
         sections={[
           { heading: '核心特色', body: 'OpenAI 推出的 AI 優先 IDE，深度整合 Codex 程式助理。' },
-          { heading: '新手優勢', body: '在編輯器內直接對話、改碼與除錯，降低從想法到實作的切換成本。' },
+          {
+            heading: '新手優勢',
+            body: '在編輯器內直接對話、改碼與除錯，降低從想法到實作的切換成本。',
+          },
         ]}
       />
       <ToolCol
         name="Cursor"
         href={CURSOR_DOWNLOAD_URL}
         sections={[
-          { heading: '核心特色', body: '今天課程主力 IDE——左邊檔案樹、中間寫 code、右邊跟 Agent 對話。' },
+          {
+            heading: '核心特色',
+            body: '今天課程主力 IDE——左邊檔案樹、中間寫 code、右邊跟 Agent 對話。',
+          },
           { heading: '新手優勢', body: '安裝後直接開啟專案資料夾，最適合從零開始跟 AI 協作。' },
         ]}
       />
@@ -1928,11 +2027,15 @@ const CloneA: Page = () => (
           gap: 24,
         }}
       >
-        <div style={{ fontSize: 24, fontWeight: 700, color: c.ink, fontFamily: mono }}>雲端 repo</div>
+        <div style={{ fontSize: 24, fontWeight: 700, color: c.ink, fontFamily: mono }}>
+          雲端 repo
+        </div>
         <Arrow dir="down" />
         <div style={{ fontSize: 22, color: c.muted, fontFamily: mono }}>git clone</div>
         <Arrow dir="down" />
-        <div style={{ fontSize: 24, fontWeight: 700, color: c.ink, fontFamily: mono }}>你的電腦</div>
+        <div style={{ fontSize: 24, fontWeight: 700, color: c.ink, fontFamily: mono }}>
+          你的電腦
+        </div>
       </div>
     </div>
   </SlideShell>
@@ -2052,74 +2155,99 @@ const ReadmeB: Page = () => (
   </SlideShell>
 );
 
-const PromptSkillA: Page = () => (
-  <SlideShell>
-    <TopBar eyebrow="#5 Prompt → Skill" />
-    <Title>
+export const makePromptSkillPage = (
+  prompt: string,
+  opts?: {
+    eyebrow?: string;
+    title?: React.ReactNode;
+  },
+): Page => {
+  const eyebrow = opts?.eyebrow ?? '#5 Prompt → Skill';
+  const title = opts?.title ?? (
+    <>
       講完就消失，還是<Accent>固化下來</Accent>？
-    </Title>
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '1.05fr 0.95fr',
-        gap: 56,
-        marginTop: 28,
-        flex: 1,
-        minHeight: 0,
-      }}
-    >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, minHeight: 0 }}>
-        <Subhead>範例 · 一段 Prompt</Subhead>
-        <div
-          style={{
-            flex: 1,
-            minHeight: 0,
-            overflow: 'auto',
-            background: c.white,
-            border: `1px solid ${c.border}`,
-            borderLeft: `4px solid ${c.primary}`,
-            borderRadius: 8,
-            padding: '18px 24px',
-            fontFamily: mono,
-            fontSize: 14,
-            lineHeight: 1.5,
-            color: c.ink,
-            whiteSpace: 'pre-wrap',
-          }}
-        >
-          {INTERVIEW_PROMPT}
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <CopyButton text={INTERVIEW_PROMPT} />
-        </div>
-      </div>
+    </>
+  );
+  const PageComponent: Page = () => (
+    <SlideShell>
+      <TopBar eyebrow={eyebrow} />
+      <Title>{title}</Title>
       <div
         style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          gap: 18,
+          display: 'grid',
+          gridTemplateColumns: 'minmax(0, 1.05fr) minmax(0, 0.95fr)',
+          gap: 48,
+          marginTop: 24,
+          flex: 1,
           minHeight: 0,
+          alignItems: 'stretch',
+          overflow: 'hidden',
         }}
       >
-        <CompareCard
-          label="一次性"
-          title="Prompt"
-          sub="一段對話"
-          points={['講完就消失', '下次要重打一遍', '別人拿不到']}
-        />
-        <Arrow dir="down" />
-        <CompareCard
-          label="可重用"
-          title="Skill"
-          sub="存成一個 .md 檔"
-          highlight
-          points={['固化成檔案存起來', '隨時可叫用', '可以分享給別人']}
-        />
+        <div
+          style={{ display: 'flex', flexDirection: 'column', gap: 12, minHeight: 0, minWidth: 0 }}
+        >
+          <Subhead>範例 · 一段 Prompt</Subhead>
+          <div
+            style={{
+              flex: 1,
+              minHeight: 0,
+              overflow: 'auto',
+              background: c.white,
+              border: `1px solid ${c.border}`,
+              borderLeft: `4px solid ${c.primary}`,
+              borderRadius: 8,
+              padding: '22px 28px',
+              fontFamily: mono,
+              fontSize: 22,
+              lineHeight: 1.55,
+              color: c.ink,
+              whiteSpace: 'pre-wrap',
+              overflowWrap: 'anywhere',
+              wordBreak: 'break-word',
+            }}
+          >
+            {prompt}
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', flexShrink: 0 }}>
+            <CopyButton text={prompt} />
+          </div>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            gap: 14,
+            minHeight: 0,
+            minWidth: 0,
+            overflow: 'hidden',
+          }}
+        >
+          <CompareCard
+            compact
+            label="一次性"
+            title="Prompt"
+            sub="一段對話"
+            points={['講完就消失', '下次要重打一遍', '別人拿不到']}
+          />
+          <Arrow dir="down" />
+          <CompareCard
+            compact
+            label="可重用"
+            title="Skill"
+            sub="存成一個 .md 檔"
+            highlight
+            points={['固化成檔案存起來', '隨時可叫用', '可以分享給別人']}
+          />
+        </div>
       </div>
-    </div>
-  </SlideShell>
-);
+    </SlideShell>
+  );
+  return PageComponent;
+};
+
+export const PromptSkillA: Page = makePromptSkillPage(INTERVIEW_PROMPT);
 
 const PromptSkillB: Page = () => (
   <SlideShell variant="tint">
@@ -2307,7 +2435,7 @@ const GraphView = () => {
   );
 };
 
-const NodeToken: Page = () => (
+export const NodeToken: Page = () => (
   <SlideShell>
     <TopBar eyebrow="#7 Obsidian node + Token" />
     <Title>
@@ -2381,7 +2509,7 @@ const NodeToken: Page = () => (
   </SlideShell>
 );
 
-const Commit: Page = () => (
+export const Commit: Page = () => (
   <SlideShell variant="tint">
     <TopBar eyebrow="#8 commit + push" />
     <Title>
@@ -2404,7 +2532,9 @@ const Commit: Page = () => (
         <ScoreStep score="85" label="rollback 回到 85，鬆口氣 😮‍💨" tone="ok" />
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 56 }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 24, justifyContent: 'center' }}>
+        <div
+          style={{ display: 'flex', flexDirection: 'column', gap: 24, justifyContent: 'center' }}
+        >
           <Def term="commit" desc="本地快照（存檔）——把現在的狀態記下來，隨時能回到這。" />
           <Def term="push" desc="把存檔上傳到 GitHub 雲端，換電腦也拿得到。" />
         </div>
@@ -2662,7 +2792,9 @@ const WorkflowPrompt: Page = () => (
             <div style={{ fontFamily: mono, fontSize: 36, fontWeight: 700, color: item.color }}>
               {item.label}
             </div>
-            <div style={{ fontSize: 17, color: c.muted, marginTop: 8, lineHeight: 1.4 }}>{item.sub}</div>
+            <div style={{ fontSize: 17, color: c.muted, marginTop: 8, lineHeight: 1.4 }}>
+              {item.sub}
+            </div>
           </div>
         ))}
       </div>
@@ -2899,32 +3031,226 @@ type CourseModule = {
 };
 
 const COURSE_MODULES: CourseModule[] = [
-  { id: 'M01', kind: 'M', title: '聊天框 vs IDE', duration: '15分', level: '初階', summary: '分清聊天框與 IDE——AI 有沒有「手」的分水嶺。', today: true },
-  { id: 'M02', kind: 'M', title: 'GitHub 與 Repo', duration: '25分', level: '初階', summary: '把專案抓下來，認識程式界的雲端硬碟。', today: true },
-  { id: 'M2B', kind: 'M', title: 'Git commit 與 rollback', duration: '15分', level: '初階', summary: 'commit 當後悔藥，改壞了能回頭。', today: true },
-  { id: 'M03', kind: 'M', title: 'IDE 介面 + 讀 README', duration: '25分', level: '初階', summary: '四個區塊認識 IDE，請 AI 白話導覽專案。', today: true },
-  { id: 'M04', kind: 'M', title: 'SSOT 與 Obsidian', duration: '25分', level: '初階', summary: '唯一事實來源，一份資料輸出到所有地方。', today: true },
-  { id: 'M5B', kind: 'M', title: 'push / branch / PR', duration: '25分', level: '進階', summary: '團隊協作流：分支、合併、解衝突。' },
-  { id: 'M05', kind: 'M', title: '團隊 SSOT', duration: '20分', level: '進階', summary: 'Obsidian + GitHub 讓團隊共用同一份知識庫。' },
-  { id: 'M06', kind: 'M', title: 'Prompt → Skill', duration: '15分', level: '初階', summary: '把一次性對話固化成可重用的 .md Skill。', today: true },
-  { id: 'M07', kind: 'M', title: 'Token 與 Obsidian 神經元', duration: '20分', level: '初階', summary: '為什麼純文字筆記跟 AI 特別合？', today: true },
-  { id: 'M08', kind: 'M', title: '動手：用 Skill 建立 SSOT', duration: '25分', level: '初階', summary: 'AI 採訪你，自動寫回 Obsidian。', today: true },
-  { id: 'M09', kind: 'M', title: 'API / MCP / CLI 三種橋樑', duration: '15分', level: '進階', summary: '讓 AI 連上外部世界的三條路。' },
-  { id: 'M10', kind: 'M', title: '身份驗證與資安', duration: '25分', level: '進階', summary: 'OAuth vs Key，什麼時候要登入。' },
-  { id: 'M12', kind: 'M', title: 'Local vs 部署', duration: '15分', level: '進階', summary: '本機開發與上線部署的差別。' },
-  { id: 'C00', kind: 'M', title: 'Capstone 排列組合', duration: '15分', level: '進階', summary: '積木攤開，看能組出多少種工作流。' },
-  { id: 'T01', kind: 'T', title: 'hypelink MCP', duration: '20分', level: '進階', summary: '個人頁／活動頁，MCP 需登入。' },
-  { id: 'T02', kind: 'T', title: 'GA4 MCP', duration: '20分', level: '進階', summary: '用自然語言問網站業績數據。' },
-  { id: 'T03', kind: 'T', title: 'wport CLI', duration: '20分', level: '進階', summary: '一行指令抓真實職缺，免登入。', today: true },
-  { id: 'T04', kind: 'T', title: 'gcloud CLI', duration: '20分', level: '進階', summary: '寄信、寄報告，串起整合寄送。' },
-  { id: 'T05', kind: 'T', title: 'Vercel CLI', duration: '20分', level: '進階', summary: '一鍵部署，拿到公開網址。', today: true },
-  { id: 'T06', kind: 'T', title: 'Cloudflare', duration: '20分', level: '進階', summary: '邊緣運算、網域、CDN 配菜。' },
-  { id: 'T07', kind: 'T', title: 'Supabase', duration: '20分', level: '進階', summary: '後端資料庫配菜卡。' },
-  { id: 'T08', kind: 'T', title: 'Firebase', duration: '20分', level: '進階', summary: 'Google 後端配菜卡。' },
-  { id: 'T09', kind: 'T', title: 'Cloudinary', duration: '20分', level: '進階', summary: '圖床與圖像處理配菜。' },
-  { id: 'D01', kind: 'D', title: '履歷職缺配對', duration: '30分', level: '進階', summary: 'wport + Skill + SSOT → 推薦 3 職缺 + 客製履歷。', today: true },
-  { id: 'D02', kind: 'D', title: '整合寄送', duration: '30分', level: '進階', summary: 'gcloud 寄履歷 + hypelink 活動頁 + wport 結果。' },
-  { id: 'D03', kind: 'D', title: '一鍵履歷上線', duration: '30分', level: '進階', summary: 'Vercel 部署 + GitHub 推送，拿到你的網址。', today: true },
+  {
+    id: 'M01',
+    kind: 'M',
+    title: '聊天框 vs IDE',
+    duration: '15分',
+    level: '初階',
+    summary: '分清聊天框與 IDE——AI 有沒有「手」的分水嶺。',
+    today: true,
+  },
+  {
+    id: 'M02',
+    kind: 'M',
+    title: 'GitHub 與 Repo',
+    duration: '25分',
+    level: '初階',
+    summary: '把專案抓下來，認識程式界的雲端硬碟。',
+    today: true,
+  },
+  {
+    id: 'M2B',
+    kind: 'M',
+    title: 'Git commit 與 rollback',
+    duration: '15分',
+    level: '初階',
+    summary: 'commit 當後悔藥，改壞了能回頭。',
+    today: true,
+  },
+  {
+    id: 'M03',
+    kind: 'M',
+    title: 'IDE 介面 + 讀 README',
+    duration: '25分',
+    level: '初階',
+    summary: '四個區塊認識 IDE，請 AI 白話導覽專案。',
+    today: true,
+  },
+  {
+    id: 'M04',
+    kind: 'M',
+    title: 'SSOT 與 Obsidian',
+    duration: '25分',
+    level: '初階',
+    summary: '唯一事實來源，一份資料輸出到所有地方。',
+    today: true,
+  },
+  {
+    id: 'M5B',
+    kind: 'M',
+    title: 'push / branch / PR',
+    duration: '25分',
+    level: '進階',
+    summary: '團隊協作流：分支、合併、解衝突。',
+  },
+  {
+    id: 'M05',
+    kind: 'M',
+    title: '團隊 SSOT',
+    duration: '20分',
+    level: '進階',
+    summary: 'Obsidian + GitHub 讓團隊共用同一份知識庫。',
+  },
+  {
+    id: 'M06',
+    kind: 'M',
+    title: 'Prompt → Skill',
+    duration: '15分',
+    level: '初階',
+    summary: '把一次性對話固化成可重用的 .md Skill。',
+    today: true,
+  },
+  {
+    id: 'M07',
+    kind: 'M',
+    title: 'Token 與 Obsidian 神經元',
+    duration: '20分',
+    level: '初階',
+    summary: '為什麼純文字筆記跟 AI 特別合？',
+    today: true,
+  },
+  {
+    id: 'M08',
+    kind: 'M',
+    title: '動手：用 Skill 建立 SSOT',
+    duration: '25分',
+    level: '初階',
+    summary: 'AI 採訪你，自動寫回 Obsidian。',
+    today: true,
+  },
+  {
+    id: 'M09',
+    kind: 'M',
+    title: 'API / MCP / CLI 三種橋樑',
+    duration: '15分',
+    level: '進階',
+    summary: '讓 AI 連上外部世界的三條路。',
+  },
+  {
+    id: 'M10',
+    kind: 'M',
+    title: '身份驗證與資安',
+    duration: '25分',
+    level: '進階',
+    summary: 'OAuth vs Key，什麼時候要登入。',
+  },
+  {
+    id: 'M12',
+    kind: 'M',
+    title: 'Local vs 部署',
+    duration: '15分',
+    level: '進階',
+    summary: '本機開發與上線部署的差別。',
+  },
+  {
+    id: 'C00',
+    kind: 'M',
+    title: 'Capstone 排列組合',
+    duration: '15分',
+    level: '進階',
+    summary: '積木攤開，看能組出多少種工作流。',
+  },
+  {
+    id: 'T01',
+    kind: 'T',
+    title: 'hypelink MCP',
+    duration: '20分',
+    level: '進階',
+    summary: '個人頁／活動頁，MCP 需登入。',
+  },
+  {
+    id: 'T02',
+    kind: 'T',
+    title: 'GA4 MCP',
+    duration: '20分',
+    level: '進階',
+    summary: '用自然語言問網站業績數據。',
+  },
+  {
+    id: 'T03',
+    kind: 'T',
+    title: 'wport CLI',
+    duration: '20分',
+    level: '進階',
+    summary: '一行指令抓真實職缺，免登入。',
+    today: true,
+  },
+  {
+    id: 'T04',
+    kind: 'T',
+    title: 'gcloud CLI',
+    duration: '20分',
+    level: '進階',
+    summary: '寄信、寄報告，串起整合寄送。',
+  },
+  {
+    id: 'T05',
+    kind: 'T',
+    title: 'Vercel CLI',
+    duration: '20分',
+    level: '進階',
+    summary: '一鍵部署，拿到公開網址。',
+    today: true,
+  },
+  {
+    id: 'T06',
+    kind: 'T',
+    title: 'Cloudflare',
+    duration: '20分',
+    level: '進階',
+    summary: '邊緣運算、網域、CDN 配菜。',
+  },
+  {
+    id: 'T07',
+    kind: 'T',
+    title: 'Supabase',
+    duration: '20分',
+    level: '進階',
+    summary: '後端資料庫配菜卡。',
+  },
+  {
+    id: 'T08',
+    kind: 'T',
+    title: 'Firebase',
+    duration: '20分',
+    level: '進階',
+    summary: 'Google 後端配菜卡。',
+  },
+  {
+    id: 'T09',
+    kind: 'T',
+    title: 'Cloudinary',
+    duration: '20分',
+    level: '進階',
+    summary: '圖床與圖像處理配菜。',
+  },
+  {
+    id: 'D01',
+    kind: 'D',
+    title: '履歷職缺配對',
+    duration: '30分',
+    level: '進階',
+    summary: 'wport + Skill + SSOT → 推薦 3 職缺 + 客製履歷。',
+    today: true,
+  },
+  {
+    id: 'D02',
+    kind: 'D',
+    title: '整合寄送',
+    duration: '30分',
+    level: '進階',
+    summary: 'gcloud 寄履歷 + hypelink 活動頁 + wport 結果。',
+  },
+  {
+    id: 'D03',
+    kind: 'D',
+    title: '一鍵履歷上線',
+    duration: '30分',
+    level: '進階',
+    summary: 'Vercel 部署 + GitHub 推送，拿到你的網址。',
+    today: true,
+  },
 ];
 
 const TODAY_MODULE_COUNT = COURSE_MODULES.filter((m) => m.today).length;
@@ -2982,7 +3308,9 @@ const CourseModuleTable = () => (
             borderBottom: `1px solid ${c.border}`,
           }}
         >
-          <span style={{ fontFamily: mono, fontWeight: 700, color: mod.today ? c.primaryHover : c.ink }}>
+          <span
+            style={{ fontFamily: mono, fontWeight: 700, color: mod.today ? c.primaryHover : c.ink }}
+          >
             {mod.id}
           </span>
           <span
@@ -2997,7 +3325,9 @@ const CourseModuleTable = () => (
           </span>
           <span style={{ color: c.ink, fontWeight: mod.today ? 700 : 500 }}>{mod.title}</span>
           <span style={{ fontFamily: mono, fontSize: 14, color: c.muted }}>{mod.duration}</span>
-          <span style={{ textAlign: 'center', fontSize: 18, color: mod.today ? c.primary : c.border }}>
+          <span
+            style={{ textAlign: 'center', fontSize: 18, color: mod.today ? c.primary : c.border }}
+          >
             {mod.today ? '●' : '○'}
           </span>
         </div>
@@ -3006,7 +3336,7 @@ const CourseModuleTable = () => (
   </div>
 );
 
-const CourseMoreIntro: Page = () => (
+export const CourseMoreIntro: Page = () => (
   <SlideShell variant="tint">
     <TopBar eyebrow="還有更多 · AI 課程模組" />
     <Title>
@@ -3024,8 +3354,8 @@ const CourseMoreIntro: Page = () => (
       }}
     >
       <Body style={{ fontSize: 28, maxWidth: 960, lineHeight: 1.65 }}>
-        今天走的是<Ink>純小白入門路線</Ink>。完整 WPORT AI 課程是一套可重組的積木——
-        下一頁有<Accent>全部模組清單</Accent>。
+        今天走的是<Ink>純小白入門路線</Ink>。完整 WPORT AI 課程是一套可重組的積木—— 下一頁有
+        <Accent>全部模組清單</Accent>。
       </Body>
       <div style={{ display: 'flex', gap: 32, alignItems: 'stretch' }}>
         <div
@@ -3037,12 +3367,28 @@ const CourseMoreIntro: Page = () => (
             minWidth: 260,
           }}
         >
-          <div style={{ fontFamily: mono, fontSize: 72, fontWeight: 700, color: c.primary, lineHeight: 1 }}>
+          <div
+            style={{
+              fontFamily: mono,
+              fontSize: 72,
+              fontWeight: 700,
+              color: c.primary,
+              lineHeight: 1,
+            }}
+          >
             {TODAY_MODULE_COUNT}
           </div>
           <div style={{ fontSize: 24, fontWeight: 700, color: c.ink, marginTop: 12 }}>今天已學</div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', fontFamily: mono, fontSize: 40, color: c.muted }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            fontFamily: mono,
+            fontSize: 40,
+            color: c.muted,
+          }}
+        >
           /
         </div>
         <div
@@ -3054,10 +3400,20 @@ const CourseMoreIntro: Page = () => (
             minWidth: 260,
           }}
         >
-          <div style={{ fontFamily: mono, fontSize: 72, fontWeight: 700, color: c.primaryHover, lineHeight: 1 }}>
+          <div
+            style={{
+              fontFamily: mono,
+              fontSize: 72,
+              fontWeight: 700,
+              color: c.primaryHover,
+              lineHeight: 1,
+            }}
+          >
             {TOTAL_MODULE_COUNT}
           </div>
-          <div style={{ fontSize: 24, fontWeight: 700, color: c.ink, marginTop: 12 }}>完整課程模組</div>
+          <div style={{ fontSize: 24, fontWeight: 700, color: c.ink, marginTop: 12 }}>
+            完整課程模組
+          </div>
         </div>
       </div>
       <Body style={{ fontSize: 22, color: c.muted }}>
@@ -3162,9 +3518,7 @@ const CourseModuleMap: Page = () => (
             </div>
           ))}
         </div>
-        <Body style={{ fontSize: 22, color: c.muted }}>
-          掌握工具的人，將取代只會使用勞力的人。
-        </Body>
+        <Body style={{ fontSize: 22, color: c.muted }}>掌握工具的人，將取代只會使用勞力的人。</Body>
       </div>
     </div>
   </SlideShell>
@@ -3230,7 +3584,9 @@ const CtaColumn = ({
     <ExternalLink href={href} mono style={{ fontSize: 22, fontWeight: 700 }}>
       {linkLabel}
     </ExternalLink>
-    <span style={{ fontSize: 20, lineHeight: 1.5, color: c.body, textAlign: 'center', maxWidth: 320 }}>
+    <span
+      style={{ fontSize: 20, lineHeight: 1.5, color: c.body, textAlign: 'center', maxWidth: 320 }}
+    >
       {desc}
     </span>
   </div>
@@ -3294,7 +3650,7 @@ const CallToAction: Page = () => (
 );
 
 export const meta: SlideMeta = {
-  title: 'AI Rookie · 新手小白也能行',
+  title: '新手小白也能做-2',
   createdAt: '2026-06-26T04:24:27.869Z',
 };
 

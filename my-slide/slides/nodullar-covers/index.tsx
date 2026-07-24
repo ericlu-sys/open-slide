@@ -110,6 +110,16 @@ const palettes: CoverPalette[] = [
     border: 'rgba(215, 88, 128, 0.34)',
     gridTint: 'rgba(235, 128, 158, 0.06)',
   },
+  {
+    shellBg: '#0a0608',
+    bg1: '#1a0a10',
+    bg2: '#3a1428',
+    bg3: '#5c2840',
+    accent1: 'rgba(180, 72, 96, 0.28)',
+    accent2: 'rgba(201, 169, 98, 0.14)',
+    border: 'rgba(201, 169, 98, 0.28)',
+    gridTint: 'rgba(201, 169, 98, 0.05)',
+  },
 ];
 
 const covers: CoverData[] = [
@@ -176,7 +186,7 @@ const covers: CoverData[] = [
   {
     organizer: '無白丁會所',
     sessionNo: '#6',
-    speakerName: '朗祖明',
+    speakerName: '郎祖名',
     speakerTitle: '春河劇團團長',
     eventName: '戲夢‧築場：構築一場永不落幕的人文實驗。',
     speakerImage: `${CDN}/${FX}/speaker_1780682003`,
@@ -365,11 +375,169 @@ function NodullarCover({ data, palette }: { data: CoverData; palette: CoverPalet
   );
 }
 
+function NodullarGatheringCover({ palette }: { palette: CoverPalette }) {
+  return (
+    <div className="nodullar-root">
+      <NodullarStyles />
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: palette.shellBg,
+        }}
+      >
+        <div
+          className="cover-frame"
+          style={{
+            position: 'relative',
+            overflow: 'hidden',
+            width: 1080,
+            height: 1080,
+            background: `
+            radial-gradient(90% 70% at 50% 110%, ${palette.accent1}, transparent 55%),
+            radial-gradient(80% 60% at 12% 8%, ${palette.accent2}, transparent 50%),
+            radial-gradient(60% 50% at 88% 18%, rgba(201, 169, 98, 0.08), transparent 45%),
+            linear-gradient(160deg, ${palette.bg1}, ${palette.bg2} 48%, ${palette.bg3})
+          `,
+            boxShadow: `inset 0 0 0 1px ${palette.border}, 0 16px 36px rgba(0, 0, 0, 0.36)`,
+          }}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              pointerEvents: 'none',
+              background: `
+              repeating-linear-gradient(90deg, ${palette.gridTint} 0, ${palette.gridTint} 1px, transparent 1px, transparent 52px),
+              repeating-linear-gradient(0deg, ${palette.gridTint} 0, ${palette.gridTint} 1px, transparent 1px, transparent 52px)
+            `,
+              opacity: 0.55,
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              left: '50%',
+              top: '14%',
+              transform: 'translateX(-50%)',
+              width: 120,
+              height: 1,
+              background:
+                'linear-gradient(90deg, transparent, rgba(201, 169, 98, 0.55) 20%, rgba(201, 169, 98, 0.55) 80%, transparent)',
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              textAlign: 'center',
+              width: '78%',
+              gap: 28,
+            }}
+          >
+            <p
+              style={{
+                margin: 0,
+                fontFamily: 'var(--display)',
+                fontSize: 28,
+                fontWeight: 400,
+                fontStyle: 'italic',
+                letterSpacing: '0.42em',
+                color: 'var(--gold-soft)',
+                textIndent: '0.42em',
+              }}
+            >
+              Speakers&apos; Salon
+            </p>
+            <h1
+              style={{
+                margin: 0,
+                fontFamily: 'var(--serif)',
+                fontSize: 92,
+                lineHeight: 1.28,
+                fontWeight: 500,
+                letterSpacing: '0.14em',
+                color: 'var(--ink)',
+                textShadow: '0 2px 18px rgba(0, 0, 0, 0.45)',
+              }}
+            >
+              無白丁講師聚會
+            </h1>
+            <div
+              style={{
+                width: 72,
+                height: 1,
+                background: 'rgba(201, 169, 98, 0.5)',
+              }}
+            />
+            <p
+              style={{
+                margin: 0,
+                fontFamily: 'var(--serif)',
+                fontSize: 36,
+                lineHeight: 1.65,
+                fontWeight: 300,
+                letterSpacing: '0.28em',
+                color: 'var(--gold)',
+              }}
+            >
+              以酒會友 · 以知識相會
+            </p>
+            <p
+              style={{
+                margin: '8px 0 0',
+                fontFamily: 'var(--serif)',
+                fontSize: 30,
+                lineHeight: 1.7,
+                fontWeight: 300,
+                letterSpacing: '0.12em',
+                color: 'rgba(245, 240, 232, 0.72)',
+                maxWidth: '88%',
+              }}
+            >
+              致謝歷届分享者
+              <br />
+              在爐邊，續寫無白丁的對話
+            </p>
+          </div>
+          <div
+            style={{
+              position: 'absolute',
+              left: '50%',
+              bottom: '10%',
+              transform: 'translateX(-50%)',
+              fontFamily: 'var(--serif)',
+              color: 'var(--gold-soft)',
+              fontSize: 24,
+              fontWeight: 300,
+              letterSpacing: '0.36em',
+              textIndent: '0.36em',
+            }}
+          >
+            無白丁會所
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function makeCoverPage(data: CoverData, palette: CoverPalette): Page {
   const Page: Page = () => <NodullarCover data={data} palette={palette} />;
   return Page;
 }
 
-const pages = covers.map((data, i) => makeCoverPage(data, palettes[i] ?? palettes[0]));
+const pages = [
+  ...covers.map((data, i) => makeCoverPage(data, palettes[i] ?? palettes[0])),
+  () => <NodullarGatheringCover palette={palettes[6] ?? palettes[0]} />,
+];
 
 export default pages satisfies Page[];
