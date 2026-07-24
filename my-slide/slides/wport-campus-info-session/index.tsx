@@ -1900,7 +1900,7 @@ const Page8: Page = () => (
   </PageFrame>
 );
 
-const Page9: Page = () => (
+const _Page9: Page = () => (
   <SectionDivider
     num="02"
     chapter="CHAPTER TWO"
@@ -2235,7 +2235,7 @@ const Page12: Page = () => (
   </PageFrame>
 );
 
-const Page13: Page = () => (
+const _Page13: Page = () => (
   <PageFrame theme="lime" chromeRight="02 · 如何註冊" center>
     <div
       style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: 80, alignItems: 'center' }}
@@ -2322,7 +2322,7 @@ const Page13: Page = () => (
   </PageFrame>
 );
 
-const Page14: Page = () => (
+const _Page14: Page = () => (
   <PageFrame theme="paper" chromeRight="02 · 如何註冊">
     <Eyebrow>02 / Other ways to apply</Eyebrow>
     <TitleZh>其他投遞履歷方式</TitleZh>
@@ -2646,7 +2646,7 @@ const Page16: Page = () => (
   </PageFrame>
 );
 
-const Page17: Page = () => (
+const _Page17: Page = () => (
   <PageFrame
     theme="green"
     chromeRight="01 · 評點制 / ICAN"
@@ -3384,7 +3384,7 @@ const Page23: Page = () => (
   />
 );
 
-const Page24: Page = () => (
+const _Page24: Page = () => (
   <PageFrame theme="paper" chromeRight="04 · 學長姐分享 01">
     <Eyebrow>04 / Working at Kaori Thermal</Eyebrow>
     <TitleZh>
@@ -4274,7 +4274,7 @@ const Page35: Page = () => (
   </PageFrame>
 );
 
-const Page36: Page = () => (
+const _Page36: Page = () => (
   <PageFrame theme="cream" chromeRight="艾肯顧問 / ICAN">
     <Eyebrow>ICAN Consulting · 優勢</Eyebrow>
     <TitleZh>艾肯顧問 三大優勢</TitleZh>
@@ -4366,7 +4366,7 @@ const Page37: Page = () => (
   </PageFrame>
 );
 
-const Page38: Page = () => (
+const _Page38: Page = () => (
   <PageFrame theme="cream" chromeRight="艾肯顧問 · 服務據點">
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
       <div>

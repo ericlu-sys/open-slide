@@ -6,12 +6,6 @@ import ericJingli from '@assets/eric_精立數位.jpg';
 import ericNankai from '@assets/eric_開南.jpg';
 import wportLogo from '@assets/wport.png';
 import wportSquare from '@assets/wport_方形logo.png';
-import nankaiClass1 from './assets/nankai-class-1.jpg';
-import nankaiClass2 from './assets/nankai-class-2.jpg';
-import smartStationVibeCoding from './assets/smart-station-vibe-coding.jpg';
-import smartStationDavid from '../smart-station/assets/david.png';
-import smartStationEric from '../smart-station/assets/eric.png';
-import { useEffect, useState } from 'react';
 import {
   type DesignSystem,
   type Page,
@@ -19,6 +13,12 @@ import {
   type SlideTransition,
   useSlidePageNumber,
 } from '@open-slide/core';
+import { useEffect, useState } from 'react';
+import smartStationDavid from '../smart-station/assets/david.png';
+import smartStationEric from '../smart-station/assets/eric.png';
+import nankaiClass1 from './assets/nankai-class-1.jpg';
+import nankaiClass2 from './assets/nankai-class-2.jpg';
+import smartStationVibeCoding from './assets/smart-station-vibe-coding.jpg';
 
 export const design: DesignSystem = {
   palette: {
@@ -696,7 +696,7 @@ Cover.transition = {
   },
 };
 
-const Overview: Page = () => (
+const _Overview: Page = () => (
   <div style={{ ...fill, padding: `${PAD_Y}px ${PAD_X}px` }}>
     <Style />
     <GridBg />
@@ -733,7 +733,7 @@ const ValueSection: Page = () => (
 
 ValueSection.transition = breath;
 
-const ValueContent: Page = () => (
+const _ValueContent: Page = () => (
   <div style={{ ...fill, padding: `${PAD_Y}px ${PAD_X}px` }}>
     <Style />
     <GridBg />
@@ -770,7 +770,7 @@ const ApproachSection: Page = () => (
 
 ApproachSection.transition = breath;
 
-const ApproachContent: Page = () => (
+const _ApproachContent: Page = () => (
   <div style={{ ...fill, padding: `${PAD_Y}px ${PAD_X}px` }}>
     <Style />
     <GridBg />
@@ -897,7 +897,6 @@ const InstructorDavid: Page = () => (
   <InstructorPage
     name="David"
     subname="CrazyYao"
-    role="WPORT 資深工程師 · 7+ 年實戰"
     accent="teal"
     photoSrc={davidInstructor}
     photoAlt="David（CrazyYao）— 講師個人形象照"
@@ -914,7 +913,6 @@ const InstructorDavid: Page = () => (
 const InstructorEric: Page = () => (
   <InstructorPage
     name="Eric"
-    role="WPORT 執行長 · BD/PM/數位行銷"
     accent="blue"
     photoSrc={ericNccu}
     photoAlt="Eric — 講師個人形象照"
@@ -992,7 +990,6 @@ const EricExperience: Page = () => (
           delay={200}
           period="2024 – 至今"
           org="熱火數碼資訊"
-          role="執行長（CEO）"
           achievement="軟體開發、新創資源銜接、小人提計劃，雇主品牌"
           accent="blue"
         />
@@ -1001,7 +998,6 @@ const EricExperience: Page = () => (
           delay={440}
           period="2015 – 2024"
           org="錫諾系統"
-          role="商業開發經理"
           achievement="Figma設計、SEO、B2B軟體業務開發、gas、python、VBA自動化"
           accent="blue"
         />
@@ -1541,7 +1537,14 @@ const OutcomeSliderPreview = () => {
         onChange={(e) => setSsot(Number(e.target.value))}
         style={{ width: '100%', marginTop: 12, accentColor: 'var(--osd-accent)' }}
       />
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: 20 }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'baseline',
+          marginTop: 20,
+        }}
+      >
         <span style={{ fontSize: 22, fontWeight: 700 }}>Skill</span>
         <span style={{ fontSize: 32, fontWeight: 800, color: palette.supportBlue }}>{skill}</span>
       </div>
@@ -1641,7 +1644,16 @@ const OutcomeChatPreview = () => {
       >
         wport agent · cli runner
       </div>
-      <div style={{ flex: 1, padding: '16px 18px', overflow: 'hidden', display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <div
+        style={{
+          flex: 1,
+          padding: '16px 18px',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 10,
+        }}
+      >
         {messages.map((msg) => (
           <div
             key={`${msg.role}-${msg.text}`}
@@ -1755,12 +1767,16 @@ const AchievableOutcomes: Page = () => (
             border: `1px solid ${palette.line}`,
           }}
         >
-          <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--osd-accent)' }}>① 互動式拖拉</div>
+          <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--osd-accent)' }}>
+            ① 互動式拖拉
+          </div>
           <p style={{ fontSize: 26, lineHeight: 1.5, color: palette.muted, margin: '14px 0 0' }}>
             拉動滑桿，即時看見 SSOT、Skill 等工具能組合出多少種自動化工作流
           </p>
           <OutcomeSliderPreview />
-          <DemoLink href={INTERN_GUIDE_SLIDER_DEMO}>查看完整示範（AI 實習生指南 · 第 15 頁）</DemoLink>
+          <DemoLink href={INTERN_GUIDE_SLIDER_DEMO}>
+            查看完整示範（AI 實習生指南 · 第 15 頁）
+          </DemoLink>
         </div>
         <div
           className="ai-fadeUp"
@@ -1779,7 +1795,9 @@ const AchievableOutcomes: Page = () => (
             CLI 對話視窗自動打字、機器人回覆 — 用 React 程式做成的簡報動畫
           </p>
           <OutcomeChatPreview />
-          <DemoLink href={INTERN_GUIDE_ANIM_DEMO}>查看完整示範（AI 實習生指南 · 第 13 頁）</DemoLink>
+          <DemoLink href={INTERN_GUIDE_ANIM_DEMO}>
+            查看完整示範（AI 實習生指南 · 第 13 頁）
+          </DemoLink>
         </div>
       </div>
     </div>
@@ -1812,7 +1830,9 @@ const Offerings: Page = () => (
             border: `1px solid ${palette.line}`,
           }}
         >
-          <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--osd-accent)' }}>① 新手小白</div>
+          <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--osd-accent)' }}>
+            ① 新手小白
+          </div>
           <div style={{ fontSize: 28, lineHeight: 1.45, color: palette.muted, marginTop: 16 }}>
             語言學習、提問法、非技術族群友善節奏，單純了解 ChatGPT 基礎工具使用
           </div>
@@ -1842,7 +1862,9 @@ const Offerings: Page = () => (
             border: `1px solid ${palette.line}`,
           }}
         >
-          <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--osd-accent)' }}>③ 企業內訓</div>
+          <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--osd-accent)' }}>
+            ③ 企業內訓
+          </div>
           <div style={{ fontSize: 28, lineHeight: 1.45, color: palette.muted, marginTop: 16 }}>
             n8n、API、GAS、Vercel、DB 進入到實際產出
           </div>
@@ -1853,7 +1875,7 @@ const Offerings: Page = () => (
   </div>
 );
 
-const Closing: Page = () => (
+const _Closing: Page = () => (
   <div
     style={{
       ...fill,

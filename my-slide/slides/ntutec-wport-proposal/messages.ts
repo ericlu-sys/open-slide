@@ -4,8 +4,7 @@ const zhTW: SlideMessages = {
   'cover.eyebrow': '提案簡報｜深度新創媒合計畫',
   'cover.title.wport': 'WPORT職航站',
   'cover.title.ntutec': '台大創創',
-  'cover.lead':
-    '3 場、9 家、4 個產業領域——一套已驗證、可複製的深度新創診斷模式。',
+  'cover.lead': '3 場、9 家、4 個產業領域——一套已驗證、可複製的深度新創診斷模式。',
 
   'footer.brand': 'WPORT職航站 × 台大創創',
 
@@ -130,8 +129,7 @@ const zhTW: SlideMessages = {
   'vccriteria.c2.title': '股權與團隊穩定度',
   'vccriteria.c2.summary': '是否預留 ESOP 給核心成員？拒絕「一人獨大、團隊零股權」結構。',
   'vccriteria.c3.title': '盡職調查就緒度',
-  'vccriteria.c3.summary':
-    '合規、勞健保、客戶定義、債務揭露——能否承受 VC 一通電話的查證？',
+  'vccriteria.c3.summary': '合規、勞健保、客戶定義、債務揭露——能否承受 VC 一通電話的查證？',
   'vccriteria.c4.title': '支出報表與財務紀律',
   'vccriteria.c4.summary': 'Burn Rate、RD/GA/SM 分類、Recurring vs Non-recurring，誠實面對弱點。',
   'vccriteria.c5.title': '單元經濟與護城河',
@@ -192,8 +190,7 @@ const en: SlideMessages = {
 
   'stats.eyebrow': 'Results overview',
   'stats.title': 'Validated milestones',
-  'stats.lead':
-    'Three sessions completed, a fourth on 6/9; 9 startups across 4 industry sectors.',
+  'stats.lead': 'Three sessions completed, a fourth on 6/9; 9 startups across 4 industry sectors.',
   'stats.sessions.unit': 'sessions',
   'stats.sessions.label': 'Sessions held',
   'stats.sessions.sub': '3/17, 4/27, 5/19; fourth planned 6/9',
@@ -205,8 +202,7 @@ const en: SlideMessages = {
   'stats.sectors.sub': 'Software, real estate, pet consumer, biotech & health',
   'stats.footnote.prefix': 'Each startup averaged',
   'stats.footnote.highlight': '30–60 minutes of 1:1 VC feedback',
-  'stats.footnote.suffix':
-    '—a density pitch competitions cannot match.',
+  'stats.footnote.suffix': '—a density pitch competitions cannot match.',
 
   'timeline.eyebrow': 'Session timeline',
   'timeline.title': 'Rhythm across four sessions',
@@ -225,8 +221,7 @@ const en: SlideMessages = {
 
   'field-photos.eyebrow': 'On the ground',
   'field-photos.title': 'Startups face to face with VCs',
-  'field-photos.lead':
-    'Three sessions done—all nine teams completed this deep diagnostic flow.',
+  'field-photos.lead': 'Three sessions done—all nine teams completed this deep diagnostic flow.',
   'field-photos.caption.1': 'Startup pitch | Travel ERP deep dive',
   'field-photos.caption.2': 'Full team photo',
   'field-photos.caption.3': 'VC 1:1 diagnostic session',
@@ -285,9 +280,11 @@ const en: SlideMessages = {
   'vccriteria.c3.summary':
     'Compliance, payroll, customer definitions, debt disclosure—can you survive one VC phone call?',
   'vccriteria.c4.title': 'Spend & financial discipline',
-  'vccriteria.c4.summary': 'Burn rate, RD/GA/SM split, recurring vs non-recurring—honest about weaknesses.',
+  'vccriteria.c4.summary':
+    'Burn rate, RD/GA/SM split, recurring vs non-recurring—honest about weaknesses.',
   'vccriteria.c5.title': 'Unit economics & moat',
-  'vccriteria.c5.summary': 'Does pricing hold? Beyond the AI hype—retention and technical barriers?',
+  'vccriteria.c5.summary':
+    'Does pricing hold? Beyond the AI hype—retention and technical barriers?',
 
   'closing.eyebrow': '09 / Next steps',
   'closing.title.line1': 'Proven in Taipei,',
@@ -303,8 +300,7 @@ const ja: SlideMessages = {
   'cover.eyebrow': '提案資料｜ディープスタートアップマッチング',
   'cover.title.wport': 'WPORT',
   'cover.title.ntutec': '台大創創',
-  'cover.lead':
-    '3回・9社・4業界——実証済みで再現可能なディープ診断モデル。',
+  'cover.lead': '3回・9社・4業界——実証済みで再現可能なディープ診断モデル。',
 
   'footer.brand': 'WPORT × 台大創創',
 
@@ -333,7 +329,8 @@ const ja: SlideMessages = {
   'positioning.traditional.item.1': '1回15〜30社',
   'positioning.traditional.item.2': '各社5〜10分のピッチ',
   'positioning.traditional.item.3': '審査員は主に観察・採点',
-  'positioning.traditional.item.4': '露出は得られるが、ビジネスモデルを変えるフィードバックは少ない',
+  'positioning.traditional.item.4':
+    '露出は得られるが、ビジネスモデルを変えるフィードバックは少ない',
   'positioning.program.label': '本プログラム',
   'positioning.program.title': 'ディープ1:1診断',
   'positioning.program.item.1': '1回わずか2〜3社を厳選',
@@ -412,19 +409,16 @@ const ja: SlideMessages = {
   'value-proposition.line2.highlight': '1時間',
   'value-proposition.line2.suffix': 'かけて分解してもらう。',
   'value-proposition.card.1.label': 'フィードバック密度',
-  'value-proposition.card.1.body':
-    '各社30〜60分のVC 1:1——Demo Dayの5〜10分を大きく上回る。',
+  'value-proposition.card.1.body': '各社30〜60分のVC 1:1——Demo Dayの5〜10分を大きく上回る。',
   'value-proposition.card.2.label': '議論の深さ',
   'value-proposition.card.2.body':
     '株式・ユニットエコノミクス・財務規律・モートを直接——市場概要の泛泛とした助言ではない。',
   'value-proposition.card.3.label': '持ち帰れる成果',
-  'value-proposition.card.3.body':
-    'ESOP確保、顧客定義のライン、増資など、すぐ着手できる具体提案。',
+  'value-proposition.card.3.body': 'ESOP確保、顧客定義のライン、増資など、すぐ着手できる具体提案。',
 
   'vccriteria.eyebrow': '各回の診断内容',
   'vccriteria.title': 'VCが現場で分解する5つの観点',
-  'vccriteria.lead':
-    '各1:1でVCが必ず踏む5つの問い——持ち帰るのは、すぐ動ける調整方向。',
+  'vccriteria.lead': '各1:1でVCが必ず踏む5つの問い——持ち帰るのは、すぐ動ける調整方向。',
   'vccriteria.c1.title': 'スケールと天井',
   'vccriteria.c1.summary': 'ファンド期間内に機関投資家規模に届くか？なぜ今か？',
   'vccriteria.c2.title': '株式とチーム安定性',

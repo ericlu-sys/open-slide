@@ -903,7 +903,7 @@ const IdeWorkspaceDemo = () => {
       setPhase('typing');
     }, 1300);
     return () => clearTimeout(t);
-  }, [phase, draft, stepIdx]);
+  }, [phase, draft, stepIdx, ideSteps.length, ideSteps]);
 
   const folderItems = [
     'vault/',
@@ -1385,6 +1385,8 @@ const ForkReadmeIdeDemo = () => {
           return (
             <div
               key={item}
+              role={isReadme ? 'button' : undefined}
+              tabIndex={isReadme ? 0 : undefined}
               draggable={isReadme}
               onDragStart={(e) => {
                 if (!isReadme) return;
@@ -1395,6 +1397,13 @@ const ForkReadmeIdeDemo = () => {
               onClick={() => {
                 if (!isReadme) return;
                 setPicked((p) => !p);
+              }}
+              onKeyDown={(e) => {
+                if (!isReadme) return;
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setPicked((p) => !p);
+                }
               }}
               style={{
                 whiteSpace: 'pre',
@@ -1540,6 +1549,8 @@ const ForkReadmeIdeDemo = () => {
           )}
         </div>
         <div
+          role="button"
+          tabIndex={0}
           onDragOver={(e) => {
             e.preventDefault();
             setDragOver(true);
@@ -1552,6 +1563,12 @@ const ForkReadmeIdeDemo = () => {
           }}
           onClick={() => {
             if (picked) attachReadme();
+          }}
+          onKeyDown={(e) => {
+            if ((e.key === 'Enter' || e.key === ' ') && picked) {
+              e.preventDefault();
+              attachReadme();
+            }
           }}
           style={{
             borderTop: `1px solid ${dragOver || attached ? c.primary : c.border}`,
@@ -2002,7 +2019,7 @@ export const IdeToolbox: Page = () => (
   </SlideShell>
 );
 
-const CloneA: Page = () => (
+const _CloneA: Page = () => (
   <SlideShell>
     <TopBar eyebrow="#3 Clone repo" />
     <Title>
@@ -2041,7 +2058,7 @@ const CloneA: Page = () => (
   </SlideShell>
 );
 
-const CloneB: Page = () => (
+const _CloneB: Page = () => (
   <SlideShell variant="tint">
     <TopBar eyebrow="#3 Clone repo" />
     <Title>
@@ -2111,7 +2128,7 @@ const IdeRegion = ({
   </div>
 );
 
-const ReadmeA: Page = () => (
+const _ReadmeA: Page = () => (
   <SlideShell>
     <TopBar eyebrow="#4 IDE 讀 README" />
     <Title>
@@ -2130,7 +2147,7 @@ const ReadmeA: Page = () => (
   </SlideShell>
 );
 
-const ReadmeB: Page = () => (
+const _ReadmeB: Page = () => (
   <SlideShell variant="tint">
     <TopBar eyebrow="#4 IDE 讀 README" />
     <Title>
@@ -2249,7 +2266,7 @@ export const makePromptSkillPage = (
 
 export const PromptSkillA: Page = makePromptSkillPage(INTERVIEW_PROMPT);
 
-const PromptSkillB: Page = () => (
+const _PromptSkillB: Page = () => (
   <SlideShell variant="tint">
     <TopBar eyebrow="#5 Prompt → Skill" />
     <div
@@ -2280,7 +2297,7 @@ const PromptSkillB: Page = () => (
   </SlideShell>
 );
 
-const HandsOnSkillA: Page = () => (
+const _HandsOnSkillA: Page = () => (
   <SlideShell>
     <TopBar eyebrow="★ 動手實作課 ① · Skill 寫關於自己" />
     <Title>
@@ -2363,7 +2380,7 @@ const BeforeAfterCard = ({
   </div>
 );
 
-const HandsOnSkillB: Page = () => (
+const _HandsOnSkillB: Page = () => (
   <SlideShell variant="tint">
     <TopBar eyebrow="★ 動手實作課 ① · Skill 寫關於自己" />
     <div style={{ display: 'flex', gap: 28, alignItems: 'stretch', marginBottom: 40 }}>
@@ -2820,7 +2837,7 @@ const FlowBox = ({ children, accent = false }: { children: React.ReactNode; acce
   </div>
 );
 
-const ReportA: Page = () => (
+const _ReportA: Page = () => (
   <SlideShell>
     <TopBar eyebrow="★ 動手實作課 ② · wport 履歷 + 報告書" />
     <Title>
@@ -2859,7 +2876,7 @@ const ReportA: Page = () => (
   </SlideShell>
 );
 
-const ReportB: Page = () => (
+const _ReportB: Page = () => (
   <SlideShell variant="tint">
     <TopBar eyebrow="★ 動手實作課 ② · wport 履歷 + 報告書" />
     <div
@@ -2893,7 +2910,7 @@ const ReportB: Page = () => (
   </SlideShell>
 );
 
-const SiteA: Page = () => (
+const _SiteA: Page = () => (
   <SlideShell>
     <TopBar eyebrow="#12 Obsidian → open-slide → 網站" />
     <Title>
@@ -2928,7 +2945,7 @@ const SiteA: Page = () => (
   </SlideShell>
 );
 
-const SiteB: Page = () => (
+const _SiteB: Page = () => (
   <SlideShell variant="tint">
     <TopBar eyebrow="#12 Obsidian → open-slide → 網站" />
     <div style={{ display: 'flex', gap: 28, alignItems: 'stretch', marginBottom: 40 }}>
@@ -2952,7 +2969,7 @@ const SiteB: Page = () => (
   </SlideShell>
 );
 
-const VercelA: Page = () => (
+const _VercelA: Page = () => (
   <SlideShell>
     <TopBar eyebrow="★ 動手實作課 ③ · Vercel 上架" />
     <Title>
@@ -2994,7 +3011,7 @@ const VercelA: Page = () => (
   </SlideShell>
 );
 
-const VercelB: Page = () => (
+const _VercelB: Page = () => (
   <SlideShell variant="tint">
     <TopBar eyebrow="★ 動手實作課 ③ · Vercel 上架" />
     <BigStatement size={66}>
@@ -3006,7 +3023,7 @@ const VercelB: Page = () => (
   </SlideShell>
 );
 
-const WhatYouCanDoPage: Page = () => (
+const _WhatYouCanDoPage: Page = () => (
   <LinkMotionScope>
     <WhatYouCanDo />
   </LinkMotionScope>
@@ -3455,7 +3472,7 @@ export const CourseModuleBoard: Page = () => (
   </SlideShell>
 );
 
-const CourseModuleMap: Page = () => (
+const _CourseModuleMap: Page = () => (
   <SlideShell variant="tint">
     <TopBar eyebrow="還有更多 · 排列組合" />
     <Title>

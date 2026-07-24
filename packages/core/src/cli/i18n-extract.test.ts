@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { createSlideTranslator } from '../app/lib/slide-messages.ts';
-import { extractSlideMessages, messagesToRecord } from './i18n-extract.ts';
 import { getContentLocaleOptions } from '../app/lib/content-locale.ts';
 import type { SlideModule } from '../app/lib/sdk.ts';
+import { createSlideTranslator } from '../app/lib/slide-messages.ts';
+import { extractSlideMessages, messagesToRecord } from './i18n-extract.ts';
 
 describe('extractSlideMessages', () => {
   it('collects JSX text from Page components', () => {

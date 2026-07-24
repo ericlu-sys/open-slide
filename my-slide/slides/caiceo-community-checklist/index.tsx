@@ -175,7 +175,9 @@ const CoverModule = ({
       }}
     >
       {titleLines.map((t, i) => (
-        <div key={i} style={{ fontSize: i === titleLines.length - 1 ? 88 : 64 }}>{t}</div>
+        <div key={i} style={{ fontSize: i === titleLines.length - 1 ? 88 : 64 }}>
+          {t}
+        </div>
       ))}
     </div>
     {sub ? <div style={{ ...bodyStyle, marginTop: 40 }}>{sub}</div> : null}
@@ -272,7 +274,7 @@ const DefListModule = ({
 );
 
 /** sections：淺藍章節標頭 + 條列（對照 post2「Carousell 分析師」頁） */
-const SectionsModule = ({
+const _SectionsModule = ({
   tag,
   sections,
 }: {
@@ -324,7 +326,9 @@ const ParagraphsModule = ({ tag, paras }: { tag: string; paras: string[] }) => (
       }}
     >
       {paras.map((p, i) => (
-        <div key={i} style={{ ...bodyStyle, fontSize: 34 }}>{p}</div>
+        <div key={i} style={{ ...bodyStyle, fontSize: 34 }}>
+          {p}
+        </div>
       ))}
     </div>
   </>
@@ -345,7 +349,9 @@ const PyramidModule = ({
     <>
       <Label>{tag}</Label>
       {paras.map((p, i) => (
-        <div key={i} style={{ ...bodyStyle, fontSize: 30, marginBottom: 10 }}>{p}</div>
+        <div key={i} style={{ ...bodyStyle, fontSize: 30, marginBottom: 10 }}>
+          {p}
+        </div>
       ))}
       <div
         style={{
@@ -405,11 +411,31 @@ const QuadrantModule = ({
   <>
     <Label>{tag}</Label>
     {paras.map((p, i) => (
-      <div key={i} style={{ ...bodyStyle, fontSize: 29, marginBottom: 10 }}>{p}</div>
+      <div key={i} style={{ ...bodyStyle, fontSize: 29, marginBottom: 10 }}>
+        {p}
+      </div>
     ))}
     <div style={{ flex: 1, position: 'relative', margin: '30px 30px 10px' }}>
-      <div style={{ position: 'absolute', left: '50%', top: 0, bottom: 0, width: 2, background: c.tagBg }} />
-      <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: 2, background: c.tagBg }} />
+      <div
+        style={{
+          position: 'absolute',
+          left: '50%',
+          top: 0,
+          bottom: 0,
+          width: 2,
+          background: c.tagBg,
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: 0,
+          right: 0,
+          height: 2,
+          background: c.tagBg,
+        }}
+      />
       {(
         [
           [axes.top, { left: '50%', top: -14, transform: 'translate(-50%, -50%)' }],
@@ -483,7 +509,9 @@ const CtaModule = ({
       ))}
     </div>
     {paras.map((p, i) => (
-      <div key={i} style={{ ...bodyStyle, marginBottom: 16 }}>{p}</div>
+      <div key={i} style={{ ...bodyStyle, marginBottom: 16 }}>
+        {p}
+      </div>
     ))}
     <div
       style={{

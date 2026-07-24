@@ -625,9 +625,7 @@ function CongFrame({ children }: { children: ReactNode }) {
       }}
     >
       <style>{SHARED_CSS}</style>
-      <div style={{ width: BANNER_W, height: BANNER_H, overflow: 'hidden' }}>
-        {children}
-      </div>
+      <div style={{ width: BANNER_W, height: BANNER_H, overflow: 'hidden' }}>{children}</div>
     </div>
   );
 }
@@ -762,11 +760,7 @@ const BannerD: Page = () => (
           <div className="p-card p-card--solo">
             <div className="p-ring-slot">
               <div className="p-ring">
-                <img
-                  className="bn-photo bn-photo--eric"
-                  src={ERIC_COVER_PHOTO}
-                  alt="Eric"
-                />
+                <img className="bn-photo bn-photo--eric" src={ERIC_COVER_PHOTO} alt="Eric" />
               </div>
             </div>
             <div className="p-name">Eric</div>
@@ -977,10 +971,4 @@ const BannerCCute: Page = () => (
 
 export { BannerC as SmartStationVol3 };
 
-export default [
-  BannerA,
-  BannerD,
-  BannerB,
-  BannerC,
-  BannerCCute,
-] satisfies Page[];
+export default [BannerA, BannerD, BannerB, BannerC, BannerCCute] satisfies Page[];

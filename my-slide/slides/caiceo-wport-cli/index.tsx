@@ -188,7 +188,9 @@ const CoverModule = ({
       }}
     >
       {titleLines.map((t, i) => (
-        <div key={i} style={{ fontSize: i === titleLines.length - 1 ? 80 : 56 }}>{t}</div>
+        <div key={i} style={{ fontSize: i === titleLines.length - 1 ? 80 : 56 }}>
+          {t}
+        </div>
       ))}
     </div>
     {sub ? <div style={{ ...bodyStyle, marginTop: 28 }}>{sub}</div> : null}
@@ -209,7 +211,7 @@ const CoverModule = ({
       }}
     >
       {photo ? (
-        <img src={photo} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        <img src={photo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
       ) : (
         <span style={{ color: c.blue, fontFamily: FONT_DISPLAY, fontSize: 34, letterSpacing: 3 }}>
           （照片區）
@@ -343,7 +345,9 @@ const ParagraphsModule = ({ tag, paras }: { tag: string; paras: React.ReactNode[
       }}
     >
       {paras.map((p, i) => (
-        <div key={i} style={{ ...bodyStyle, fontSize: 34 }}>{p}</div>
+        <div key={i} style={{ ...bodyStyle, fontSize: 34 }}>
+          {p}
+        </div>
       ))}
     </div>
   </>
@@ -378,7 +382,9 @@ const CtaModule = ({
       ))}
     </div>
     {paras.map((p, i) => (
-      <div key={i} style={{ ...bodyStyle, marginBottom: 16 }}>{p}</div>
+      <div key={i} style={{ ...bodyStyle, marginBottom: 16 }}>
+        {p}
+      </div>
     ))}
     <div
       style={{
@@ -443,7 +449,14 @@ const P3: Page = () => (
           { term: '人類瀏覽', desc: '網頁 GUI 直覺好看，這仍是你的主場。' },
           { term: 'AI 搜尋', desc: '網頁要模擬點擊、不穩定；CLI 一行指令，穩定。' },
           { term: '接續處理', desc: '不用爬 HTML，原生輸出 JSON / NDJSON。' },
-          { term: '串進腳本', desc: <>直接 pipe 給 <Code>jq</Code>、Skill、CI，自動化不卡關。</> },
+          {
+            term: '串進腳本',
+            desc: (
+              <>
+                直接 pipe 給 <Code>jq</Code>、Skill、CI，自動化不卡關。
+              </>
+            ),
+          },
         ]}
       />
     </Frame>
@@ -459,16 +472,16 @@ const P4: Page = () => (
         sections={[
           {
             header: '安裝（Node ≥ 18.17）',
-            bullets: [<Code>npm install -g @wport/cli</Code>],
+            bullets: [<Code key="install">npm install -g @wport/cli</Code>],
           },
           {
             header: '搜尋職缺',
-            bullets: [<Code>wport jobs search --keyword "產品經理"</Code>],
+            bullets: [<Code key="search">wport jobs search --keyword "產品經理"</Code>],
           },
           {
             header: '查看詳情',
             bullets: [
-              <Code>wport jobs view &lt;enc_id&gt;</Code>,
+              <Code key="view">wport jobs view &lt;enc_id&gt;</Code>,
               '終端機顯示表格；pipe 出去自動變 JSON。',
             ],
           },
@@ -488,7 +501,10 @@ const P5: Page = () => (
         items={[
           { title: <Code>--minimal</Code>, desc: '只留 Agent 必要欄位，省 token' },
           { title: <Code>--fields enc_id,title</Code>, desc: '自訂欄位，要什麼拿什麼' },
-          { title: <Code>--batch</Code>, desc: '從 stdin 吃多個 enc_id，NDJSON 逐行輸出，單筆失敗不中斷' },
+          {
+            title: <Code>--batch</Code>,
+            desc: '從 stdin 吃多個 enc_id，NDJSON 逐行輸出，單筆失敗不中斷',
+          },
           { title: <Code>--output json</Code>, desc: '強制 JSON，接 jq / Skill 都順' },
         ]}
       />
@@ -505,6 +521,7 @@ const P6: Page = () => (
         paras={[
           '打開 Agent 模式，直接下這段指令：',
           <div
+            key="agent-prompt"
             style={{
               border: `3px dashed ${c.dash}`,
               borderRadius: 18,
@@ -514,8 +531,9 @@ const P6: Page = () => (
               color: c.ink,
             }}
           >
-            「請在終端機執行 <Code>wport jobs search --keyword "桃園 產品經理" --minimal --output
-            json</Code>，把結果整理成表格，標出最適合應屆生的 3 筆。」
+            「請在終端機執行{' '}
+            <Code>wport jobs search --keyword "桃園 產品經理" --minimal --output json</Code>
+            ，把結果整理成表格，標出最適合應屆生的 3 筆。」
           </div>,
           'Agent 會自己呼叫 CLI、拿到 JSON、接著產出履歷建議——比請它「去網站找職缺」可靠得多。',
         ]}
@@ -531,9 +549,18 @@ const P7: Page = () => (
       <DefListModule
         tag="我們為什麼這樣設計"
         items={[
-          { term: 'Agent 優先', desc: 'minimal / fields / batch / pipe 友善，全是為了讓 AI 少讀廢話、多做事。' },
-          { term: '公開分離', desc: '求職者搜職缺不用帳號；企業功能收在 enterprise 子命令，金鑰權限清楚。' },
-          { term: '可腳本化', desc: '和 jq、Skill、MCP 工具鏈串接，把搜職缺變成履歷客製流水線的一環。' },
+          {
+            term: 'Agent 優先',
+            desc: 'minimal / fields / batch / pipe 友善，全是為了讓 AI 少讀廢話、多做事。',
+          },
+          {
+            term: '公開分離',
+            desc: '求職者搜職缺不用帳號；企業功能收在 enterprise 子命令，金鑰權限清楚。',
+          },
+          {
+            term: '可腳本化',
+            desc: '和 jq、Skill、MCP 工具鏈串接，把搜職缺變成履歷客製流水線的一環。',
+          },
         ]}
       />
     </Frame>

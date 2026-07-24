@@ -1,4 +1,4 @@
-import { useSlideT, type Page, type SlideMeta } from '@open-slide/core';
+import { type Page, type SlideMeta, useSlideT } from '@open-slide/core';
 import stickerNew from './assets/新創.png';
 import stickerLine from './assets/線條skr蛙.png';
 import stickerRacer from './assets/車手蛙.png';

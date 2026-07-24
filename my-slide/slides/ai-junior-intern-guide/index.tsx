@@ -1581,7 +1581,7 @@ const CliChatDemo = ({ variant = 'light' }: { variant?: 'light' | 'dark' }) => {
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
-  }, [messages, draft, botTyping]);
+  }, []);
 
   useEffect(() => {
     const step = CLI_CHAT_STEPS[stepIdx];

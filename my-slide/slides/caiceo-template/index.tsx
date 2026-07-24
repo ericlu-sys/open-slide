@@ -268,7 +268,9 @@ const CoverModule = (d: CoverData) => (
       }}
     >
       {d.titleLines.map((t, i) => (
-        <div key={i} style={{ fontSize: i === d.titleLines.length - 1 ? 80 : 56 }}>{t}</div>
+        <div key={i} style={{ fontSize: i === d.titleLines.length - 1 ? 80 : 56 }}>
+          {t}
+        </div>
       ))}
     </div>
     {d.sub ? <div style={{ ...bodyStyle, marginTop: 28 }}>{rich(d.sub)}</div> : null}
@@ -287,7 +289,11 @@ const CoverModule = (d: CoverData) => (
       }}
     >
       {d.photo ? (
-        <img src={asset(d.photo)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        <img
+          src={asset(d.photo)}
+          alt=""
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
       ) : (
         <span style={{ color: c.blue, fontFamily: FONT_DISPLAY, fontSize: 34, letterSpacing: 3 }}>
           （照片區 · 換上活動/主題照）
@@ -345,7 +351,9 @@ const DefListModule = (d: DefListData) => (
       {d.items.map((it) => (
         <div key={it.term} style={{ display: 'flex', gap: 24, alignItems: 'flex-start' }}>
           <Tag>{it.term}</Tag>
-          <div style={{ ...bodyStyle, fontSize: 31, lineHeight: 1.6, flex: 1 }}>{rich(it.desc)}</div>
+          <div style={{ ...bodyStyle, fontSize: 31, lineHeight: 1.6, flex: 1 }}>
+            {rich(it.desc)}
+          </div>
         </div>
       ))}
     </div>
@@ -397,7 +405,9 @@ const ParagraphsModule = (d: ParagraphsData) => (
       }}
     >
       {d.paras.map((p, i) => (
-        <div key={i} style={{ ...bodyStyle, fontSize: 34 }}>{rich(p)}</div>
+        <div key={i} style={{ ...bodyStyle, fontSize: 34 }}>
+          {rich(p)}
+        </div>
       ))}
     </div>
   </>
@@ -409,7 +419,9 @@ const PyramidModule = (d: PyramidData) => {
     <>
       <Label>{d.tag}</Label>
       {d.paras.map((p, i) => (
-        <div key={i} style={{ ...bodyStyle, fontSize: 30, marginBottom: 10 }}>{rich(p)}</div>
+        <div key={i} style={{ ...bodyStyle, fontSize: 30, marginBottom: 10 }}>
+          {rich(p)}
+        </div>
       ))}
       <div
         style={{
@@ -458,11 +470,31 @@ const QuadrantModule = (d: QuadrantData) => (
   <>
     <Label>{d.tag}</Label>
     {d.paras.map((p, i) => (
-      <div key={i} style={{ ...bodyStyle, fontSize: 29, marginBottom: 10 }}>{rich(p)}</div>
+      <div key={i} style={{ ...bodyStyle, fontSize: 29, marginBottom: 10 }}>
+        {rich(p)}
+      </div>
     ))}
     <div style={{ flex: 1, position: 'relative', margin: '30px 30px 10px' }}>
-      <div style={{ position: 'absolute', left: '50%', top: 0, bottom: 0, width: 2, background: c.tagBg }} />
-      <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: 2, background: c.tagBg }} />
+      <div
+        style={{
+          position: 'absolute',
+          left: '50%',
+          top: 0,
+          bottom: 0,
+          width: 2,
+          background: c.tagBg,
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: 0,
+          right: 0,
+          height: 2,
+          background: c.tagBg,
+        }}
+      />
       {(
         [
           [d.axes.top, { left: '50%', top: -14, transform: 'translate(-50%, -50%)' }],
@@ -525,7 +557,9 @@ const CtaModule = (d: CtaData) => (
       ))}
     </div>
     {d.paras.map((p, i) => (
-      <div key={i} style={{ ...bodyStyle, marginBottom: 16 }}>{rich(p)}</div>
+      <div key={i} style={{ ...bodyStyle, marginBottom: 16 }}>
+        {rich(p)}
+      </div>
     ))}
     <div
       style={{

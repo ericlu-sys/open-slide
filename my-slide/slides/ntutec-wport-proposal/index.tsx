@@ -1,4 +1,4 @@
-import { useSlideT, type Page, type SlideMeta } from '@open-slide/core';
+import { type Page, type SlideMeta, useSlideT } from '@open-slide/core';
 import ericPhoto from './assets/eric-tcyac.jpg';
 import ntutecLogo from './assets/ntutec-logo-direct.png';
 import pitchPropertyPhoto from './assets/pitch-property.jpg';
@@ -386,7 +386,9 @@ const Stats: Page = () => {
         }}
       >
         {t('stats.footnote.prefix')}{' '}
-        <span style={{ color: C.primary, fontWeight: 'bold' }}>{t('stats.footnote.highlight')}</span>{' '}
+        <span style={{ color: C.primary, fontWeight: 'bold' }}>
+          {t('stats.footnote.highlight')}
+        </span>{' '}
         {t('stats.footnote.suffix')}
       </p>
 
@@ -492,8 +494,7 @@ const Timeline: Page = () => {
                     fontSize: 24,
                     lineHeight: 1.4,
                     padding: '12px 0',
-                    borderBottom:
-                      j < col.companies.length - 1 ? `1px solid ${C.border}` : 'none',
+                    borderBottom: j < col.companies.length - 1 ? `1px solid ${C.border}` : 'none',
                   }}
                 >
                   <div style={{ fontWeight: 600 }}>{c.name}</div>

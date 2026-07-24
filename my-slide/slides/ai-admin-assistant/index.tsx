@@ -943,7 +943,7 @@ const Agenda: Page = () => (
   </SlideShell>
 );
 
-const SSOT: Page = () => (
+const _SSOT: Page = () => (
   <SlideShell variant="tint">
     <TopBar num="03" eyebrow="知識管理觀念" />
     <Title>
@@ -998,7 +998,7 @@ const SSOT: Page = () => (
   </SlideShell>
 );
 
-const GitHubSync: Page = () => (
+const _GitHubSync: Page = () => (
   <SlideShell>
     <TopBar num="04" eyebrow="Obsidian 進階應用" />
     <Title>
@@ -1066,7 +1066,7 @@ const GitHubSync: Page = () => (
   </SlideShell>
 );
 
-const IdeObsidian: Page = () => (
+const _IdeObsidian: Page = () => (
   <SlideShell variant="tint">
     <TopBar num="05" eyebrow="工具整合" />
     <Title>
@@ -1123,7 +1123,7 @@ const IdeObsidian: Page = () => (
   </SlideShell>
 );
 
-const HandsOn01: Page = () => (
+const _HandsOn01: Page = () => (
   <SlideShell variant="tint">
     <TopBar num="07" eyebrow="實作流程 · Step-by-Step" />
     <Title>
@@ -1170,7 +1170,7 @@ const HandsOn01: Page = () => (
   </SlideShell>
 );
 
-const SkillCli: Page = () => (
+const _SkillCli: Page = () => (
   <SlideShell>
     <TopBar num="08" eyebrow="技術觀念拆解" />
     <Title>
@@ -1255,7 +1255,7 @@ const SkillCli: Page = () => (
   </SlideShell>
 );
 
-const CliMcpApi: Page = () => (
+const _CliMcpApi: Page = () => (
   <SlideShell variant="tint">
     <TopBar num="09" eyebrow="觀念架構對比" />
     <Title>
@@ -1306,7 +1306,7 @@ const CliMcpApi: Page = () => (
   </SlideShell>
 );
 
-const CliPower: Page = () => (
+const _CliPower: Page = () => (
   <SlideShell>
     <TopBar num="10" eyebrow="實務痛點分析" />
     <Title>
@@ -1350,7 +1350,7 @@ const CliPower: Page = () => (
   </SlideShell>
 );
 
-const WportCliResume: Page = () => (
+const _WportCliResume: Page = () => (
   <SlideShell variant="tint">
     <TopBar num="11" eyebrow="工作流實踐" />
     <Title>
@@ -1526,7 +1526,7 @@ const CliChatDemo = ({ variant = 'light' }: { variant?: 'light' | 'dark' }) => {
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
-  }, [messages, draft, botTyping]);
+  }, []);
 
   useEffect(() => {
     const step = CLI_CHAT_STEPS[stepIdx];
@@ -1762,7 +1762,7 @@ const CliChatDemo = ({ variant = 'light' }: { variant?: 'light' | 'dark' }) => {
   );
 };
 
-const UltimateWorkflow: Page = () => (
+const _UltimateWorkflow: Page = () => (
   <SlideShell variant="dark">
     <TopBar num="12" eyebrow="企業級 AI 實習生" dark />
     <Title dark>
@@ -1842,7 +1842,7 @@ const UltimateWorkflow: Page = () => (
   </SlideShell>
 );
 
-const Closing: Page = () => (
+const _Closing: Page = () => (
   <SlideShell>
     <TopBar num="14" eyebrow="總結與行動 · Call to Action" />
     <Title>
@@ -2166,25 +2166,25 @@ export const WhatYouCanDo: Page = () => (
   </SlideShell>
 );
 
-const WportRehoSpotlightPage: Page = () => (
+const _WportRehoSpotlightPage: Page = () => (
   <LinkMotionScope>
     <PageRehoSpotlight />
   </LinkMotionScope>
 );
 
-const WportRehoWhyJoin1Page: Page = () => (
+const _WportRehoWhyJoin1Page: Page = () => (
   <LinkMotionScope>
     <PageRehoWhyJoin1 />
   </LinkMotionScope>
 );
 
-const WportRehoWhyJoin2Page: Page = () => (
+const _WportRehoWhyJoin2Page: Page = () => (
   <LinkMotionScope>
     <PageRehoWhyJoin2 />
   </LinkMotionScope>
 );
 
-const SmartStationVol3Page: Page = () => (
+const _SmartStationVol3Page: Page = () => (
   <LinkMotionScope>
     <SmartStationVol3 />
   </LinkMotionScope>

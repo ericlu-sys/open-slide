@@ -1,4 +1,4 @@
-import { useSlideT, type Page, type SlideMeta } from '@open-slide/core';
+import { type Page, type SlideMeta, useSlideT } from '@open-slide/core';
 import { messages } from './messages.ts';
 
 const Cover: Page = () => {
