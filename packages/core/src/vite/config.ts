@@ -24,6 +24,17 @@ function findPackageRoot(fromFile: string): string {
 const PKG_ROOT = findPackageRoot(fileURLToPath(import.meta.url));
 const APP_ROOT = path.join(PKG_ROOT, 'src', 'app');
 
+function collectNodeModulesDirs(fromDir: string): string[] {
+  const dirs: string[] = [];
+  let dir = path.resolve(fromDir);
+  while (dir !== path.dirname(dir)) {
+    const nodeModules = path.join(dir, 'node_modules');
+    if (existsSync(nodeModules)) dirs.push(nodeModules);
+    dir = path.dirname(dir);
+  }
+  return dirs;
+}
+
 function readCoreVersion(): string {
   try {
     const raw = readFileSync(path.join(PKG_ROOT, 'package.json'), 'utf8');
@@ -116,7 +127,16 @@ export async function createViteConfig(opts: CreateViteConfigOptions): Promise<I
     },
     server: {
       port: config.port ?? 5173,
-      fs: { allow: [APP_ROOT, userCwd, slidesAbs, themesAbs, assetsAbs] },
+      fs: {
+        allow: [
+          APP_ROOT,
+          userCwd,
+          slidesAbs,
+          themesAbs,
+          assetsAbs,
+          ...collectNodeModulesDirs(PKG_ROOT),
+        ],
+      },
     },
     build: {
       outDir: path.resolve(userCwd, 'dist'),
