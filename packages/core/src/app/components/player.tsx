@@ -9,6 +9,7 @@ import type { DesignSystem } from '../lib/design';
 import type { Page } from '../lib/sdk';
 import type { EntryDirection, StepAggregate, StepController } from '../lib/step-context';
 import type { SlideTransition } from '../lib/transition';
+import { useIsMobile } from '../lib/use-is-mobile';
 import { usePrefersReducedMotion } from '../lib/use-prefers-reduced-motion';
 import { OverviewGrid } from './overview-grid';
 import { PresentBlackoutOverlay } from './present/blackout-overlay';
@@ -30,6 +31,7 @@ import { SlideTransitionLayer } from './slide-transition-layer';
 
 const IDLE_HIDE_MS = 2000;
 const BAR_HOTZONE_PX = 160;
+const MOBILE_CHROME_HIDE_MS = 2200;
 
 type Props = {
   pages: Page[];
@@ -67,6 +69,7 @@ export function Player({
   messages,
   fullscreen = true,
 }: Props) {
+  const isMobile = useIsMobile();
   const prefersReducedMotion = usePrefersReducedMotion();
   const rootRef = useRef<HTMLDivElement | null>(null);
   // Mirrored as state so descendants portaling *into* the player subtree
@@ -83,6 +86,8 @@ export function Player({
   const [blackout, setBlackout] = useState<'black' | 'white' | null>(null);
   const [laser, setLaser] = useState(false);
   const [keyboardDriven, setKeyboardDriven] = useState(false);
+  const [mobileChromeVisible, setMobileChromeVisible] = useState(false);
+  const [mobileChromeDeadline, setMobileChromeDeadline] = useState(0);
   const [startedAt] = useState(() => Date.now());
   const [windowed, setWindowed] = useState(!fullscreen);
   // Mirror windowed into a ref so the fullscreenchange listener can read the
@@ -135,6 +140,54 @@ export function Player({
   }, [index, activePages.length, handleIndexChange]);
 
   const overlayActive = controls && (overviewOpen || helpOpen);
+  const overlayActiveRef = useRef(overlayActive);
+  const showMobileChrome = useCallback(() => {
+    if (!controls || !isMobile) return;
+    setMobileChromeVisible(true);
+    setMobileChromeDeadline(Date.now() + MOBILE_CHROME_HIDE_MS);
+  }, [controls, isMobile]);
+  const handleMobileViewportClick = useCallback(
+    ({ y }: { x: number; y: number }) => {
+      if (!controls || !isMobile || y < 0.5) return;
+      showMobileChrome();
+    },
+    [controls, isMobile, showMobileChrome],
+  );
+
+  useEffect(() => {
+    if (!controls || !isMobile) {
+      setMobileChromeVisible(false);
+      setMobileChromeDeadline(0);
+      return;
+    }
+    setMobileChromeVisible(true);
+    setMobileChromeDeadline(Date.now() + MOBILE_CHROME_HIDE_MS);
+  }, [controls, isMobile]);
+
+  useEffect(() => {
+    const wasOverlayActive = overlayActiveRef.current;
+    overlayActiveRef.current = overlayActive;
+    if (wasOverlayActive && !overlayActive) showMobileChrome();
+  }, [overlayActive, showMobileChrome]);
+
+  useEffect(() => {
+    if (
+      !controls ||
+      !isMobile ||
+      overlayActive ||
+      !mobileChromeVisible ||
+      mobileChromeDeadline === 0
+    ) {
+      return;
+    }
+    const id = window.setTimeout(
+      () => {
+        setMobileChromeVisible(false);
+      },
+      Math.max(0, mobileChromeDeadline - Date.now()),
+    );
+    return () => window.clearTimeout(id);
+  }, [controls, isMobile, mobileChromeDeadline, mobileChromeVisible, overlayActive]);
 
   useClickPageNavigation({
     ref: rootRef,
@@ -143,6 +196,7 @@ export function Player({
     canNext,
     onPrev: goPrev,
     onNext: goNext,
+    onViewportClick: controls && isMobile ? handleMobileViewportClick : undefined,
   });
 
   useWheelPageNavigation({
@@ -336,8 +390,11 @@ export function Player({
   // The control bar + progress strip only surface when the pointer is in
   // the bottom hot zone. Keyboard nav (arrows / space / PgDn) never reveals
   // them — intentional so the deck stays clean during a talk.
-  const pointerNearBottom = usePointerNearBottom(BAR_HOTZONE_PX, controls && !overlayActive);
-  const chromeVisible = pointerNearBottom || overlayActive;
+  const pointerNearBottom = usePointerNearBottom(
+    BAR_HOTZONE_PX,
+    controls && !overlayActive && !isMobile,
+  );
+  const chromeVisible = overlayActive || (isMobile ? mobileChromeVisible : pointerNearBottom);
   const idle = useIdle(IDLE_HIDE_MS, controls && !overlayActive);
 
   useEffect(() => {
@@ -348,7 +405,9 @@ export function Player({
   }, [keyboardDriven]);
 
   const hideCursor =
-    controls && (laser || keyboardDriven || (idle && !overlayActive && !pointerNearBottom));
+    controls &&
+    !isMobile &&
+    (laser || keyboardDriven || (idle && !overlayActive && !pointerNearBottom));
 
   return (
     <div
@@ -358,6 +417,7 @@ export function Player({
         controls && 'select-none',
         controls && (hideCursor ? 'cursor-none' : 'cursor-default'),
       )}
+      style={design ? { background: design.palette.bg } : undefined}
     >
       <SlideCanvas flat design={design}>
         <ContentLocaleProvider locale={contentLocale}>
@@ -398,6 +458,7 @@ export function Player({
             windowed={windowed}
             onPrev={goPrev}
             onNext={goNext}
+            onMobileInteraction={showMobileChrome}
             onOverview={() => setOverviewOpen(true)}
             onBlackout={(mode) => setBlackout((c) => (c === mode ? null : mode))}
             onLaser={() => setLaser((v) => !v)}
