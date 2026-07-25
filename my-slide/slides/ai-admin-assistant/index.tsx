@@ -2086,6 +2086,108 @@ const _Closing: Page = () => (
   </SlideShell>
 );
 
+const AI_FORM_PRACTICE_URL = 'https://forms.gle/caL2dKRMgrovJgpm7';
+const AI_FORM_PRACTICE_QR = `https://api.qrserver.com/v1/create-qr-code/?size=520x520&margin=12&data=${encodeURIComponent(AI_FORM_PRACTICE_URL)}`;
+
+const AiSecretaryPractice: Page = () => (
+  <SlideShell variant="tint">
+    <TopBar num="10" eyebrow="動手 · AI 秘書練習" />
+    <Title>
+      AI 秘書練習：讓 AI 讀筆記，<Accent>幫你填</Accent>
+    </Title>
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 460px',
+        gap: 88,
+        marginTop: 40,
+        flex: 1,
+        minHeight: 0,
+        alignItems: 'center',
+      }}
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 36 }}>
+        <StepItem
+          n={1}
+          title="填入本地 Doc"
+          desc={
+            <>
+              讓 AI 讀你的 <ObsidianLink /> 筆記，把個人資料填進<Ink>本地 Word / Doc 檔</Ink>。
+            </>
+          }
+        />
+        <StepItem
+          n={2}
+          title="填入本地 Sheet"
+          desc={
+            <>
+              同一份資料，讓 AI 整理成<Ink>本地試算表（Sheet / Excel）</Ink>，欄位自動對齊。
+            </>
+          }
+        />
+        <StepItem
+          n={3}
+          title="填入 Google Form"
+          desc={
+            <>
+              讓 AI 代填
+              <ExternalLink href={AI_FORM_PRACTICE_URL} mono style={{ margin: '0 8px' }}>
+                求職者基本資料表
+              </ExternalLink>
+              ，觀察它如何把自由書寫對應到選項。
+            </>
+          }
+        />
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 20,
+        }}
+      >
+        <a
+          href={AI_FORM_PRACTICE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={INTERACTIVE_LINK_CLASS}
+          style={{
+            display: 'block',
+            background: c.white,
+            border: `1px solid ${c.border}`,
+            borderRadius: 16,
+            padding: 24,
+            boxShadow: '0 16px 48px rgba(0,0,0,0.08)',
+          }}
+        >
+          <img
+            src={AI_FORM_PRACTICE_QR}
+            alt="AI 填表練習 Google Form QR Code"
+            width={300}
+            height={300}
+            style={{ display: 'block', width: 300, height: 300 }}
+          />
+        </a>
+        <ExternalLink href={AI_FORM_PRACTICE_URL} mono style={{ fontSize: 22 }}>
+          forms.gle/caL2dKRMgrovJgpm7
+        </ExternalLink>
+        <div
+          style={{
+            fontSize: 19,
+            lineHeight: 1.5,
+            color: c.muted,
+            textAlign: 'center',
+            maxWidth: 400,
+          }}
+        >
+          ⚠ 練習用途，請勿填寫真實身分證字號、金融帳號等敏感資料。
+        </div>
+      </div>
+    </div>
+  </SlideShell>
+);
+
 const CalcSlider = ({
   label,
   sub,
@@ -2538,6 +2640,7 @@ export default [
   NodeToken,
   SsotA,
   Commit,
+  AiSecretaryPractice,
   WhatYouCanDo,
   CombinatoricsCalculator,
   CourseMoreIntro,
