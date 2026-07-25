@@ -2087,7 +2087,6 @@ const _Closing: Page = () => (
 );
 
 const AI_FORM_PRACTICE_URL = 'https://forms.gle/caL2dKRMgrovJgpm7';
-const AI_FORM_PRACTICE_QR = `https://api.qrserver.com/v1/create-qr-code/?size=520x520&margin=12&data=${encodeURIComponent(AI_FORM_PRACTICE_URL)}`;
 
 const AiSecretaryPractice: Page = () => (
   <SlideShell variant="tint">
@@ -2098,9 +2097,9 @@ const AiSecretaryPractice: Page = () => (
     <div
       style={{
         display: 'grid',
-        gridTemplateColumns: '1fr 460px',
+        gridTemplateColumns: '1fr 1fr',
         gap: 88,
-        marginTop: 40,
+        marginTop: 48,
         flex: 1,
         minHeight: 0,
         alignItems: 'center',
@@ -2139,50 +2138,110 @@ const AiSecretaryPractice: Page = () => (
           }
         />
       </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 28, justifyContent: 'center' }}>
+        <RepoCallout href={AI_FORM_PRACTICE_URL}>forms.gle/caL2dKRMgrovJgpm7</RepoCallout>
+        <div
+          style={{
+            fontSize: 22,
+            lineHeight: 1.6,
+            color: c.muted,
+            maxWidth: 560,
+          }}
+        >
+          ⚠ 練習用途，請勿填寫真實身分證字號、金融帳號等敏感資料。
+          <br />
+          下一頁有完整 Prompt，讓 AI 用內建瀏覽器代填。
+        </div>
+      </div>
+    </div>
+  </SlideShell>
+);
+
+const AI_FORM_FILL_PROMPT = `用內建瀏覽器打開這個表單，用我的筆記填完：
+表單：${AI_FORM_PRACTICE_URL}
+筆記：<你的 Obsidian 路徑>
+
+操作上請注意：
+1. 不要調整瀏覽器視窗大小。resize 之後這個分頁的滑鼠和鍵盤事件會全部失效，
+   而且不會報錯。需要換視野就開新分頁。
+2. 每一題填完後，用 DOM 確認真的填進去了，不要相信工具回報的「點擊成功」：
+   單選/複選看 aria-checked、下拉看 aria-selected、文字看 input.value。
+3. 如果發現點擊沒反應，先做這個測試：清空焦點後點一個文字框，
+   看 document.activeElement 有沒有變。沒變就是分頁死了，關掉重開。
+   （表單有自動存草稿，重開後填過的內容還在。）
+4. 提交鍵我自己按。`;
+
+const AiFormPromptPage: Page = () => (
+  <SlideShell>
+    <TopBar num="11" eyebrow="動手 · Prompt → Skill" />
+    <Title>
+      講完就消失，還是<Accent>固化下來</Accent>？
+    </Title>
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'minmax(0, 1.05fr) minmax(0, 0.95fr)',
+        gap: 48,
+        marginTop: 24,
+        flex: 1,
+        minHeight: 0,
+        alignItems: 'stretch',
+        overflow: 'hidden',
+      }}
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, minHeight: 0, minWidth: 0 }}>
+        <Subhead>範例 · 一段 Prompt</Subhead>
+        <div
+          style={{
+            flex: 1,
+            minHeight: 0,
+            background: c.white,
+            border: `1px solid ${c.border}`,
+            borderLeft: `4px solid ${c.primary}`,
+            borderRadius: 8,
+            padding: '20px 26px',
+            fontFamily: mono,
+            fontSize: 19,
+            lineHeight: 1.5,
+            color: c.ink,
+            whiteSpace: 'pre-wrap',
+            overflowWrap: 'anywhere',
+            wordBreak: 'break-word',
+          }}
+        >
+          {AI_FORM_FILL_PROMPT}
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', flexShrink: 0 }}>
+          <CopyButton text={AI_FORM_FILL_PROMPT} />
+        </div>
+      </div>
       <div
         style={{
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
-          gap: 20,
+          justifyContent: 'center',
+          gap: 16,
+          minHeight: 0,
+          minWidth: 0,
+          overflow: 'hidden',
         }}
       >
-        <a
-          href={AI_FORM_PRACTICE_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={INTERACTIVE_LINK_CLASS}
-          style={{
-            display: 'block',
-            background: c.white,
-            border: `1px solid ${c.border}`,
-            borderRadius: 16,
-            padding: 24,
-            boxShadow: '0 16px 48px rgba(0,0,0,0.08)',
-          }}
-        >
-          <img
-            src={AI_FORM_PRACTICE_QR}
-            alt="AI 填表練習 Google Form QR Code"
-            width={300}
-            height={300}
-            style={{ display: 'block', width: 300, height: 300 }}
-          />
-        </a>
-        <ExternalLink href={AI_FORM_PRACTICE_URL} mono style={{ fontSize: 22 }}>
-          forms.gle/caL2dKRMgrovJgpm7
-        </ExternalLink>
-        <div
-          style={{
-            fontSize: 19,
-            lineHeight: 1.5,
-            color: c.muted,
-            textAlign: 'center',
-            maxWidth: 400,
-          }}
-        >
-          ⚠ 練習用途，請勿填寫真實身分證字號、金融帳號等敏感資料。
+        <PromptCompareCard
+          label="一次性"
+          title="Prompt"
+          sub="每次要填都貼一次"
+          points={['講完就消失', '下次要重打一遍', '別人拿不到']}
+        />
+        <div style={{ display: 'flex', justifyContent: 'center', color: c.primary, fontSize: 28 }}>
+          ↓
         </div>
+        <PromptCompareCard
+          label="可重用"
+          title="Skill"
+          sub="自然長成專案裡的 .md"
+          highlight
+          points={['固化成檔案存起來', '隨時可叫用', '可以分享給別人']}
+        />
       </div>
     </div>
   </SlideShell>
@@ -2641,6 +2700,7 @@ export default [
   SsotA,
   Commit,
   AiSecretaryPractice,
+  AiFormPromptPage,
   WhatYouCanDo,
   CombinatoricsCalculator,
   CourseMoreIntro,
