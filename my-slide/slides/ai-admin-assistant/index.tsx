@@ -855,6 +855,80 @@ const Cover: Page = () => (
   </SlideShell>
 );
 
+const WIFI_FIELDS: { label: string; value: string }[] = [
+  { label: 'Network / 網路名稱', value: 'BlackHole Creative_guest' },
+  { label: 'Password / 密碼', value: 'ilovebkhole' },
+];
+
+const WifiInfo: Page = () => (
+  <SlideShell variant="dark">
+    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1 }}>
+      <div
+        style={{
+          fontFamily: mono,
+          fontSize: 24,
+          letterSpacing: '0.26em',
+          textTransform: 'uppercase',
+          color: c.primary,
+          marginBottom: 40,
+        }}
+      >
+        Wi-Fi · 連上網路開始動手
+      </div>
+      <h1
+        style={{
+          fontSize: 108,
+          fontWeight: 700,
+          lineHeight: 1.04,
+          color: '#fff',
+          letterSpacing: '-0.02em',
+          margin: '0 0 64px',
+        }}
+      >
+        會場 Wi-Fi
+      </h1>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
+        {WIFI_FIELDS.map((f) => (
+          <div
+            key={f.label}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 14,
+              paddingTop: 36,
+              borderTop: '1px solid #4a4a4a',
+            }}
+          >
+            <div
+              style={{
+                fontFamily: mono,
+                fontSize: 22,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                color: '#7a7a7a',
+              }}
+            >
+              {f.label}
+            </div>
+            <div
+              style={{
+                fontFamily: mono,
+                fontSize: 64,
+                fontWeight: 700,
+                color: c.primaryMuted,
+                letterSpacing: '0.01em',
+                wordBreak: 'break-all',
+              }}
+            >
+              {f.value}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </SlideShell>
+);
+
 const AGENDA_ITEMS: { n: string; text: React.ReactNode }[] = [
   {
     n: '01',
@@ -2691,6 +2765,7 @@ export const meta: SlideMeta = {
 
 export default [
   Cover,
+  WifiInfo,
   Agenda,
   WebAiHtmlPractice,
   RepoFork,
