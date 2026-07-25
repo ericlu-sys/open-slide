@@ -34,9 +34,10 @@ const c = {
 const mono = '"JetBrains Mono", "Fira Code", monospace';
 const PAD = { top: 104, right: 132, bottom: 96, left: 132 };
 
-// 待補：上課當天提供真實連結。
-const COURSE_REPO_URL = 'https://github.com/contactwport/wport-ai-starter-kit';
-const COURSE_REPO_LABEL = 'contactwport/wport-ai-starter-kit';
+const COURSE_REPO_URL = 'https://github.com/ericlu-sys/ai-junior-starter-kit';
+const COURSE_REPO_LABEL = 'ericlu-sys/ai-junior-starter-kit';
+const COURSE_REPO_OWNER = 'ericlu-sys';
+const COURSE_REPO_NAME = 'ai-junior-starter-kit';
 const WPORT_CLI_URL = 'https://www.npmjs.com/package/@wport/cli';
 const WPORT_CLI_LABEL = '@wport/cli';
 const WPORT_CLI_INSTALL = 'npm install -g @wport/cli';
@@ -48,7 +49,7 @@ const DISCORD_URL = 'https://discord.gg/7DBZZjtXz';
 const DISCORD_LABEL = 'discord.gg/7DBZZjtXz';
 
 const GIT_CLONE = `git clone ${COURSE_REPO_URL}`;
-const FORK_CLONE = 'git clone https://github.com/<你的帳號>/wport-ai-starter-kit';
+const FORK_CLONE = `git clone https://github.com/<你的帳號>/${COURSE_REPO_NAME}`;
 const GIT_COMMIT = 'git commit -m "說明"';
 const GIT_PUSH = 'git push';
 const VERCEL_DEPLOY = 'vercel deploy';
@@ -99,9 +100,9 @@ const INTERVIEW_PROMPT = `你現在是一位專業的「履歷與個人網站諮
 【我的參考資料如下】：
 [請在這裡貼上你的履歷、網址或其他個人資料]`;
 const README_PREVIEW = [
-  '# wport-ai-starter-kit',
-  '開源 AI Skills 工具包。',
-  'Fork → 連結 Skills → 跟 AI 說需求。',
+  `# ${COURSE_REPO_NAME}`,
+  '給 junior 的 AI 工具入門包。',
+  'Fork → 讀 Skill → 跑 CLI → 產出可 review 的成果。',
 ];
 
 if (typeof document !== 'undefined') {
@@ -1729,11 +1730,11 @@ const RepoForkCard = () => (
     >
       <div>
         <div style={{ fontSize: 28, fontWeight: 700, color: c.ink, lineHeight: 1.25 }}>
-          <span style={{ color: c.muted, fontWeight: 500 }}>contactwport / </span>
-          <Accent>wport-ai-starter-kit</Accent>
+          <span style={{ color: c.muted, fontWeight: 500 }}>{COURSE_REPO_OWNER} / </span>
+          <Accent>{COURSE_REPO_NAME}</Accent>
         </div>
         <div style={{ marginTop: 12, fontSize: 19, color: c.body, lineHeight: 1.5 }}>
-          開源 AI Skills 工具包 · 履歷、簡報、求職一條龍。
+          AI Junior Starter Kit · Skills、CLI、履歷與求職一條龍。
         </div>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
@@ -1810,7 +1811,7 @@ export const RepoFork: Page = () => (
           >
             <span style={{ color: c.primary, fontWeight: 700 }}>$ </span>
             git clone https://github.com/
-            <span style={{ color: c.primaryHover }}>&lt;你的帳號&gt;</span>/wport-ai-starter-kit
+            <span style={{ color: c.primaryHover }}>&lt;你的帳號&gt;</span>/{COURSE_REPO_NAME}
           </span>
           <CopyButton text={FORK_CLONE} />
         </div>
