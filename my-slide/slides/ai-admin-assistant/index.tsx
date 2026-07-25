@@ -2626,7 +2626,7 @@ const ReviewCta: Page = () => (
 );
 
 export const meta: SlideMeta = {
-  title: 'Claude 行政秘書',
+  title: 'AI課程3-Claude 行政秘書',
   createdAt: '2026-06-14T14:54:44.234Z',
 };
 

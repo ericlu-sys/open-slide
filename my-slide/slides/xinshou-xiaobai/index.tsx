@@ -3147,10 +3147,18 @@ const COURSE_MODULES: CourseModule[] = [
   {
     id: 'M10',
     kind: 'M',
-    title: '身份驗證與資安',
+    title: 'Key / API / OAuth 差別',
     duration: '25分',
     level: '進階',
-    summary: 'OAuth vs Key，什麼時候要登入。',
+    summary: 'OAuth vs Key vs API，什麼時候要登入、怎麼護密。',
+  },
+  {
+    id: 'M11',
+    kind: 'M',
+    title: '媒體識讀與 AI 造假',
+    duration: '40分',
+    level: '初階',
+    summary: '圖／影／站／聲搶答：先會認，才會防。',
   },
   {
     id: 'M12',
@@ -3243,6 +3251,22 @@ const COURSE_MODULES: CourseModule[] = [
     summary: '圖床與圖像處理配菜。',
   },
   {
+    id: 'T10',
+    kind: 'T',
+    title: 'GCP 與 Google 行銷 API',
+    duration: '20分',
+    level: '進階',
+    summary: 'GCP project → OAuth／Key → GSC·GTM·GA。',
+  },
+  {
+    id: 'T11',
+    kind: 'T',
+    title: 'wport API Key',
+    duration: '20分',
+    level: '進階',
+    summary: '帶著 key 讓 AI 真實改公司資料。',
+  },
+  {
     id: 'D01',
     kind: 'D',
     title: '履歷職缺配對',
@@ -3268,88 +3292,134 @@ const COURSE_MODULES: CourseModule[] = [
     summary: 'Vercel 部署 + GitHub 推送，拿到你的網址。',
     today: true,
   },
+  {
+    id: 'D04',
+    kind: 'D',
+    title: 'Agent 掛行銷追蹤',
+    duration: '20分',
+    level: '進階',
+    summary: '授權交給 Agent，規劃 GSC／GTM／GA。',
+  },
+  {
+    id: 'D05',
+    kind: 'D',
+    title: 'Key 外洩與 MFA 演練',
+    duration: '40分',
+    level: '初階',
+    summary: '自建 key → 外洩體感 → MFA 角色演 → 刪 key。',
+  },
+  {
+    id: 'D06',
+    kind: 'D',
+    title: 'AI 製作簡報',
+    duration: '30分',
+    level: '初階',
+    summary: '用 AI + open-slide 從大綱產出可投影簡報。',
+  },
+  {
+    id: 'D07',
+    kind: 'D',
+    title: 'AI 用 HTML 製作封面',
+    duration: '25分',
+    level: '初階',
+    summary: '請 AI 產出單檔 HTML 封面／海報，瀏覽器直接預覽。',
+  },
 ];
 
 const TODAY_MODULE_COUNT = COURSE_MODULES.filter((m) => m.today).length;
 const TOTAL_MODULE_COUNT = COURSE_MODULES.length;
+
+const kindLabel = (kind: ModuleKind) => (kind === 'M' ? '概念' : kind === 'T' ? '工具' : '情境');
+
+const kindColor = (kind: ModuleKind) =>
+  kind === 'M' ? c.primaryHover : kind === 'T' ? '#6B8CAE' : '#9A7B4F';
+
+const CourseModuleCard = ({ mod }: { mod: CourseModule }) => (
+  <div
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: 12,
+      padding: '7px 14px',
+      borderRadius: 8,
+      border: `1px solid ${mod.today ? c.primaryMuted : c.border}`,
+      background: mod.today ? c.primaryLight : c.white,
+      minWidth: 0,
+    }}
+  >
+    <div
+      style={{
+        flexShrink: 0,
+        width: 50,
+        fontFamily: mono,
+        fontSize: 17,
+        fontWeight: 700,
+        color: mod.today ? c.primaryHover : c.ink,
+      }}
+    >
+      {mod.id}
+    </div>
+    <div
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 10,
+        minWidth: 0,
+        maxWidth: '100%',
+        overflow: 'hidden',
+      }}
+    >
+      <span
+        style={{
+          fontSize: 21,
+          fontWeight: mod.today ? 700 : 600,
+          color: c.ink,
+          lineHeight: 1.2,
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          minWidth: 0,
+        }}
+      >
+        {mod.title}
+      </span>
+      <span
+        style={{
+          flexShrink: 0,
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 8,
+          fontFamily: mono,
+          fontSize: 15,
+          color: c.muted,
+        }}
+      >
+        <span style={{ color: kindColor(mod.kind), fontWeight: 700 }}>{kindLabel(mod.kind)}</span>
+        <span style={{ color: c.border }}>·</span>
+        <span>{mod.duration}</span>
+        <span style={{ color: mod.today ? c.primary : c.border, fontWeight: 700 }}>
+          {mod.today ? '●今日' : '○'}
+        </span>
+      </span>
+    </div>
+  </div>
+);
 
 const CourseModuleTable = () => (
   <div
     style={{
       flex: 1,
       minHeight: 0,
-      display: 'flex',
-      flexDirection: 'column',
-      border: `1px solid ${c.border}`,
-      borderRadius: 10,
-      background: c.white,
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: 7,
+      alignContent: 'start',
       overflow: 'hidden',
     }}
   >
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '88px 72px 1fr 72px 56px',
-        gap: 12,
-        padding: '12px 20px',
-        background: c.tint,
-        borderBottom: `1px solid ${c.border}`,
-        fontFamily: mono,
-        fontSize: 14,
-        fontWeight: 700,
-        letterSpacing: '0.08em',
-        textTransform: 'uppercase',
-        color: c.muted,
-      }}
-    >
-      <span>模組</span>
-      <span>類型</span>
-      <span>課程名稱</span>
-      <span>時間</span>
-      <span style={{ textAlign: 'center' }}>今日</span>
-    </div>
-    <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
-      {COURSE_MODULES.map((mod, i) => (
-        <div
-          key={mod.id}
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '88px 72px 1fr 72px 56px',
-            gap: 12,
-            alignItems: 'center',
-            padding: '7px 20px',
-            fontSize: 17,
-            lineHeight: 1.35,
-            color: c.body,
-            background: mod.today ? c.primaryLight : i % 2 === 0 ? c.white : c.tint,
-            borderBottom: `1px solid ${c.border}`,
-          }}
-        >
-          <span
-            style={{ fontFamily: mono, fontWeight: 700, color: mod.today ? c.primaryHover : c.ink }}
-          >
-            {mod.id}
-          </span>
-          <span
-            style={{
-              fontFamily: mono,
-              fontSize: 13,
-              fontWeight: 700,
-              color: mod.kind === 'M' ? c.primaryHover : mod.kind === 'T' ? '#6B8CAE' : '#9A7B4F',
-            }}
-          >
-            {mod.kind}
-          </span>
-          <span style={{ color: c.ink, fontWeight: mod.today ? 700 : 500 }}>{mod.title}</span>
-          <span style={{ fontFamily: mono, fontSize: 14, color: c.muted }}>{mod.duration}</span>
-          <span
-            style={{ textAlign: 'center', fontSize: 18, color: mod.today ? c.primary : c.border }}
-          >
-            {mod.today ? '●' : '○'}
-          </span>
-        </div>
-      ))}
-    </div>
+    {COURSE_MODULES.map((mod) => (
+      <CourseModuleCard key={mod.id} mod={mod} />
+    ))}
   </div>
 );
 
@@ -3440,37 +3510,119 @@ export const CourseMoreIntro: Page = () => (
   </SlideShell>
 );
 
-export const CourseModuleBoard: Page = () => (
-  <SlideShell>
-    <TopBar eyebrow="還有更多 · 完整課程清單" />
-    <Title>
-      共 <Accent>{TOTAL_MODULE_COUNT}</Accent> 堂模組，自由組合
-    </Title>
+export const CourseModuleBoard: Page = () => {
+  const { current } = useSlidePageNumber();
+  return (
     <div
       style={{
+        width: '100%',
+        height: '100%',
+        padding: '72px 100px 48px',
         display: 'flex',
-        gap: 20,
-        fontFamily: mono,
-        fontSize: 15,
-        color: c.muted,
-        marginBottom: 16,
+        flexDirection: 'column',
+        position: 'relative',
+        overflow: 'hidden',
+        background: c.white,
+        color: c.body,
+        fontFamily: 'var(--osd-font-body)',
       }}
     >
-      <span>
-        <span style={{ color: c.primary, fontWeight: 700 }}>●</span> 今日已學 {TODAY_MODULE_COUNT}
-      </span>
-      <span>
-        <span style={{ color: c.border }}>○</span> 待探索 {TOTAL_MODULE_COUNT - TODAY_MODULE_COUNT}
-      </span>
-      <span>M {COURSE_MODULES.filter((m) => m.kind === 'M').length}</span>
-      <span>T {COURSE_MODULES.filter((m) => m.kind === 'T').length}</span>
-      <span>D {COURSE_MODULES.filter((m) => m.kind === 'D').length}</span>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 24,
+          marginBottom: 14,
+          flexShrink: 0,
+        }}
+      >
+        <span
+          style={{
+            fontFamily: mono,
+            fontSize: 22,
+            fontWeight: 700,
+            color: c.primary,
+            letterSpacing: '0.04em',
+          }}
+        >
+          {String(current).padStart(2, '0')}
+        </span>
+        <span
+          style={{
+            fontFamily: mono,
+            fontSize: 17,
+            fontWeight: 500,
+            letterSpacing: '0.16em',
+            textTransform: 'uppercase',
+            color: c.muted,
+            whiteSpace: 'nowrap',
+          }}
+        >
+          還有更多 · 完整課程清單
+        </span>
+        <span style={{ flex: 1, height: 1, background: c.border }} />
+        <span
+          style={{
+            fontFamily: mono,
+            fontSize: 16,
+            fontWeight: 500,
+            letterSpacing: '0.08em',
+            color: c.muted,
+          }}
+        >
+          <b style={{ color: c.primary, fontWeight: 700 }}>w</b>port
+        </span>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'baseline',
+          justifyContent: 'space-between',
+          gap: 28,
+          marginBottom: 12,
+          flexShrink: 0,
+        }}
+      >
+        <h1
+          style={{
+            fontSize: 44,
+            fontWeight: 700,
+            lineHeight: 1.15,
+            color: c.ink,
+            letterSpacing: '-0.01em',
+            margin: 0,
+          }}
+        >
+          共 <Accent>{TOTAL_MODULE_COUNT}</Accent> 堂模組，自由組合
+        </h1>
+        <div
+          style={{
+            display: 'flex',
+            gap: 18,
+            fontFamily: mono,
+            fontSize: 16,
+            color: c.muted,
+            flexShrink: 0,
+          }}
+        >
+          <span>
+            <span style={{ color: c.primary, fontWeight: 700 }}>●</span> 今日 {TODAY_MODULE_COUNT}
+          </span>
+          <span>
+            <span style={{ color: c.border }}>○</span> 待探索{' '}
+            {TOTAL_MODULE_COUNT - TODAY_MODULE_COUNT}
+          </span>
+          <span>M {COURSE_MODULES.filter((m) => m.kind === 'M').length}</span>
+          <span>T {COURSE_MODULES.filter((m) => m.kind === 'T').length}</span>
+          <span>D {COURSE_MODULES.filter((m) => m.kind === 'D').length}</span>
+        </div>
+      </div>
+      <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+        <CourseModuleTable />
+      </div>
     </div>
-    <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
-      <CourseModuleTable />
-    </div>
-  </SlideShell>
-);
+  );
+};
 
 const _CourseModuleMap: Page = () => (
   <SlideShell variant="tint">
@@ -3667,7 +3819,7 @@ const CallToAction: Page = () => (
 );
 
 export const meta: SlideMeta = {
-  title: '新手小白也能做-2',
+  title: 'AI課程2-新手小白也能做',
   createdAt: '2026-06-26T04:24:27.869Z',
 };
 

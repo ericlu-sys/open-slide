@@ -2246,7 +2246,7 @@ const SmartStationVol3Page: Page = () => (
 );
 
 export const meta: SlideMeta = {
-  title: 'AI 實習生速成指南-1',
+  title: 'AI課程1-AI 實習生速成指南',
   createdAt: '2026-06-14T14:54:44.234Z',
 };
 
