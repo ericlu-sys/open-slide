@@ -948,6 +948,189 @@ const Agenda: Page = () => (
   </SlideShell>
 );
 
+const PromptCompareCard = ({
+  label,
+  title,
+  sub,
+  points,
+  highlight = false,
+}: {
+  label: string;
+  title: string;
+  sub: string;
+  points: string[];
+  highlight?: boolean;
+}) => (
+  <div
+    style={{
+      border: `1px solid ${highlight ? c.primaryMuted : c.border}`,
+      borderTop: `5px solid ${highlight ? c.primary : c.muted}`,
+      borderRadius: 10,
+      padding: '22px 28px 26px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 10,
+      background: highlight ? c.primaryLight : c.white,
+      minHeight: 0,
+      minWidth: 0,
+    }}
+  >
+    <div
+      style={{
+        fontFamily: mono,
+        fontSize: 15,
+        letterSpacing: '0.14em',
+        textTransform: 'uppercase',
+        color: highlight ? c.primaryHover : c.muted,
+      }}
+    >
+      {label}
+    </div>
+    <div style={{ fontSize: 30, fontWeight: 700, color: c.ink, lineHeight: 1.2 }}>{title}</div>
+    <div style={{ fontSize: 19, color: highlight ? c.primaryHover : c.muted, fontWeight: 500 }}>
+      {sub}
+    </div>
+    <ul
+      style={{
+        listStyle: 'none',
+        margin: '4px 0 0',
+        padding: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 9,
+      }}
+    >
+      {points.map((p) => (
+        <li
+          key={p}
+          style={{
+            position: 'relative',
+            paddingLeft: 28,
+            fontSize: 20,
+            lineHeight: 1.5,
+            color: c.body,
+          }}
+        >
+          <span
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: 12,
+              width: 14,
+              height: 3,
+              background: highlight ? c.primary : c.muted,
+            }}
+          />
+          {p}
+        </li>
+      ))}
+    </ul>
+  </div>
+);
+
+const WebAiHtmlPractice: Page = () => (
+  <SlideShell>
+    <TopBar num="03" eyebrow="動手 · Web AI 練習" />
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'minmax(0, 1.1fr) minmax(0, 0.9fr)',
+        gap: 48,
+        flex: 1,
+        minHeight: 0,
+        alignItems: 'stretch',
+        overflow: 'hidden',
+      }}
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minHeight: 0, minWidth: 0 }}>
+        <h1
+          style={{
+            fontSize: 52,
+            fontWeight: 700,
+            lineHeight: 1.2,
+            color: c.ink,
+            letterSpacing: '-0.01em',
+            margin: 0,
+            flexShrink: 0,
+          }}
+        >
+          先讓 AI 問你，再
+          <br />
+          <Accent>產出靜態 HTML</Accent>
+        </h1>
+        <div
+          style={{
+            fontSize: 20,
+            fontFamily: mono,
+            fontWeight: 700,
+            letterSpacing: '0.06em',
+            color: c.primary,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+            flexShrink: 0,
+          }}
+        >
+          <span style={{ width: 22, height: 3, background: c.primary, display: 'inline-block' }} />
+          範例 · 一段 Prompt
+        </div>
+        <div
+          style={{
+            flex: 1,
+            minHeight: 0,
+            overflow: 'auto',
+            background: c.white,
+            border: `1px solid ${c.border}`,
+            borderLeft: `4px solid ${c.primary}`,
+            borderRadius: 8,
+            padding: '18px 24px',
+            fontFamily: mono,
+            fontSize: 18,
+            lineHeight: 1.5,
+            color: c.ink,
+            whiteSpace: 'pre-wrap',
+            overflowWrap: 'anywhere',
+            wordBreak: 'break-word',
+          }}
+        >
+          {WEB_AI_HTML_PROMPT}
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', flexShrink: 0 }}>
+          <CopyButton text={WEB_AI_HTML_PROMPT} />
+        </div>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          gap: 16,
+          minHeight: 0,
+          minWidth: 0,
+          overflow: 'hidden',
+        }}
+      >
+        <PromptCompareCard
+          label="練習目標"
+          title="Web AI"
+          sub="聊天框就能做"
+          points={['先問清楚需求', '一次產出完整 HTML', '瀏覽器直接打開']}
+        />
+        <div style={{ display: 'flex', justifyContent: 'center', color: c.primary, fontSize: 28 }}>
+          ↓
+        </div>
+        <PromptCompareCard
+          label="帶走成果"
+          title="靜態 HTML"
+          sub="單檔、可預覽"
+          highlight
+          points={['CSS 內嵌在檔案裡', '不用建置工具', '適合課堂先練手']}
+        />
+      </div>
+    </div>
+  </SlideShell>
+);
+
 const _SSOT: Page = () => (
   <SlideShell variant="tint">
     <TopBar num="03" eyebrow="知識管理觀念" />
@@ -1959,6 +2142,72 @@ const CalcSlider = ({
   </div>
 );
 
+export const WhatYouCanDo: Page = () => (
+  <SlideShell variant="tint">
+    <TopBar num="13" eyebrow="實戰路線圖 · What You Can Build" />
+    <Title>
+      具體來說，你可以<Accent>做到這些</Accent>
+    </Title>
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 480px',
+        gap: 48,
+        marginTop: 24,
+        flex: 1,
+        minHeight: 0,
+      }}
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+        <p
+          style={{
+            fontSize: 26,
+            lineHeight: 1.6,
+            color: c.body,
+            margin: 0,
+            maxWidth: 900,
+          }}
+        >
+          從 <ObsidianLink /> 個人資料到網站上線、寄信給教授——今天就能跑通的完整六步驟。
+        </p>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 14,
+            marginTop: 22,
+            flex: 1,
+            minHeight: 0,
+          }}
+        >
+          <FlowStep n={1} compact>
+            <ObsidianLink /> 讀取個人資訊——履歷、自傳與專長筆記，作為唯一權威資料源（SSOT）。
+          </FlowStep>
+          <FlowStep n={2} compact>
+            在 IDE 載入 <InlineCode>wport skill</InlineCode>
+            ，以此資訊一鍵產生結構化、可部署的個人履歷。
+          </FlowStep>
+          <FlowStep n={3} compact>
+            以 <ObsidianLink /> 資料呼叫 <InlineCode>靜態網站 skill</InlineCode>
+            ，製作個人作品集網站。
+          </FlowStep>
+          <FlowStep n={4} compact>
+            透過 <InlineCode>google speed cli</InlineCode> 檢查網站速度，依報告迭代優化後再更新。
+          </FlowStep>
+          <FlowStep n={5} compact>
+            使用 <InlineCode>vercel cli</InlineCode> 將靜態網站一鍵上架，取得公開網址。
+          </FlowStep>
+          <FlowStep n={6} compact>
+            使用 <InlineCode>google workspace cli</InlineCode>
+            ，網站上線後自動寄信通知教授你的作品連結。
+          </FlowStep>
+        </div>
+      </div>
+      <CliChatDemo variant="light" />
+    </div>
+  </SlideShell>
+);
+
 export const CombinatoricsCalculator: Page = () => {
   const [ssot, setSsot] = useState(5);
   const [agent, setAgent] = useState(3);
@@ -2104,72 +2353,6 @@ export const CombinatoricsCalculator: Page = () => {
     </SlideShell>
   );
 };
-
-export const WhatYouCanDo: Page = () => (
-  <SlideShell variant="tint">
-    <TopBar num="13" eyebrow="實戰路線圖 · What You Can Build" />
-    <Title>
-      具體來說，你可以<Accent>做到這些</Accent>
-    </Title>
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 480px',
-        gap: 48,
-        marginTop: 24,
-        flex: 1,
-        minHeight: 0,
-      }}
-    >
-      <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-        <p
-          style={{
-            fontSize: 26,
-            lineHeight: 1.6,
-            color: c.body,
-            margin: 0,
-            maxWidth: 900,
-          }}
-        >
-          從 <ObsidianLink /> 個人資料到網站上線、寄信給教授——今天就能跑通的完整六步驟。
-        </p>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 14,
-            marginTop: 22,
-            flex: 1,
-            minHeight: 0,
-          }}
-        >
-          <FlowStep n={1} compact>
-            <ObsidianLink /> 讀取個人資訊——履歷、自傳與專長筆記，作為唯一權威資料源（SSOT）。
-          </FlowStep>
-          <FlowStep n={2} compact>
-            在 IDE 載入 <InlineCode>wport skill</InlineCode>
-            ，以此資訊一鍵產生結構化、可部署的個人履歷。
-          </FlowStep>
-          <FlowStep n={3} compact>
-            以 <ObsidianLink /> 資料呼叫 <InlineCode>靜態網站 skill</InlineCode>
-            ，製作個人作品集網站。
-          </FlowStep>
-          <FlowStep n={4} compact>
-            透過 <InlineCode>google speed cli</InlineCode> 檢查網站速度，依報告迭代優化後再更新。
-          </FlowStep>
-          <FlowStep n={5} compact>
-            使用 <InlineCode>vercel cli</InlineCode> 將靜態網站一鍵上架，取得公開網址。
-          </FlowStep>
-          <FlowStep n={6} compact>
-            使用 <InlineCode>google workspace cli</InlineCode>
-            ，網站上線後自動寄信通知教授你的作品連結。
-          </FlowStep>
-        </div>
-      </div>
-      <CliChatDemo variant="light" />
-    </div>
-  </SlideShell>
-);
 
 const _WportRehoSpotlightPage: Page = () => (
   <LinkMotionScope>
@@ -2345,198 +2528,15 @@ export const meta: SlideMeta = {
   createdAt: '2026-06-14T14:54:44.234Z',
 };
 
-const PromptCompareCard = ({
-  label,
-  title,
-  sub,
-  points,
-  highlight = false,
-}: {
-  label: string;
-  title: string;
-  sub: string;
-  points: string[];
-  highlight?: boolean;
-}) => (
-  <div
-    style={{
-      border: `1px solid ${highlight ? c.primaryMuted : c.border}`,
-      borderTop: `5px solid ${highlight ? c.primary : c.muted}`,
-      borderRadius: 10,
-      padding: '22px 28px 26px',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 10,
-      background: highlight ? c.primaryLight : c.white,
-      minHeight: 0,
-      minWidth: 0,
-    }}
-  >
-    <div
-      style={{
-        fontFamily: mono,
-        fontSize: 15,
-        letterSpacing: '0.14em',
-        textTransform: 'uppercase',
-        color: highlight ? c.primaryHover : c.muted,
-      }}
-    >
-      {label}
-    </div>
-    <div style={{ fontSize: 30, fontWeight: 700, color: c.ink, lineHeight: 1.2 }}>{title}</div>
-    <div style={{ fontSize: 19, color: highlight ? c.primaryHover : c.muted, fontWeight: 500 }}>
-      {sub}
-    </div>
-    <ul
-      style={{
-        listStyle: 'none',
-        margin: '4px 0 0',
-        padding: 0,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 9,
-      }}
-    >
-      {points.map((p) => (
-        <li
-          key={p}
-          style={{
-            position: 'relative',
-            paddingLeft: 28,
-            fontSize: 20,
-            lineHeight: 1.5,
-            color: c.body,
-          }}
-        >
-          <span
-            style={{
-              position: 'absolute',
-              left: 0,
-              top: 12,
-              width: 14,
-              height: 3,
-              background: highlight ? c.primary : c.muted,
-            }}
-          />
-          {p}
-        </li>
-      ))}
-    </ul>
-  </div>
-);
-
-const WebAiHtmlPractice: Page = () => (
-  <SlideShell>
-    <TopBar num="03" eyebrow="動手 · Web AI 練習" />
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'minmax(0, 1.1fr) minmax(0, 0.9fr)',
-        gap: 48,
-        flex: 1,
-        minHeight: 0,
-        alignItems: 'stretch',
-        overflow: 'hidden',
-      }}
-    >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minHeight: 0, minWidth: 0 }}>
-        <h1
-          style={{
-            fontSize: 52,
-            fontWeight: 700,
-            lineHeight: 1.2,
-            color: c.ink,
-            letterSpacing: '-0.01em',
-            margin: 0,
-            flexShrink: 0,
-          }}
-        >
-          先讓 AI 問你，再
-          <br />
-          <Accent>產出靜態 HTML</Accent>
-        </h1>
-        <div
-          style={{
-            fontSize: 20,
-            fontFamily: mono,
-            fontWeight: 700,
-            letterSpacing: '0.06em',
-            color: c.primary,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 12,
-            flexShrink: 0,
-          }}
-        >
-          <span style={{ width: 22, height: 3, background: c.primary, display: 'inline-block' }} />
-          範例 · 一段 Prompt
-        </div>
-        <div
-          style={{
-            flex: 1,
-            minHeight: 0,
-            overflow: 'auto',
-            background: c.white,
-            border: `1px solid ${c.border}`,
-            borderLeft: `4px solid ${c.primary}`,
-            borderRadius: 8,
-            padding: '18px 24px',
-            fontFamily: mono,
-            fontSize: 18,
-            lineHeight: 1.5,
-            color: c.ink,
-            whiteSpace: 'pre-wrap',
-            overflowWrap: 'anywhere',
-            wordBreak: 'break-word',
-          }}
-        >
-          {WEB_AI_HTML_PROMPT}
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'flex-end', flexShrink: 0 }}>
-          <CopyButton text={WEB_AI_HTML_PROMPT} />
-        </div>
-      </div>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          gap: 16,
-          minHeight: 0,
-          minWidth: 0,
-          overflow: 'hidden',
-        }}
-      >
-        <PromptCompareCard
-          label="練習目標"
-          title="Web AI"
-          sub="聊天框就能做"
-          points={['先問清楚需求', '一次產出完整 HTML', '瀏覽器直接打開']}
-        />
-        <div style={{ display: 'flex', justifyContent: 'center', color: c.primary, fontSize: 28 }}>
-          ↓
-        </div>
-        <PromptCompareCard
-          label="帶走成果"
-          title="靜態 HTML"
-          sub="單檔、可預覽"
-          highlight
-          points={['CSS 內嵌在檔案裡', '不用建置工具', '適合課堂先練手']}
-        />
-      </div>
-    </div>
-  </SlideShell>
-);
-
 export default [
   Cover,
   Agenda,
-  IdeVsChatA,
-  RepoFork,
-  SsotA,
-  IdeToolbox,
   WebAiHtmlPractice,
+  RepoFork,
+  IdeVsChatA,
+  IdeToolbox,
   NodeToken,
+  SsotA,
   Commit,
   WhatYouCanDo,
   CombinatoricsCalculator,
