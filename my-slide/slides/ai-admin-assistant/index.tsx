@@ -11,7 +11,10 @@ import {
   CourseModuleBoard,
   CourseMoreIntro,
   IdeToolbox,
+  IdeVsChatA,
   NodeToken,
+  RepoFork,
+  SsotA,
 } from '../xinshou-xiaobai/index';
 
 export const design: DesignSystem = {
@@ -350,17 +353,19 @@ const ExternalLink = ({
   children,
   style,
   mono: useMono = false,
+  tint = true,
 }: {
   href: string;
   children: React.ReactNode;
   style?: React.CSSProperties;
   mono?: boolean;
+  tint?: boolean;
 }) => (
   <a
     href={href}
     target="_blank"
     rel="noopener noreferrer"
-    className={`${INTERACTIVE_LINK_CLASS} aj-link-tint`}
+    className={`${INTERACTIVE_LINK_CLASS}${tint ? ' aj-link-tint' : ''}`}
     style={{
       color: c.primaryHover,
       textDecoration: 'none',
@@ -773,9 +778,9 @@ const Cover: Page = () => (
           margin: '0 0 40px',
         }}
       >
-        AI
+        Claude
         <br />
-        行政助手
+        行政秘書
       </h1>
       <p
         style={{
@@ -2193,6 +2198,7 @@ const _SmartStationVol3Page: Page = () => (
 const GOOGLE_MAPS_REVIEW_URL =
   'https://www.google.com/maps/place//data=!4m3!3m2!1s0x34681f2616ab9e4b:0x9464eaa164ab5c38!12e1?source=g.page.m.ia._&laa=nmx-review-solicitation-ia2';
 const GOOGLE_MAPS_REVIEW_QR = `https://api.qrserver.com/v1/create-qr-code/?size=520x520&margin=12&data=${encodeURIComponent(GOOGLE_MAPS_REVIEW_URL)}`;
+const INSTAGRAM_URL = 'https://www.instagram.com/eric_rookie_ceo/';
 
 const ReviewCta: Page = () => (
   <SlideShell variant="dark">
@@ -2227,30 +2233,56 @@ const ReviewCta: Page = () => (
             fontSize: 32,
             lineHeight: 1.55,
             color: '#C9C9C9',
-            margin: '0 0 48px',
+            margin: '0 0 40px',
             maxWidth: 980,
           }}
         >
           掃右邊 QR Code，或點擊下方連結，到 Google Maps 留下評價——
           <span style={{ color: '#fff', fontWeight: 700 }}>讓更多人知道這堂課。</span>
+          <br />
+          不會的、想再問的，也可以直接找我。
         </p>
-        <ExternalLink
-          href={GOOGLE_MAPS_REVIEW_URL}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 16,
-            fontSize: 28,
-            fontWeight: 700,
-            color: c.ink,
-            background: c.primary,
-            borderBottom: 'none',
-            borderRadius: 10,
-            padding: '22px 36px',
-          }}
+        <div
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 20 }}
         >
-          點此前往 Google Maps 評分 →
-        </ExternalLink>
+          <ExternalLink
+            href={GOOGLE_MAPS_REVIEW_URL}
+            tint={false}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 16,
+              fontSize: 28,
+              fontWeight: 700,
+              color: '#fff',
+              background: c.primary,
+              borderBottom: 'none',
+              borderRadius: 10,
+              padding: '22px 36px',
+            }}
+          >
+            點此前往 Google Maps 評分 →
+          </ExternalLink>
+          <ExternalLink
+            href={INSTAGRAM_URL}
+            tint={false}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 16,
+              fontSize: 26,
+              fontWeight: 700,
+              color: '#fff',
+              background: 'transparent',
+              border: `2px solid ${c.primary}`,
+              borderBottom: `2px solid ${c.primary}`,
+              borderRadius: 10,
+              padding: '18px 32px',
+            }}
+          >
+            Instagram · @eric_rookie_ceo →
+          </ExternalLink>
+        </div>
         <p
           style={{
             marginTop: 28,
@@ -2260,7 +2292,7 @@ const ReviewCta: Page = () => (
             letterSpacing: '0.04em',
           }}
         >
-          google.com/maps · review
+          google.com/maps · instagram.com/eric_rookie_ceo
         </p>
       </div>
       <div
@@ -2309,7 +2341,7 @@ const ReviewCta: Page = () => (
 );
 
 export const meta: SlideMeta = {
-  title: 'AI 行政助手-3',
+  title: 'Claude 行政秘書',
   createdAt: '2026-06-14T14:54:44.234Z',
 };
 
@@ -2499,13 +2531,16 @@ const WebAiHtmlPractice: Page = () => (
 export default [
   Cover,
   Agenda,
-  WebAiHtmlPractice,
+  IdeVsChatA,
+  RepoFork,
+  SsotA,
   IdeToolbox,
-  WhatYouCanDo,
-  CombinatoricsCalculator,
-  ReviewCta,
+  WebAiHtmlPractice,
   NodeToken,
   Commit,
+  WhatYouCanDo,
+  CombinatoricsCalculator,
   CourseMoreIntro,
   CourseModuleBoard,
+  ReviewCta,
 ] satisfies Page[];

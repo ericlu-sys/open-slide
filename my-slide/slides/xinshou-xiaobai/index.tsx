@@ -1303,7 +1303,7 @@ const Roadmap: Page = () => (
   </SlideShell>
 );
 
-const IdeVsChatA: Page = () => (
+export const IdeVsChatA: Page = () => (
   <SlideShell>
     <TopBar eyebrow="#1 IDE vs 聊天框" />
     <Title>
@@ -1842,7 +1842,7 @@ export const RepoFork: Page = () => (
   </SlideShell>
 );
 
-const SsotA: Page = () => (
+export const SsotA: Page = () => (
   <SlideShell>
     <TopBar eyebrow="#2 Obsidian SSOT" />
     <Title>
